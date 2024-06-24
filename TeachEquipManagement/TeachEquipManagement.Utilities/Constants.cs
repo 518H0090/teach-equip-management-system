@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeachEquipManagement.Utilities
 {
-    public class Constant
+    public class Constants
     {
         public const string ConnectionString = "DefaultConnection";
     }
