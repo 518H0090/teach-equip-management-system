@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeachEquipManagement.DAL\TeachEquipManagement.DAL.csproj" />
+    <ProjectReference Include="..\TeachEquipManagement.Utilities\TeachEquipManagement.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BusinessModels\Common\" />
+    <Folder Include="BusinessModels\Dtos\" />
+    <Folder Include="BusinessModels\Enums\" />
+    <Folder Include="IServices\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+</Project>
