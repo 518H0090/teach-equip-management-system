@@ -58,6 +58,6 @@
     <Folder Include="Properties" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="initial-database.sql" />
+    <Build Include="user-table.sql" />
   </ItemGroup>
 </Project>

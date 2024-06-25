@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeachEquipManagement.DAL", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeachEquipManagement.Utilities", "TeachEquipManagement.Utilities\TeachEquipManagement.Utilities.csproj", "{11966B83-0954-4B6A-9D33-9437C0E3DE60}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "TeachEquipManagement.Database", "TeachEquipManagement.Database\TeachEquipManagement.Database.sqlproj", "{ADEFB47F-50E8-43BA-AD67-BBA5F2556B31}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,12 +33,6 @@ Global
 		{11966B83-0954-4B6A-9D33-9437C0E3DE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11966B83-0954-4B6A-9D33-9437C0E3DE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11966B83-0954-4B6A-9D33-9437C0E3DE60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADEFB47F-50E8-43BA-AD67-BBA5F2556B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADEFB47F-50E8-43BA-AD67-BBA5F2556B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADEFB47F-50E8-43BA-AD67-BBA5F2556B31}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{ADEFB47F-50E8-43BA-AD67-BBA5F2556B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADEFB47F-50E8-43BA-AD67-BBA5F2556B31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADEFB47F-50E8-43BA-AD67-BBA5F2556B31}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

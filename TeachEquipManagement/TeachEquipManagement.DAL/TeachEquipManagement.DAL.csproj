@@ -7,13 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataContext\**" />
+    <EmbeddedResource Remove="DataContext\**" />
+    <None Remove="DataContext\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TeachEquipManagement.Utilities\TeachEquipManagement.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DataModels\" />
-    <Folder Include="DataContext\" />
     <Folder Include="IRepositories\" />
+    <Folder Include="GenericRepository\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 
