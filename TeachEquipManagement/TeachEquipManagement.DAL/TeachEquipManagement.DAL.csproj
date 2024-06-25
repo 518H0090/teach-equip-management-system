@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="IRepositories\" />
     <Folder Include="GenericRepository\" />
+    <Folder Include="UnitOfWorks\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 

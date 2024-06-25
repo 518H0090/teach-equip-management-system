@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.Utilities;
 
@@ -68,6 +69,13 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 # endregion
 
+# region SeriLog
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
+# endregion
+
 #region Register DI
 
 #endregion
@@ -82,6 +90,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAllPolicy");
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
