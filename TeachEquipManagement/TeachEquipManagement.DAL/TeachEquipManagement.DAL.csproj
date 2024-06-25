@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataModels\" />
     <Folder Include="IRepositories\" />
     <Folder Include="GenericRepository\" />
     <Folder Include="Repositories\" />
