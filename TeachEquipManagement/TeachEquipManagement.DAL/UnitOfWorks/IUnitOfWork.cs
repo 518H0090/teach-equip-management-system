@@ -15,8 +15,8 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         void CreateTransaction();
 
-        Task Commit();
+        void Commit();
 
-        Task Rollback();
+        void Rollback();
     }
 }

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
+using System.Data.Entity;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.Services;
 using TeachEquipManagement.DAL.EFContext;

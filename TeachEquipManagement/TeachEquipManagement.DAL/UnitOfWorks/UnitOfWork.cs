@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Data.Entity;
 using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.IRepositories;
 using TeachEquipManagement.DAL.Repositories;
@@ -8,9 +9,9 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DataContext _context;
-        private IDbContextTransaction _transaction;
+        private DbContextTransaction _transaction;
 
-        public UnitOfWork(DataContext context, IDbContextTransaction transaction)
+        public UnitOfWork(DataContext context, DbContextTransaction transaction)
         {
             _context = context;
             _transaction = transaction;
@@ -18,20 +19,20 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         public IUserRepository UserRepository => new UserRepository(_context);
 
-        public async Task Commit()
+        public void Commit()
         {
-            await _transaction.CommitAsync();
+            _transaction.Commit();
         }
 
         public void CreateTransaction()
         {
-            _transaction = _context.Database.BeginTransaction();
+            _transaction = (DbContextTransaction)_context.Database.BeginTransaction();
         }
 
-        public async Task Rollback()
+        public void Rollback()
         {
-            await _transaction.RollbackAsync();
-            await _transaction.DisposeAsync();
+            _transaction.Rollback();
+            _transaction.Dispose();
         }
 
         public async Task<bool> SaveChangesAsync()
