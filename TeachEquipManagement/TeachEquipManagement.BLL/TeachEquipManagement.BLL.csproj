@@ -13,10 +13,7 @@
 
   <ItemGroup>
     <Folder Include="BusinessModels\Common\" />
-    <Folder Include="BusinessModels\Dtos\" />
     <Folder Include="BusinessModels\Enums\" />
-    <Folder Include="IServices\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
