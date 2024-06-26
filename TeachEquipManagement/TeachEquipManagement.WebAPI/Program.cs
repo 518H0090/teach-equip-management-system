@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using TeachEquipManagement.BLL.IServices;
+using TeachEquipManagement.BLL.Services;
 using TeachEquipManagement.DAL.EFContext;
+using TeachEquipManagement.DAL.IRepositories;
+using TeachEquipManagement.DAL.Repositories;
+using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -77,6 +82,9 @@ builder.Host.UseSerilog((context, configuration) =>
 # endregion
 
 #region Register DI
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 #endregion
 

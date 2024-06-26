@@ -37,11 +37,6 @@ namespace TeachEquipManagement.DAL.GenericRepository
             await _context.Set<TEntity>().AddRangeAsync(entity);
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public void UpdateAsync(TEntity entity)
         {
             _context.Set<TEntity>().Update(entity);

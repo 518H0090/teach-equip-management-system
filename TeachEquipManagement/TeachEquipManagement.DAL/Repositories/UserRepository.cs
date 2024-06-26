@@ -10,7 +10,7 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.Repositories
 {
-    public class UserRepository : GenericRepository<User>
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
         private readonly DataContext _context;
 

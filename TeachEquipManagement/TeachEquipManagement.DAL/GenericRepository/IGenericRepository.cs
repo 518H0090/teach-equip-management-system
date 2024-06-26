@@ -15,7 +15,5 @@
         void UpdateRangeAsync(IEnumerable<TEntity> entity);
 
         void DeleteAsync(TEntity entity);
-
-        Task SaveChangesAsync();
     }
 }
