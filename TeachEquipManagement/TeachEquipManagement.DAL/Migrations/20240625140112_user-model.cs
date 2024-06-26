@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeachEquipManagement.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class usermodel : Migration
+    public partial class UserModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

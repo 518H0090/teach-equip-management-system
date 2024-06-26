@@ -9,6 +9,9 @@ namespace TeachEquipManagement.Utilities
 {
     public static class FunctionHelper
     {
+
+        #region Process Password
+
         public static void CreatePasswordHash(string password, out byte[] PasswordHash, out byte[] PasswordSalt)
         {
             using (var hmac = new HMACSHA512())
@@ -26,5 +29,8 @@ namespace TeachEquipManagement.Utilities
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
+
+        #endregion
+
     }
 }

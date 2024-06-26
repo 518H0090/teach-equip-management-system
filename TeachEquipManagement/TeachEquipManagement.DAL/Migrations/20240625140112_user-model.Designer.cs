@@ -13,7 +13,7 @@ namespace TeachEquipManagement.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20240625140112_user-model")]
-    partial class usermodel
+    partial class UserModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

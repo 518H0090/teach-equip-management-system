@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="ApiModels\Response\" />
     <Folder Include="ApiModels\Request\" />
+    <Folder Include="Logs\" />
   </ItemGroup>
 
 </Project>
