@@ -9,13 +9,9 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DataContext _context;
-        private DbContextTransaction _transaction;
+        private IDbContextTransaction _transaction;
 
-        public UnitOfWork(DataContext context, DbContextTransaction transaction)
-        {
-            _context = context;
-            _transaction = transaction;
-        }
+        public UnitOfWork(DataContext context) => _context = context;
 
         public IUserRepository UserRepository => new UserRepository(_context);
 
@@ -26,7 +22,7 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         public void CreateTransaction()
         {
-            _transaction = (DbContextTransaction)_context.Database.BeginTransaction();
+            _transaction = _context.Database.BeginTransaction();
         }
 
         public void Rollback()
