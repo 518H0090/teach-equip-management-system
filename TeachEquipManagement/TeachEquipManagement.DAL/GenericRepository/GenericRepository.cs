@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using TeachEquipManagement.DAL.EFContext;
+using TeachEquipManagement.DAL.Specifications;
 
 namespace TeachEquipManagement.DAL.GenericRepository
 {
@@ -46,5 +48,22 @@ namespace TeachEquipManagement.DAL.GenericRepository
         {
             _context.Set<TEntity>().UpdateRange(entity);
         }
+
+        public IQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> inputQuery)
+        {
+            return _context.Set<TEntity>().Where(inputQuery);
+        }
+
+        public IQueryable<TEntity> GetQueryableOrderBy(Expression<Func<TEntity, bool>> inputQuery, 
+            Expression<Func<TEntity, object>> expression, bool isDesc = false)
+        {
+            if (!isDesc)
+            {
+                return _context.Set<TEntity>().Where(inputQuery).OrderBy(expression);
+            }
+
+            return _context.Set<TEntity>().Where(inputQuery).OrderByDescending(expression);
+        }
+
     }
 }

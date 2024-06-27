@@ -2,6 +2,8 @@
 using Serilog;
 using TeachEquipManagement.BLL.BusinessModels.Dtos;
 using TeachEquipManagement.BLL.IServices;
+using TeachEquipManagement.DAL.Models;
+using TeachEquipManagement.DAL.Specifications;
 using TeachEquipManagement.DAL.UnitOfWorks;
 
 namespace TeachEquipManagement.BLL.Services
