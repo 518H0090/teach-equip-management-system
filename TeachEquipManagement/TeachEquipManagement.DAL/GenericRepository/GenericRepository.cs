@@ -49,8 +49,14 @@ namespace TeachEquipManagement.DAL.GenericRepository
             _context.Set<TEntity>().UpdateRange(entity);
         }
 
-        public IQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> inputQuery)
+        public IQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> inputQuery,
+            bool isAsNoTracking = false)
         {
+            if (isAsNoTracking)
+            {
+                return _context.Set<TEntity>().Where(inputQuery).AsNoTracking();
+            }
+
             return _context.Set<TEntity>().Where(inputQuery);
         }
 
