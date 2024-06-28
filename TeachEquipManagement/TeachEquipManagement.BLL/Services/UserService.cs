@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using TeachEquipManagement.BLL.BusinessModels.Dtos;
 using TeachEquipManagement.BLL.IServices;
-using TeachEquipManagement.DAL.Models;
-using TeachEquipManagement.DAL.Specifications;
 using TeachEquipManagement.DAL.UnitOfWorks;
+using TeachEquipManagement.Utilities.CustomAttribute;
 
 namespace TeachEquipManagement.BLL.Services
 {
@@ -21,6 +21,7 @@ namespace TeachEquipManagement.BLL.Services
             _logger = logger;
         }
 
+        [ServiceFilter(typeof(LogFilterAttribute))]
         public async Task<IEnumerable<UserDTOTest>> ToiDayD()
         {
             var listData = await _unitOfWork.UserRepository.GetAllAsync();

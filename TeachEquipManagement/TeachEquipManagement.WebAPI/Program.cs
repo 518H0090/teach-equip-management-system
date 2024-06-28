@@ -9,6 +9,7 @@ using TeachEquipManagement.DAL.IRepositories;
 using TeachEquipManagement.DAL.Repositories;
 using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities;
+using TeachEquipManagement.Utilities.CustomAttribute;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddMvc(options =>
+{
+    options.Filters.Add<LogFilterAttribute>();
+});
+
 
 # region Cors Policy
 

@@ -1,14 +1,9 @@
 ﻿using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TeachEquipManagement.Utilities
 {
-    public class RestSharpHelper
+    public sealed class RestSharpHelper
     {
         private readonly RestClient _restClient;
 

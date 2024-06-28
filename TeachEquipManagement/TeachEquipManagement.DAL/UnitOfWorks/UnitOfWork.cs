@@ -6,7 +6,7 @@ using TeachEquipManagement.DAL.Repositories;
 
 namespace TeachEquipManagement.DAL.UnitOfWorks
 {
-    public class UnitOfWork : IUnitOfWork
+    public sealed class UnitOfWork : IUnitOfWork
     {
         private readonly DataContext _context;
         private IDbContextTransaction _transaction;

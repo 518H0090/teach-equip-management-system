@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-using TeachEquipManagement.DAL.Specifications;
-using TeachEquipManagement.Utilities.CommonModels;
+﻿using TeachEquipManagement.Utilities.CommonModels;
 
 namespace TeachEquipManagement.DAL.GenericRepository
 {

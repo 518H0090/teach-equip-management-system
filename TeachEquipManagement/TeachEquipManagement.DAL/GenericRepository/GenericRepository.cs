@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using TeachEquipManagement.DAL.EFContext;
-using TeachEquipManagement.DAL.Specifications;
 using TeachEquipManagement.Utilities.CommonModels;
 
 namespace TeachEquipManagement.DAL.GenericRepository
