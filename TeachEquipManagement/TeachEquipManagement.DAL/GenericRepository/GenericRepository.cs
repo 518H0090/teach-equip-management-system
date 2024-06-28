@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.Specifications;
+using TeachEquipManagement.Utilities.CommonModels;
 
 namespace TeachEquipManagement.DAL.GenericRepository
 {
@@ -49,26 +50,34 @@ namespace TeachEquipManagement.DAL.GenericRepository
             _context.Set<TEntity>().UpdateRange(entity);
         }
 
-        public IQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> inputQuery,
-            bool isAsNoTracking = false)
+        public IQueryable<TEntity> GetQueryable(QueryModel<TEntity> queryCondition)
         {
-            if (isAsNoTracking)
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+
+            if (queryCondition.QueryCondition != null)
             {
-                return _context.Set<TEntity>().Where(inputQuery).AsNoTracking();
+                query = query.Where(queryCondition.QueryCondition);
+
+                if (queryCondition.IsAsNoTracking.HasValue)
+                {
+                    query = query.AsNoTracking();
+                }
             }
 
-            return _context.Set<TEntity>().Where(inputQuery);
-        }
-
-        public IQueryable<TEntity> GetQueryableOrderBy(Expression<Func<TEntity, bool>> inputQuery, 
-            Expression<Func<TEntity, object>> expression, bool isDesc = false)
-        {
-            if (!isDesc)
+            if (queryCondition.OrderCondition != null)
             {
-                return _context.Set<TEntity>().Where(inputQuery).OrderBy(expression);
+                if (queryCondition.IsOrderDescending.HasValue)
+                {
+                    query = query.OrderByDescending(queryCondition.OrderCondition);
+                }
+
+                else
+                {
+                    query = query.OrderBy(queryCondition.OrderCondition);
+                }
             }
 
-            return _context.Set<TEntity>().Where(inputQuery).OrderByDescending(expression);
+            return query;
         }
 
     }

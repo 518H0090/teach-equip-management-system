@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using TeachEquipManagement.DAL.Specifications;
+using TeachEquipManagement.Utilities.CommonModels;
 
 namespace TeachEquipManagement.DAL.GenericRepository
 {
@@ -19,10 +20,6 @@ namespace TeachEquipManagement.DAL.GenericRepository
 
         void DeleteAsync(TEntity entity);
 
-        IQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> inputQuery,
-            bool isAsNoTracking = false);
-
-        IQueryable<TEntity> GetQueryableOrderBy(Expression<Func<TEntity, bool>> inputQuery,
-            Expression<Func<TEntity, object>> expression, bool isDesc = false);
+        IQueryable<TEntity> GetQueryable(QueryModel<TEntity> queryCondition);
     }
 }
