@@ -3,7 +3,11 @@ using Serilog;
 
 namespace TeachEquipManagement.Utilities.CustomAttribute
 {
-    public class LogFilterAttribute : ActionFilterAttribute, IActionFilter
+    public class LogFilterAttribute : ActionFilterAttribute,
+        IResourceFilter,
+        IActionFilter,
+        IResultFilter,
+        IExceptionFilter
     {
         private readonly ILogger _logger;
 
@@ -12,30 +16,41 @@ namespace TeachEquipManagement.Utilities.CustomAttribute
             _logger = logger;
         }
 
-        //public override void OnActionExecuting(ActionExecutingContext context)
-        //{
-        //    _logger.Information($"Action '{context.ActionDescriptor.DisplayName}' is starting.");
+        public void OnResourceExecuted(ResourceExecutedContext context)
+        {
+            _logger.Information($"Resource '{context.ActionDescriptor.DisplayName}' has completed.");
+        }
 
-        //    base.OnActionExecuting(context);
-        //}
-
-        //public override void OnActionExecuted(ActionExecutedContext context)
-        //{
-        //    _logger.Information($"Action '{context.ActionDescriptor.DisplayName}' has completed");
-
-        //    base.OnActionExecuted(context);
-        //}
+        public void OnResourceExecuting(ResourceExecutingContext context)
+        {
+            _logger.Information($"Resource '{context.ActionDescriptor.DisplayName}' is starting.");
+        }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             _logger.Information($"Action '{context.ActionDescriptor.DisplayName}' is starting.");
+
             var result = await next();
+
             _logger.Information($"Action '{context.ActionDescriptor.DisplayName}' has completed");
+        }
+
+        public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        {
+            _logger.Information($"Result '{context.ActionDescriptor.DisplayName}' is starting.");
+
+            var result = await next();
+
+            _logger.Information($"Result '{context.ActionDescriptor.DisplayName}' has completed");
+        }
+
+
+        public void OnException(ExceptionContext context)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            _logger.Error($"Exception: '{context.Exception.InnerException}' is thrown.");
         }
     }
 
-    class MyTestAttribute : Attribute
-    {
-
-    }
 }

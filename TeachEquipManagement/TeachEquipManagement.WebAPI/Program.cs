@@ -1,12 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
-using System.Data.Entity;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.Services;
 using TeachEquipManagement.DAL.EFContext;
-using TeachEquipManagement.DAL.IRepositories;
-using TeachEquipManagement.DAL.Repositories;
 using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities;
 using TeachEquipManagement.Utilities.CustomAttribute;
@@ -20,11 +16,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+# region Register Filter Attribute
+
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add<LogFilterAttribute>();
 });
 
+#endregion
 
 # region Cors Policy
 
