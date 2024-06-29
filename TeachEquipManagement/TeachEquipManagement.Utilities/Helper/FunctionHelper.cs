@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Text;
 
-namespace TeachEquipManagement.Utilities
+namespace TeachEquipManagement.Utilities.Helper
 {
     public static class FunctionHelper
     {
@@ -20,7 +20,7 @@ namespace TeachEquipManagement.Utilities
             }
         }
 
-        public static bool VerifyPasswordHash(string password,  byte[] passwordHash, byte[] PasswordSalt)
+        public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] PasswordSalt)
         {
             using (var hmac = new HMACSHA512(PasswordSalt))
             {

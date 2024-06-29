@@ -11,7 +11,11 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         private readonly DataContext _context;
         private IDbContextTransaction _transaction;
 
+        #pragma warning disable CS8618
+
         public UnitOfWork(DataContext context) => _context = context;
+
+        #pragma warning restore CS8618
 
         public IUserRepository UserRepository => new UserRepository(_context);
 
