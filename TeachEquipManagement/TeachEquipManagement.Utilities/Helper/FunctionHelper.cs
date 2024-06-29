@@ -30,6 +30,5 @@ namespace TeachEquipManagement.Utilities.Helper
         }
 
         #endregion
-
     }
 }

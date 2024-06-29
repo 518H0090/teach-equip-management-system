@@ -6,6 +6,7 @@ using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities;
 using TeachEquipManagement.Utilities.CustomAttribute;
+using TeachEquipManagement.Utilities.OptionPattern;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,10 +90,17 @@ builder.Host.UseSerilog((context, configuration) =>
 
 # endregion
 
+#region Register Configuration
+
+builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSection("AzureAD"));
+
+#endregion
+
 #region Register DI
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGraphService, GraphService>();
 
 #endregion
 

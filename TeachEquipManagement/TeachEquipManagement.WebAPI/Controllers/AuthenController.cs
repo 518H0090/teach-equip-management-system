@@ -9,16 +9,19 @@ namespace TeachEquipManagement.WebAPI.Controllers
     public class AuthenController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IGraphService _graphService;
 
-        public AuthenController(IUserService userService)
+        public AuthenController(IUserService userService, IGraphService graphService)
         {
             _userService = userService;
+            _graphService = graphService;
         }
 
         [HttpGet]
         [Route("authen-getall")]
         public async Task<IActionResult> AuthenticationGetAll()
         {
+            _graphService.Test();
             return Ok(await _userService.ToiDayD());
         }
     }
