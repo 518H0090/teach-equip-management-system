@@ -2,6 +2,7 @@
 using Polly.Retry;
 using RestSharp;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace TeachEquipManagement.Utilities.Helper
 {
@@ -20,26 +21,26 @@ namespace TeachEquipManagement.Utilities.Helper
            .WaitAndRetryAsync(_maxRetryCount, retryAttempt => _timeDelayForRetry);
         }
 
-        public async Task<TEntity?> Execute<TEntity>(RestRequest request) where TEntity : class, new()
+        public async Task<TEntity?> ExecuteAsync<TEntity>(RestRequest request, [Optional] CancellationToken token) where TEntity : new()
         {
             var response = await _policy.ExecuteAsync(async () =>
             {
-                var response = await _restClient.ExecuteAsync<TEntity>(request);
+                var response = await _restClient.ExecuteAsync<TEntity>(request, token);
                 return response;
             });
 
             return response.Data;
         }
 
-        public async Task<HttpStatusCode> Execute(RestRequest request)
+        public async Task<RestResponse> ExecuteAsync(RestRequest request, [Optional] CancellationToken token)
         {
-            var responseStatus = await _policy.ExecuteAsync(async () =>
+            RestResponse response = await _policy.ExecuteAsync(async () =>
             {
-                var respone = await _restClient.ExecuteAsync(request);
-                return respone.StatusCode;
+                var respone = await _restClient.ExecuteAsync(request, token);
+                return respone;
             });
 
-            return responseStatus;
+            return response;
         }
 
     }

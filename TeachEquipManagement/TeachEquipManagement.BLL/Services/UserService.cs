@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 using Serilog;
 using TeachEquipManagement.BLL.BusinessModels.Dtos;
 using TeachEquipManagement.BLL.IServices;
+using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities.CustomAttribute;
+using TeachEquipManagement.Utilities.Helper;
 
 namespace TeachEquipManagement.BLL.Services
 {
