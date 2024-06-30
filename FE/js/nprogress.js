@@ -1,6 +1,3 @@
-/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
- * @license MIT */
-
 ;(function(root, factory) {
 
   if (typeof define === 'function' && define.amd) {
@@ -14,7 +11,6 @@
 })(this, function() {
   var NProgress = {};
 
-  NProgress.version = '0.1.6';
 
   var Settings = NProgress.settings = {
     minimum: 0.08,
@@ -31,13 +27,6 @@
     template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
   };
 
-  /**
-   * Updates configuration.
-   *
-   *     NProgress.configure({
-   *       minimum: 0.1
-   *     });
-   */
   NProgress.configure = function(options) {
     var key, value;
     for (key in options) {
@@ -48,18 +37,7 @@
     return this;
   };
 
-  /**
-   * Last number.
-   */
-
   NProgress.status = null;
-
-  /**
-   * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
-   *
-   *     NProgress.set(0.4);
-   *     NProgress.set(1.0);
-   */
 
   NProgress.set = function(n) {
     var started = NProgress.isStarted();
@@ -72,22 +50,19 @@
         speed    = Settings.speed,
         ease     = Settings.easing;
 
-    progress.offsetWidth; /* Repaint */
+    progress.offsetWidth;
 
     queue(function(next) {
-      // Set positionUsing if it hasn't already been set
       if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
 
-      // Add transition
       css(bar, barPositionCSS(n, speed, ease));
 
       if (n === 1) {
-        // Fade out
         css(progress, { 
           transition: 'none', 
           opacity: 1 
         });
-        progress.offsetWidth; /* Repaint */
+        progress.offsetWidth;
 
         setTimeout(function() {
           css(progress, { 
@@ -134,27 +109,11 @@
     return this;
   };
 
-  /**
-   * Hides the progress bar.
-   * This is the *sort of* the same as setting the status to 100%, with the
-   * difference being `done()` makes some placebo effect of some realistic motion.
-   *
-   *     NProgress.done();
-   *
-   * If `true` is passed, it will show the progress bar even if its hidden.
-   *
-   *     NProgress.done(true);
-   */
-
   NProgress.done = function(force) {
     if (!force && !NProgress.status) return this;
 
     return NProgress.inc(0.3 + 0.5 * Math.random()).set(1);
   };
-
-  /**
-   * Increments by a random amount.
-   */
 
   NProgress.inc = function(amount) {
     var n = NProgress.status;
@@ -175,12 +134,6 @@
     return NProgress.inc(Math.random() * Settings.trickleRate);
   };
 
-  /**
-   * Waits for all supplied jQuery promises and
-   * increases the progress as the promises resolve.
-   * 
-   * @param $promise jQUery Promise
-   */
   (function() {
     var initial = 0, current = 0;
     
@@ -272,30 +225,21 @@
    */
 
   NProgress.getPositioningCSS = function() {
-    // Sniff on document.body.style
     var bodyStyle = document.body.style;
 
-    // Sniff prefixes
     var vendorPrefix = ('WebkitTransform' in bodyStyle) ? 'Webkit' :
                        ('MozTransform' in bodyStyle) ? 'Moz' :
                        ('msTransform' in bodyStyle) ? 'ms' :
                        ('OTransform' in bodyStyle) ? 'O' : '';
 
     if (vendorPrefix + 'Perspective' in bodyStyle) {
-      // Modern browsers with 3D support, e.g. Webkit, IE10
       return 'translate3d';
     } else if (vendorPrefix + 'Transform' in bodyStyle) {
-      // Browsers without 3D support, e.g. IE9
       return 'translate';
     } else {
-      // Browsers without translate() support, e.g. IE7-8
       return 'margin';
     }
   };
-
-  /**
-   * Helpers
-   */
 
   function clamp(n, min, max) {
     if (n < min) return min;
@@ -303,20 +247,9 @@
     return n;
   }
 
-  /**
-   * (Internal) converts a percentage (`0..1`) to a bar translateX
-   * percentage (`-100%..0%`).
-   */
-
   function toBarPerc(n) {
     return (-1 + n) * 100;
   }
-
-
-  /**
-   * (Internal) returns the correct CSS for changing the bar's
-   * position given an n percentage, and speed and ease from Settings
-   */
 
   function barPositionCSS(n, speed, ease) {
     var barCSS;
@@ -353,14 +286,6 @@
       if (pending.length == 1) next();
     };
   })();
-
-  /**
-   * (Internal) Applies css properties to an element, similar to the jQuery 
-   * css method.
-   *
-   * While this helper does assist with vendor prefixed property names, it 
-   * does not perform any manipulation of values prior to setting styles.
-   */
 
   var css = (function() {
     var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
@@ -413,18 +338,10 @@
     }
   })();
 
-  /**
-   * (Internal) Determines if an element or space separated list of class names contains a class name.
-   */
-
   function hasClass(element, name) {
     var list = typeof element == 'string' ? element : classList(element);
     return list.indexOf(' ' + name + ' ') >= 0;
   }
-
-  /**
-   * (Internal) Adds a class to an element.
-   */
 
   function addClass(element, name) {
     var oldList = classList(element),
@@ -432,40 +349,21 @@
 
     if (hasClass(oldList, name)) return; 
 
-    // Trim the opening space.
     element.className = newList.substring(1);
   }
-
-  /**
-   * (Internal) Removes a class from an element.
-   */
 
   function removeClass(element, name) {
     var oldList = classList(element),
         newList;
 
     if (!hasClass(element, name)) return;
-
-    // Replace the class name.
     newList = oldList.replace(' ' + name + ' ', ' ');
-
-    // Trim the opening and closing spaces.
     element.className = newList.substring(1, newList.length - 1);
   }
-
-  /**
-   * (Internal) Gets a space separated list of the class names on the element. 
-   * The list is wrapped with a single space on each end to facilitate finding 
-   * matches within the list.
-   */
 
   function classList(element) {
     return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
   }
-
-  /**
-   * (Internal) Removes an element from the DOM.
-   */
 
   function removeElement(element) {
     element && element.parentNode && element.parentNode.removeChild(element);
