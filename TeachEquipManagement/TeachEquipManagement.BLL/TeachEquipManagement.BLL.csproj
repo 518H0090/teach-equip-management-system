@@ -19,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Graph" Version="5.56.0" />
     <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.24915.12000" />
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="19.225.1" />
   </ItemGroup>
 
 </Project>

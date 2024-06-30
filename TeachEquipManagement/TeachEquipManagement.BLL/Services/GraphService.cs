@@ -1,7 +1,7 @@
 ﻿using Azure.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
-using Microsoft.Graph.Models;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.Utilities.OptionPattern;
 
@@ -49,14 +49,13 @@ namespace TeachEquipManagement.BLL.Services
 
             var testDocument = await graphClient.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Drives.GetAsync();
 
-            var siteId = testSite.Id.Split(",")[1];
+            var siteId = testSite?.Id?.Split(",")[1];
 
-            var documentId = testDocument.Value.FirstOrDefault(x => x.Name == "Avatars").Id;
+            var documentId = testDocument?.Value?.FirstOrDefault(x => x.Name == "Avatars")?.Id;
 
             var result = await graphClient.Drives[documentId].Items["root"].Children.GetAsync();
 
-            var list = await graphClient.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Lists["test"].GetAsync();
-
+            var list = await graphClient.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Lists["test"].Items.GetAsync();
         }
     }
 }

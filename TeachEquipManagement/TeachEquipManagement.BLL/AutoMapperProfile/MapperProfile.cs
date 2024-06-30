@@ -14,6 +14,8 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
         public MapperProfile()
         {
             CreateMap<User, UserDTOTest>();
+
+            CreateMap<UserDTOTest, User>();
         }
     }
 }
