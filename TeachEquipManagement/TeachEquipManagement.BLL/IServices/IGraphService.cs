@@ -8,5 +8,6 @@ namespace TeachEquipManagement.BLL.IServices
 {
     public interface IGraphService
     {
+        Task GetSharePointDataAsync();
     }
 }

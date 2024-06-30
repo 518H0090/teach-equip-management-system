@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph;
 using Serilog;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.Services;
@@ -72,7 +73,7 @@ builder.Services.AddCors(options =>
 # region Add DbContext
 
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString(Constants.ConnectionString))
+    builder.Configuration.GetConnectionString(ConstantValues.ConnectionString))
 );
 
 # endregion

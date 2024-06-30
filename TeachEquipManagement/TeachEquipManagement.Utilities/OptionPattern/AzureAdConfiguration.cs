@@ -8,10 +8,10 @@ namespace TeachEquipManagement.Utilities.OptionPattern
 {
     public class AzureAdConfiguration
     {
-        public string ClientId { get; set; }
-        public string TenantId { get; set; }
-        public string Instance { get; set; }
-        public string GraphResource { get; set; }
-        public string GraphResourceEndPoint { get; set; }
+        public string ClientId { get; set; } = string.Empty;
+        public string TenantId { get; set; } = string.Empty;
+        public string Instance { get; set; } = string.Empty;
+        public string GraphResource { get; set; } = string.Empty;
+        public string GraphResourceEndPoint { get; set; } = string.Empty;
     }
 }

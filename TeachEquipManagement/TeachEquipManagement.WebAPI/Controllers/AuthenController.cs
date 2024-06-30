@@ -21,7 +21,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         [Route("authen-getall")]
         public async Task<IActionResult> AuthenticationGetAll()
         {
-            _graphService.Test();
+            await _graphService.GetSharePointDataAsync();
             return Ok(await _userService.ToiDayD());
         }
     }

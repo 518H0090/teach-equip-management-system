@@ -24,7 +24,7 @@ namespace TeachEquipManagement.BLL.Services
             _logger = logger;
         }
 
-        [ServiceFilter(typeof(LogFilterAttribute))]
+        //[ServiceFilter(typeof(LogFilterAttribute))]
         public async Task<IEnumerable<UserDTOTest>> ToiDayD()
         {
             var listData = await _unitOfWork.UserRepository.GetAllAsync();
