@@ -23,7 +23,7 @@ namespace TeachEquipManagement.DAL.GenericRepository
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<TEntity?> GetBydIdAsync(Guid id)
+        public async Task<TEntity?> GetByIdAsync(object id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }

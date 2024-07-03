@@ -6,7 +6,7 @@ namespace TeachEquipManagement.DAL.GenericRepository
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
 
-        Task<TEntity?> GetBydIdAsync(Guid id);
+        Task<TEntity?> GetByIdAsync(object id);
 
         Task InsertAsync(TEntity entity);
 

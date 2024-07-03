@@ -15,5 +15,7 @@ namespace TeachEquipManagement.DAL.Models
         public byte[] PasswordHash { set; get; } = new byte[32];
 
         public byte[] PasswordSalt { set; get; } = new byte[32];
+
+        public string Email { set; get; } = string.Empty;
     }
 }

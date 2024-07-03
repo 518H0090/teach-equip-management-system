@@ -102,6 +102,7 @@ builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSectio
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGraphService, GraphService>();
+builder.Services.AddScoped<IPaginationService, PaginationService>();
 
 #endregion
 
