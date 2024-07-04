@@ -14,16 +14,20 @@ namespace TeachEquipManagement.DAL.Models
 
         public int Quantity {  get; set; }  
 
-        public string RequestType { get; set; }
+        public string RequestType { get; set; } = string.Empty;
 
         public DateTime RequestDate { get; set; }
 
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
 
-        public string ManagerApprove { get; set; }
+        public string ManagerApprove { get; set; } = string.Empty;
 
         public DateTime ApproveDate { get; set; }   
 
         public bool IsApproved { get; set; }
+
+        public User User { get; set; } = new();
+
+        public Inventory Inventory { get; set; } = new();
     }
 }

@@ -9,8 +9,11 @@ namespace TeachEquipManagement.DAL.Models
     public class Category
     {
         public int Id { get; set; }
-        public string Type { get; set; }
 
-        public string Unit { get; set; }
+        public string Type { get; set; } = string.Empty;
+
+        public string Unit { get; set; } = string.Empty;
+
+        public List<Tool> Tools { get; set; } = new();
     }
 }

@@ -8,16 +8,18 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class InventoryHistory
     {
-        public int Id { get; set; }
-
         public Guid UserId { get; set; }
 
         public Guid InventoryId { get; set; }   
 
         public int Quantity { get; set; }
 
-        public DateTime TransactionDate { get; set; }   
+        public DateTime ActionDate { get; set; }   
 
-        public string ActionType { get; set; }
+        public string ActionType { get; set; } = string.Empty;
+
+        public User User { get; set; } = new();
+
+        public Inventory Inventory { get; set; } = new();
     }
 }

@@ -10,10 +10,21 @@ namespace TeachEquipManagement.DAL.Models
     {
         public int Id { get; set; }
 
-        public string ToolName { get; set; }
+        public string ToolName { get; set; } = string.Empty;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public string SubjectRelative { get; set; } = string.Empty;
+
+        public Category Category { get; set; } = new();
+        public int CategoryId { get; set; }
+
+        public Supplier Supplier { get; set; } = new();
+
+        public int SupplierId { get; set; }
+
+        public Inventory Inventory { get; set; } = new();
+
+        public List<Invoice> Invoices { get; set; } = new();
     }
 }

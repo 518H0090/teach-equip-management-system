@@ -13,5 +13,7 @@ namespace TeachEquipManagement.DAL.Models
         public string Name { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
+
+        public List<UserPermission> UserPermissions { get; set; } = new();
     }
 }

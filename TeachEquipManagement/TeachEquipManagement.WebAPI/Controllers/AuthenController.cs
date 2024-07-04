@@ -17,12 +17,12 @@ namespace TeachEquipManagement.WebAPI.Controllers
             _graphService = graphService;
         }
 
-        [HttpGet]
-        [Route("authen-getall")]
-        public async Task<IActionResult> AuthenticationGetAll()
-        {
-            await _graphService.GetSharePointDataAsync();
-            return Ok(await _userService.ToiDayD());
-        }
+        //[HttpGet]
+        //[Route("authen-getall")]
+        //public async Task<IActionResult> AuthenticationGetAll()
+        //{
+        //    await _graphService.GetSharePointDataAsync();
+        //    return Ok(await _userService.ToiDayD());
+        //}
     }
 }

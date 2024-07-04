@@ -8,6 +8,8 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class UserDetail
     {
+        public User User { get; set; } = new();
+            
         public Guid UserId { get; set; }
 
         public string FullName { get; set; } = string.Empty;    

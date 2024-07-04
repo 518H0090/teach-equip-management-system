@@ -15,5 +15,7 @@ namespace TeachEquipManagement.DAL.Models
         public DateTime Created { get; set; }
 
         public DateTime Expires { get; set; }
+
+        public User User { get; set; } = new User();
     }
 }

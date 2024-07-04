@@ -8,10 +8,10 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class UserPermission
     {
-        public User User { get; set; }
+        public User User { get; set; } = new();
         public Guid UserId { get; set; }
 
-        public Permission Permission { get; set; }
+        public Permission Permission { get; set; } = new();
         public int PermissionId { get; set; }
     }
 }

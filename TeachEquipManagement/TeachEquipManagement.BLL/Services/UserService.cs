@@ -25,23 +25,23 @@ namespace TeachEquipManagement.BLL.Services
         }
 
         //[ServiceFilter(typeof(LogFilterAttribute))]
-        public async Task<IEnumerable<UserDTOTest>> ToiDayD()
-        {
-            var listData = await _unitOfWork.UserRepository.GetAllAsync();
+        //public async Task<IEnumerable<UserDTOTest>> ToiDayD()
+        //{
+        //    var listData = await _unitOfWork.UserRepository.GetAllAsync();
 
-            var NewList = new List<string>
-            {
-                "hehe",
-                "haha",
-                "FOOFOF",
-                "Safasfsa"
-            };
+        //    var NewList = new List<string>
+        //    {
+        //        "hehe",
+        //        "haha",
+        //        "FOOFOF",
+        //        "Safasfsa"
+        //    };
 
-            _logger.Information("Test {@listData}", NewList);
+        //    _logger.Information("Test {@listData}", NewList);
 
-            var returnList = _mapper.Map<IEnumerable<UserDTOTest>>(listData);
+        //    var returnList = _mapper.Map<IEnumerable<UserDTOTest>>(listData);
 
-            return returnList;
-        }
+        //    return returnList;
+        //}
     }
 }

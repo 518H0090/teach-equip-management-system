@@ -13,5 +13,9 @@ namespace TeachEquipManagement.DAL.Models
         public double Price { get; set; }
         
         public DateTime InvoiceDate { get; set; }   
+
+        public Tool Tool { get; set; } = new();
+
+        public int ToolId { get; set; } 
     }
 }
