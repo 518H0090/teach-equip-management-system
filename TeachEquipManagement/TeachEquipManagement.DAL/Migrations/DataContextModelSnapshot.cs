@@ -33,7 +33,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ApproveDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 39, 49, 288, DateTimeKind.Local).AddTicks(621));
+                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 46, 56, 962, DateTimeKind.Local).AddTicks(119));
 
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 39, 49, 287, DateTimeKind.Local).AddTicks(9960));
+                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 46, 56, 961, DateTimeKind.Local).AddTicks(9472));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -128,7 +128,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 39, 49, 288, DateTimeKind.Local).AddTicks(8264));
+                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 46, 56, 962, DateTimeKind.Local).AddTicks(7908));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -157,7 +157,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 39, 49, 287, DateTimeKind.Local).AddTicks(4417));
+                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 46, 56, 961, DateTimeKind.Local).AddTicks(4174));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
@@ -204,7 +204,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 39, 49, 288, DateTimeKind.Local).AddTicks(4594));
+                        .HasDefaultValue(new DateTime(2024, 7, 4, 22, 46, 56, 962, DateTimeKind.Local).AddTicks(3994));
 
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");

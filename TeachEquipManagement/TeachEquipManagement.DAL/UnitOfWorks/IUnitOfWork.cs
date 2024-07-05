@@ -11,6 +11,14 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
     {
         IUserRepository UserRepository { get; }
 
+        IUserPermissionRepository UserPermissionRepository { get; }
+
+        IUserDetailRepository UserDetailRepository { get; }
+
+        IToolRepository ToolRepository { get; }
+
+        ISupplierRepository SupplierRepository { get; }
+
         Task<bool> SaveChangesAsync();
 
         void CreateTransaction();
