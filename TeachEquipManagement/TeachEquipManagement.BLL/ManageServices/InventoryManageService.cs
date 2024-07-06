@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.TeamFoundation.Work.WebApi;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -12,23 +11,23 @@ using TeachEquipManagement.DAL.UnitOfWorks;
 
 namespace TeachEquipManagement.BLL.ManageServices
 {
-    public class ManageService : IManageService
+    public class InventoryManageService : IInventoryManageService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public ManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
+        public InventoryManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public IToolManageService ToolManageService =>  new ToolManageService(_unitOfWork, _mapper, _logger);
+        public IInventoryService InventoryService => new InventoryService(_unitOfWork, _mapper, _logger);
 
-        public IInventoryManageService InventoryManageService =>  new InventoryManageService(_unitOfWork, _mapper, _logger);
+        public IInventoryHistoryService InventoryHistoryService => new InventoryHistoryService(_unitOfWork, _mapper, _logger);
 
-        public IAuthenService AuthenService => new AuthenService(_unitOfWork, _mapper, _logger);
+        public IApprovalRequestService ApprovalRequestService => new ApprovalRequestService(_unitOfWork, _mapper, _logger);
     }
 }

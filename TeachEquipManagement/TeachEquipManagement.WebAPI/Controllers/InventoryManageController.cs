@@ -7,23 +7,15 @@ namespace TeachEquipManagement.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenController : ControllerBase
+    public class InventoryManageController : ControllerBase
     {
         private readonly IManageService _manageService;
         private readonly IGraphService _graphService;
 
-        public AuthenController(IManageService manageService, IGraphService graphService)
+        public InventoryManageController(IManageService manageService, IGraphService graphService)
         {
             _manageService = manageService;
             _graphService = graphService;
         }
-
-        //[HttpGet]
-        //[Route("authen-getall")]
-        //public async Task<IActionResult> AuthenticationGetAll()
-        //{
-        //    await _graphService.GetSharePointDataAsync();
-        //    return Ok(await _userService.ToiDayD());
-        //}
     }
 }

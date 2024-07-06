@@ -100,8 +100,11 @@ builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSectio
 
 #region Register DI
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IManageService, ManageService>();
+builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IToolManageService, ToolManageService>();
+builder.Services.AddScoped<IInventoryManageService, InventoryManageService>();
+builder.Services.AddScoped<IAuthenService, AuthenService>();
+
 builder.Services.AddScoped<IGraphService, GraphService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
 

@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessModels\Common\" />
     <Folder Include="BusinessModels\Enums\" />
   </ItemGroup>
 

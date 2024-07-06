@@ -10,28 +10,10 @@ namespace TeachEquipManagement.BLL.ManageServices
 {
     public interface IManageService
     {
-        IUserService UserService { get; }
+        IToolManageService ToolManageService { get; }
 
-        IUserPermissionService UserPermissionService { get; }
+        IInventoryManageService InventoryManageService { get; }
 
-        IUserDetailService UserDetailService { get; }
-
-        IToolService ToolService { get; }
-
-        ISupplierService SupplierService { get; }
-
-        IRefreshTokenService RefreshTokenService { get; }
-
-        IPermissionService PermissionService { get; }
-
-        IInvoiceService InvoiceService { get; }
-
-        IInventoryService InventoryService { get; }
-
-        IInventoryHistoryService InventoryHistoryService { get; }
-
-        ICategoryService CategoryService { get; }
-
-        IApprovalRequestService ApprovalRequestService { get; }
+        IAuthenService AuthenService { get; }
     }
 }
