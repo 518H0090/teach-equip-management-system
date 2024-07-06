@@ -5,17 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: 
-      - main
-      - development
-      - sprint1
-      - sprint_*
+    branches: [main, development, sprint1]
   pull_request:
-    branches: 
-      - main
-      - development
-      - sprint1
-      - sprint_*
+    branches: [main, development, sprint1]
 
 jobs:
   dotnet-build:
