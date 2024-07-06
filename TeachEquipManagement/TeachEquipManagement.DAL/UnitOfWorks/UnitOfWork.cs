@@ -26,6 +26,20 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         public ISupplierRepository SupplierRepository => new SupplierRepository(_context);
 
+        public IRefreshTokenRepository RefreshTokenRepository => new RefreshTokenRepository(_context);
+
+        public IPermissionRepository PermissionRepository => new PermissionRepository(_context);
+
+        public IInvoiceRepository InvoiceRepository =>  new InvoiceRepository(_context);
+
+        public IInventoryRepository InventoryRepository =>  new InventoryRepository(_context);
+
+        public IInventoryHistoryRepository InventoryHistoryRepository =>  new InventoryHistoryRepository(_context);
+
+        public ICategoryRepository CategoryRepository =>  new CategoryRepository(_context);
+
+        public IApprovalRequestRepository ApprovalRequestRepository => new ApprovalRequestRepository(_context);
+
         public void Commit()
         {
             _transaction.Commit();

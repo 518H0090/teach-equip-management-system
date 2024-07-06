@@ -19,6 +19,20 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         ISupplierRepository SupplierRepository { get; }
 
+        IRefreshTokenRepository RefreshTokenRepository { get; }
+
+        IPermissionRepository PermissionRepository { get; }
+
+        IInvoiceRepository InvoiceRepository { get; }
+
+        IInventoryRepository InventoryRepository { get; }
+
+        IInventoryHistoryRepository InventoryHistoryRepository { get; }
+
+        ICategoryRepository CategoryRepository { get; }
+
+        IApprovalRequestRepository ApprovalRequestRepository { get; }
+
         Task<bool> SaveChangesAsync();
 
         void CreateTransaction();
