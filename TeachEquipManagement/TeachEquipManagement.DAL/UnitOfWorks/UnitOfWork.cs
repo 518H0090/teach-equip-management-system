@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using System.Data.Entity;
 using TeachEquipManagement.DAL.EFContext;
+using TeachEquipManagement.DAL.GenericRepository;
 using TeachEquipManagement.DAL.IRepositories;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.Repositories;
@@ -12,7 +13,7 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         private readonly DataContext _context;
         private IDbContextTransaction _transaction;
 
-        #pragma warning disable CS8618
+#pragma warning disable CS8618
 
         public UnitOfWork(DataContext context) => _context = context;
 

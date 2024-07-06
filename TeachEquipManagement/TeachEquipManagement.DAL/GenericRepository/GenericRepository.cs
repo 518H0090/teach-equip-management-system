@@ -4,7 +4,7 @@ using TeachEquipManagement.Utilities.CommonModels;
 
 namespace TeachEquipManagement.DAL.GenericRepository
 {
-    public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         private readonly DataContext _context;
 

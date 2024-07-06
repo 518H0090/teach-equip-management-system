@@ -43,8 +43,6 @@ namespace TeachEquipManagement.Utilities.CustomAttribute
 
             _logger.Information($"Result '{context.ActionDescriptor.DisplayName}' has completed");
         }
-
-
         public void OnException(ExceptionContext context)
         {
             Console.ForegroundColor = ConsoleColor.Red;

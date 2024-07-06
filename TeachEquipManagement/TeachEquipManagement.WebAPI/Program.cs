@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Serilog;
 using TeachEquipManagement.BLL.IServices;
+using TeachEquipManagement.BLL.ManageServices;
 using TeachEquipManagement.BLL.Services;
 using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.UnitOfWorks;
@@ -100,7 +101,7 @@ builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSectio
 #region Register DI
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IManageService, ManageService>();
 builder.Services.AddScoped<IGraphService, GraphService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
 
