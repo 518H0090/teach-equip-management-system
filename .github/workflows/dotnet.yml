@@ -10,7 +10,7 @@ on:
     branches: [ "main", "sprint1" ]
 
 jobs:
-  sprint1-build:
+  dotnet-build:
 
     runs-on: ubuntu-latest
 
