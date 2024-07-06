@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,19 +7,15 @@ using System.Threading.Tasks;
 
 namespace TeachEquipManagement.BLL.BusinessModels.Common
 {
-    public abstract class ApiResponse<TEntity> where TEntity : class
+    public class ApiResponse<TEntity>
     {
-        public TEntity? Data { get; protected set; }
-        public string Message { get; protected set; } = string.Empty;
-        public int StatusCode { get; protected set; }
+        [JsonProperty("data_response")]
+        public TEntity? Data { get; set; }
 
-        protected ApiResponse(TEntity? data, string message, int statusCode)
-        {
-            Data = data;
-            Message = message;
-            StatusCode = statusCode;
-        }
+        [JsonProperty("message_response")]
+        public string Message { get; set; } = string.Empty;
 
-
+        [JsonProperty("status_response")]
+        public int StatusCode { get; set; }
     }
 }

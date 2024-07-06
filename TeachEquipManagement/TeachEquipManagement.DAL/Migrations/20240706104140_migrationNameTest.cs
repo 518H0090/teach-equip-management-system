@@ -6,10 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeachEquipManagement.DAL.Migrations
 {
     /// <inheritdoc />
-    /// 
-
-#pragma warning disable CS8981
-    public partial class initialdatabase : Migration
+    public partial class migrationNameTest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +45,7 @@ namespace TeachEquipManagement.DAL.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 4, 22, 46, 56, 962, DateTimeKind.Local).AddTicks(3994)),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 6, 17, 41, 37, 326, DateTimeKind.Local).AddTicks(9314)),
                     Expires = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -196,7 +193,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
-                    InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 4, 22, 46, 56, 961, DateTimeKind.Local).AddTicks(4174)),
+                    InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 6, 17, 41, 37, 325, DateTimeKind.Local).AddTicks(4064)),
                     ToolId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -218,10 +215,10 @@ namespace TeachEquipManagement.DAL.Migrations
                     InventoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     RequestType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 4, 22, 46, 56, 961, DateTimeKind.Local).AddTicks(9472)),
+                    RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 6, 17, 41, 37, 326, DateTimeKind.Local).AddTicks(1980)),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ManagerApprove = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ApproveDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 4, 22, 46, 56, 962, DateTimeKind.Local).AddTicks(119)),
+                    ApproveDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 6, 17, 41, 37, 326, DateTimeKind.Local).AddTicks(2818)),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -248,7 +245,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InventoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    ActionDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 4, 22, 46, 56, 962, DateTimeKind.Local).AddTicks(7908)),
+                    ActionDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 6, 17, 41, 37, 327, DateTimeKind.Local).AddTicks(5951)),
                     ActionType = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -362,6 +359,5 @@ namespace TeachEquipManagement.DAL.Migrations
             migrationBuilder.DropTable(
                 name: "Suppliers");
         }
-#pragma warning restore CS8981
     }
 }

@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using System.Data.Entity;
 using TeachEquipManagement.DAL.EFContext;
-using TeachEquipManagement.DAL.GenericRepository;
 using TeachEquipManagement.DAL.IRepositories;
-using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.Repositories;
 
 namespace TeachEquipManagement.DAL.UnitOfWorks

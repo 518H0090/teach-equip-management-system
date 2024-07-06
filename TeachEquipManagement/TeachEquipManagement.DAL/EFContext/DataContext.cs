@@ -70,11 +70,11 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<UserPermission>(user_permission =>
             {
-                user_permission.HasKey(up => new {up.UserId, up.PermissionId});
+                user_permission.HasKey(up => new { up.UserId, up.PermissionId });
 
                 user_permission.HasOne<User>(up => up.User)
                                 .WithMany(u => u.UserPermissions)
-                                .HasForeignKey(up => up.UserId) 
+                                .HasForeignKey(up => up.UserId)
                                 .OnDelete(DeleteBehavior.Cascade);
 
                 user_permission.HasOne<Permission>(up => up.Permission)
@@ -99,6 +99,8 @@ namespace TeachEquipManagement.DAL.EFContext
             modelBuilder.Entity<Supplier>(supplier =>
             {
                 supplier.HasKey(supplier => supplier.Id);
+
+                supplier.Property(supplier => supplier.Id).UseIdentityColumn<int>(1, 1);
 
                 supplier.Property(supplier => supplier.SupplierName).IsRequired();
 
@@ -151,7 +153,7 @@ namespace TeachEquipManagement.DAL.EFContext
                 inventory.HasOne<Tool>(inventory => inventory.Tool)
                          .WithOne(t => t.Inventory)
                          .HasForeignKey<Inventory>(inventory => inventory.ToolId)
-                         .OnDelete(DeleteBehavior.Cascade); 
+                         .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Invoice>(invoice =>
@@ -170,7 +172,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<ApprovalRequest>(approval_request =>
             {
-                approval_request.HasKey(approval_request => new {approval_request.UserId, approval_request.InventoryId});
+                approval_request.HasKey(approval_request => new { approval_request.UserId, approval_request.InventoryId });
 
                 approval_request.Property(approval_request => approval_request.Quantity).HasDefaultValue(0).IsRequired();
 
@@ -212,7 +214,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<InventoryHistory>(inventory_history =>
             {
-                inventory_history.HasKey(inventory_history => new { inventory_history .UserId, inventory_history .InventoryId});
+                inventory_history.HasKey(inventory_history => new { inventory_history.UserId, inventory_history.InventoryId });
 
                 inventory_history.Property(inventory_history => inventory_history.Quantity).HasDefaultValue(0).IsRequired();
 

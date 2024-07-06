@@ -1,11 +1,12 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TeachEquipManagement.BLL.BusinessModels.Common;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
+using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
 
 namespace TeachEquipManagement.BLL.Services
@@ -21,6 +22,55 @@ namespace TeachEquipManagement.BLL.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        public async Task<ApiResponse<bool>> Create(SupplierRequest request)
+        {
+            ApiResponse<bool> response = new ApiResponse<bool>();
+
+            try
+            {
+                _unitOfWork.CreateTransaction();
+
+                var supplier = _mapper.Map<Supplier>(request);
+
+                await _unitOfWork.SupplierRepository.InsertAsync(supplier);
+                await _unitOfWork.SaveChangesAsync();
+
+                _unitOfWork.Commit();
+                response.StatusCode = StatusCodes.Status201Created;
+                response.Message = "Create new supplier successfully";
+            } 
+            
+            catch(Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status400BadRequest;
+                _unitOfWork.Rollback();
+            };
+
+            return response;
+        }
+
+        public Task<ApiResponse<SupplierResponse>> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<SupplierResponse>> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<bool>> Remove(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<bool>> Update(SupplierRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

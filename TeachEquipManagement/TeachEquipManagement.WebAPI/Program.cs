@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
@@ -100,7 +101,7 @@ builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSectio
 
 #region Register DI
 
-builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IToolManageService, ToolManageService>();
 builder.Services.AddScoped<IInventoryManageService, InventoryManageService>();
 builder.Services.AddScoped<IAuthenService, AuthenService>();
