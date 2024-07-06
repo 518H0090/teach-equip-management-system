@@ -5,9 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "sprint1" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "sprint1" ]
+    branches: [ "main" ]
 
 jobs:
   sprint1-build:
