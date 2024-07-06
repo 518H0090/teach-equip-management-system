@@ -25,6 +25,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add<LogFilterAttribute>();
+    options.SuppressAsyncSuffixInActionNames = false;
 });
 
 #endregion
