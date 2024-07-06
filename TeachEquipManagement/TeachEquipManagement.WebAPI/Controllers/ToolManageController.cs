@@ -21,21 +21,48 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         [HttpPost]
         [Route("create-supplier")]
-        public async Task<IActionResult> CreateSupplier(SupplierRequest request)
+        public async Task<IActionResult> CreateSupplier([FromBody] SupplierRequest request)
         {
             var response = await _toolService.SupplierService.Create(request);
 
-            if (response.StatusCode == StatusCodes.Status201Created)
-            {
-                return Created("CreateNewRestaurant", response);
-            }
-
-            else if (response.StatusCode == StatusCodes.Status400BadRequest)
-            {
-                return BadRequest(response.Message);
-            }
-
-            return Ok("Oke");
+            return StatusCode(response.StatusCode, response); 
         }
+
+        [HttpGet]
+        [Route("all-supplier")]
+        public async Task<IActionResult> GetAllSuppliers()
+        {
+            var response = await _toolService.SupplierService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("supplier/find/{id}")]
+        public async Task<IActionResult> FindSupplierById(int id)
+        {
+            var response = await _toolService.SupplierService.GetById(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-supplier/{id}")]
+        public async Task<IActionResult> RemoveSupplier(int id)
+        {
+            var response = await _toolService.SupplierService.Remove(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut]
+        [Route("update-supplier")]
+        public async Task<IActionResult> UpdateSupplier([FromBody] SupplierUpdateRequest request)
+        {
+            var response = await _toolService.SupplierService.Update(request);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
     }
 }

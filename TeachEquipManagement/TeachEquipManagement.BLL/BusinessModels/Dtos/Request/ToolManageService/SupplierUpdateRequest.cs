@@ -5,10 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService
+namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService
 {
-    public class SupplierResponse
+    public class SupplierUpdateRequest
     {
+        [JsonProperty("supplier_id")]
+        public int Id { get; set; }
+
         [JsonProperty("supplier_name")]
         public string SupplierName { get; set; } = string.Empty;
 

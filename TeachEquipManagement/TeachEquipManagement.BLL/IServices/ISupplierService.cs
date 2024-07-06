@@ -12,9 +12,9 @@ namespace TeachEquipManagement.BLL.IServices
     public interface ISupplierService
     {
         Task<ApiResponse<bool>> Create(SupplierRequest request);
-        Task<ApiResponse<bool>> Update(SupplierRequest request);
+        Task<ApiResponse<bool>> Update(SupplierUpdateRequest request);
         Task<ApiResponse<bool>> Remove(int id);
-        Task<ApiResponse<SupplierResponse>> GetAll();
+        Task<ApiResponse<List<SupplierResponse>>> GetAll();
         Task<ApiResponse<SupplierResponse>> GetById(int id);
     }
 }

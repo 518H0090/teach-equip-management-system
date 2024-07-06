@@ -13,7 +13,7 @@ namespace TeachEquipManagement.DAL.GenericRepository
             _context = context;
         }
 
-        public void DeleteAsync(TEntity entity)
+        public void Delete(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);
         }
@@ -28,9 +28,10 @@ namespace TeachEquipManagement.DAL.GenericRepository
             return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task InsertAsync(TEntity entity)
+        public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            await _context.Set<TEntity>().AddAsync(entity);
+            var Entity = await _context.Set<TEntity>().AddAsync(entity);
+            return Entity.Entity;
         }
 
         public async Task InsertRangeAsync(IEnumerable<TEntity> entity)
@@ -38,12 +39,12 @@ namespace TeachEquipManagement.DAL.GenericRepository
             await _context.Set<TEntity>().AddRangeAsync(entity);
         }
 
-        public void UpdateAsync(TEntity entity)
+        public void Update(TEntity entity)
         {
             _context.Set<TEntity>().Update(entity);
         }
 
-        public void UpdateRangeAsync(IEnumerable<TEntity> entity)
+        public void UpdateRange(IEnumerable<TEntity> entity)
         {
             _context.Set<TEntity>().UpdateRange(entity);
         }

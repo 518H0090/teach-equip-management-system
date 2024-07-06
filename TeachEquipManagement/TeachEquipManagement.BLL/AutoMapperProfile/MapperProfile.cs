@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeachEquipManagement.BLL.BusinessModels.Dtos;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.BLL.AutoMapperProfile
@@ -19,6 +14,8 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             //CreateMap<UserDTOTest, User>();
 
             CreateMap<SupplierRequest, Supplier>();
+            CreateMap<Supplier, SupplierResponse>();
+            CreateMap<SupplierUpdateRequest, Supplier>();
         }
     }
 }

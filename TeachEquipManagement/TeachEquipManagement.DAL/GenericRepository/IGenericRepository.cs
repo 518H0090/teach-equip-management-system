@@ -8,15 +8,15 @@ namespace TeachEquipManagement.DAL.GenericRepository
 
         Task<TEntity?> GetByIdAsync(object id);
 
-        Task InsertAsync(TEntity entity);
+        Task<TEntity> InsertAsync(TEntity entity);
 
         Task InsertRangeAsync(IEnumerable<TEntity> entity);
 
-        void UpdateAsync(TEntity entity);
+        void Update(TEntity entity);
 
-        void UpdateRangeAsync(IEnumerable<TEntity> entity);
+        void UpdateRange(IEnumerable<TEntity> entity);
 
-        void DeleteAsync(TEntity entity);
+        void Delete(TEntity entity);
 
         IQueryable<TEntity> GetQueryable(QueryModel<TEntity> queryCondition);
     }

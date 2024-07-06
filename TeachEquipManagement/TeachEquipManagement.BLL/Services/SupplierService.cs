@@ -6,6 +6,7 @@ using TeachEquipManagement.BLL.BusinessModels.Common;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
+using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
 
@@ -34,10 +35,12 @@ namespace TeachEquipManagement.BLL.Services
 
                 var supplier = _mapper.Map<Supplier>(request);
 
-                await _unitOfWork.SupplierRepository.InsertAsync(supplier);
+                var entity = await _unitOfWork.SupplierRepository.InsertAsync(supplier);
                 await _unitOfWork.SaveChangesAsync();
 
                 _unitOfWork.Commit();
+
+                response.Data = true;
                 response.StatusCode = StatusCodes.Status201Created;
                 response.Message = "Create new supplier successfully";
             } 
@@ -46,31 +49,140 @@ namespace TeachEquipManagement.BLL.Services
             {
                 _logger.Error($"Error with : {e.Message}");
                 response.Message = $"{e.InnerException}";
-                response.StatusCode = StatusCodes.Status400BadRequest;
+                response.StatusCode = StatusCodes.Status500InternalServerError;
                 _unitOfWork.Rollback();
             };
 
             return response;
         }
 
-        public Task<ApiResponse<SupplierResponse>> GetAll()
+        public async Task<ApiResponse<List<SupplierResponse>>> GetAll()
         {
-            throw new NotImplementedException();
+            ApiResponse<List<SupplierResponse>> response = new();
+
+            var suppliers = await _unitOfWork.SupplierRepository.GetAllAsync();
+
+            if (!suppliers.Any())
+            {
+                _logger.Warning("Warning: Not Found Any Supplier");
+                response.Data = null;
+                response.Message = "Not Found Any Data";
+                response.StatusCode = StatusCodes.Status404NotFound;
+            }
+
+            else
+            {
+                var dataResponses = _mapper.Map<List<SupplierResponse>>(suppliers);
+                response.Data = dataResponses;
+                response.Message = "List Suppliers";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            return response;
         }
 
-        public Task<ApiResponse<SupplierResponse>> GetById(int id)
+        public async Task<ApiResponse<SupplierResponse>> GetById(int id)
         {
-            throw new NotImplementedException();
+            ApiResponse<SupplierResponse> response = new();
+
+            var supplier = await _unitOfWork.SupplierRepository.GetByIdAsync(id);
+
+            if (supplier != null)
+            {
+                var dataResponses = _mapper.Map<SupplierResponse>(supplier);
+                response.Data = dataResponses;
+                response.Message = "Found Supplier";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            else
+            {
+                _logger.Warning("Warning: Not Found Supplier");
+                response.Data = null;
+                response.Message = "Not Found Supplier";
+                response.StatusCode = StatusCodes.Status404NotFound;
+            }
+
+            return response;
         }
 
-        public Task<ApiResponse<bool>> Remove(int id)
+        public async Task<ApiResponse<bool>> Remove(int id)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                _unitOfWork.CreateTransaction();
+
+                var supplier = await _unitOfWork.SupplierRepository.GetByIdAsync(id);
+
+                if (supplier != null)
+                {
+                    _unitOfWork.SupplierRepository.Delete(supplier!);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    _unitOfWork.Commit();
+
+                    response.Data = true;
+                    response.Message = "Remove Supplier";
+                    response.StatusCode = StatusCodes.Status202Accepted;
+                } 
+
+                else
+                {
+                    _logger.Warning("Warning: Not Found Supplier");
+                    response.Message = "";
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                }
+            }
+            catch (Exception e) {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
         }
 
-        public Task<ApiResponse<bool>> Update(SupplierRequest request)
+        public async Task<ApiResponse<bool>> Update(SupplierUpdateRequest request)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                _unitOfWork.CreateTransaction();
+
+                var supplier = await _unitOfWork.SupplierRepository.GetByIdAsync(request.Id);
+
+                if (supplier != null)
+                {
+                    var updateSupplier = _mapper.Map(request, supplier);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    _unitOfWork.Commit();
+
+                    response.Data = true;
+                    response.Message = "Update Supplier";
+                    response.StatusCode = StatusCodes.Status202Accepted;
+                }
+
+                else
+                {
+                    _logger.Warning("Warning: Not Found Supplier");
+                    response.Message = "";
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
         }
     }
 }
