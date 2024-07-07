@@ -116,6 +116,8 @@ namespace TeachEquipManagement.DAL.EFContext
             {
                 tool.HasKey(tool => tool.Id);
 
+                tool.Property(tool => tool.Id).UseIdentityColumn(1, 1);
+
                 tool.Property(tool => tool.ToolName).IsRequired();
 
                 tool.Property(tool => tool.Description).IsRequired();

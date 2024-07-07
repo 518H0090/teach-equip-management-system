@@ -127,5 +127,38 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         #endregion
+
+        #region Tool
+
+        [HttpPost]
+        [Route("create-tool")]
+        public async Task<IActionResult> CreateTool([FromBody] ToolRequest request)
+        {
+            var validationResult = new ToolRequestValidator().Validate(request);
+
+            var response = await _toolService.ToolService.Create(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-tools")]
+        public async Task<IActionResult> GetAllTools()
+        {
+            var response = await _toolService.ToolService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-tools-include-supplier")]
+        public async Task<IActionResult> GetAllToolsIncludeSupplier()
+        {
+            var response = await _toolService.ToolService.GetAllIncludeSupplier();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        #endregion
     }
 }
