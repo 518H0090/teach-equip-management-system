@@ -4,6 +4,7 @@ using Microsoft.Graph;
 using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
 using System.Reflection;
+using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
 using TeachEquipManagement.BLL.Services;
@@ -76,7 +77,8 @@ builder.Services.AddCors(options =>
 
 #region FluentValidator
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddScoped<SupplierRequestValidator>();
+builder.Services.AddScoped<SupplierUpdateRequestValidator>();
 
 #endregion
 

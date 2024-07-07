@@ -17,7 +17,6 @@
     <Folder Include="BusinessModels\Dtos\Response\AuthenService\" />
     <Folder Include="BusinessModels\Dtos\Response\InventoryManage\" />
     <Folder Include="BusinessModels\Enums\" />
-    <Folder Include="FluentValidator\" />
   </ItemGroup>
 
   <ItemGroup>

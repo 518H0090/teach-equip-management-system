@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TeachEquipManagement.BLL.BusinessModels.Common;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
+using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
 
@@ -23,7 +26,9 @@ namespace TeachEquipManagement.WebAPI.Controllers
         [Route("create-supplier")]
         public async Task<IActionResult> CreateSupplier([FromBody] SupplierRequest request)
         {
-            var response = await _toolService.SupplierService.Create(request);
+            var validationResult = new SupplierRequestValidator().Validate(request);
+
+            var response = await _toolService.SupplierService.Create(request, validationResult);
 
             return StatusCode(response.StatusCode, response); 
         }
@@ -59,7 +64,9 @@ namespace TeachEquipManagement.WebAPI.Controllers
         [Route("update-supplier")]
         public async Task<IActionResult> UpdateSupplier([FromBody] SupplierUpdateRequest request)
         {
-            var response = await _toolService.SupplierService.Update(request);
+            var validationResult = new SupplierUpdateRequestValidator().Validate(request);
+
+            var response = await _toolService.SupplierService.Update(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
         }

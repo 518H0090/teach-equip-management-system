@@ -1,7 +1,9 @@
 ﻿
 using AutoMapper;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Serilog;
+using System.Runtime.InteropServices;
 using TeachEquipManagement.BLL.BusinessModels.Common;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
@@ -9,6 +11,7 @@ using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TeachEquipManagement.BLL.Services
 {
@@ -25,24 +28,34 @@ namespace TeachEquipManagement.BLL.Services
             _logger = logger;
         }
 
-        public async Task<ApiResponse<bool>> Create(SupplierRequest request)
+        public async Task<ApiResponse<bool>> Create(SupplierRequest request, ValidationResult validation)
         {
             ApiResponse<bool> response = new ApiResponse<bool>();
 
             try
             {
-                _unitOfWork.CreateTransaction();
+                if (validation.IsValid)
+                {
+                    _unitOfWork.CreateTransaction();
 
-                var supplier = _mapper.Map<Supplier>(request);
+                    var supplier = _mapper.Map<Supplier>(request);
 
-                var entity = await _unitOfWork.SupplierRepository.InsertAsync(supplier);
-                await _unitOfWork.SaveChangesAsync();
+                    var entity = await _unitOfWork.SupplierRepository.InsertAsync(supplier);
+                    await _unitOfWork.SaveChangesAsync();
 
-                _unitOfWork.Commit();
+                    _unitOfWork.Commit();
 
-                response.Data = true;
-                response.StatusCode = StatusCodes.Status201Created;
-                response.Message = "Create new supplier successfully";
+                    response.Data = true;
+                    response.StatusCode = StatusCodes.Status201Created;
+                    response.Message = "Create new supplier successfully";
+                } 
+
+                else
+                {
+                    response.Data = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = validation.ToString();
+                }
             } 
             
             catch(Exception e)
@@ -145,34 +158,45 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public async Task<ApiResponse<bool>> Update(SupplierUpdateRequest request)
+        public async Task<ApiResponse<bool>> Update(SupplierUpdateRequest request, ValidationResult validation)
         {
             ApiResponse<bool> response = new();
 
             try
             {
-                _unitOfWork.CreateTransaction();
-
-                var supplier = await _unitOfWork.SupplierRepository.GetByIdAsync(request.Id);
-
-                if (supplier != null)
+                if (validation.IsValid)
                 {
-                    var updateSupplier = _mapper.Map(request, supplier);
-                    await _unitOfWork.SaveChangesAsync();
+                    _unitOfWork.CreateTransaction();
 
-                    _unitOfWork.Commit();
+                    var supplier = await _unitOfWork.SupplierRepository.GetByIdAsync(request.Id);
 
-                    response.Data = true;
-                    response.Message = "Update Supplier";
-                    response.StatusCode = StatusCodes.Status202Accepted;
+                    if (supplier != null)
+                    {
+                        var updateSupplier = _mapper.Map(request, supplier);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        _unitOfWork.Commit();
+
+                        response.Data = true;
+                        response.Message = "Update Supplier";
+                        response.StatusCode = StatusCodes.Status202Accepted;
+                    }
+
+                    else
+                    {
+                        _logger.Warning("Warning: Not Found Supplier");
+                        response.Message = "";
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                    }
                 }
 
                 else
                 {
-                    _logger.Warning("Warning: Not Found Supplier");
-                    response.Message = "";
-                    response.StatusCode = StatusCodes.Status404NotFound;
+                    response.Data = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = validation.ToString();
                 }
+                
             }
             catch (Exception e)
             {
