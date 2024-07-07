@@ -38,6 +38,10 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         public IApprovalRequestRepository ApprovalRequestRepository => new ApprovalRequestRepository(_context);
 
+        public IToolCategoryRepository ToolCategoryRepository => new ToolCategoryRepository(_context);
+
+        public IQueryToolRepository QueryToolRepository => new QueryToolRepository(_context);
+
         public void Commit()
         {
             _transaction.Commit();

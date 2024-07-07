@@ -1,19 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeachEquipManagement.DAL.Models
+namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService
 {
-    public class Category
+    public class CategoryRequest
     {
-        public int Id { get; set; }
-
+        [JsonProperty("category_type")]
         public string Type { get; set; } = string.Empty;
 
+        [JsonProperty("category_unit")]
         public string Unit { get; set; } = string.Empty;
-
-        public List<ToolCategory> ToolCategories { get; set; } = new();
     }
 }

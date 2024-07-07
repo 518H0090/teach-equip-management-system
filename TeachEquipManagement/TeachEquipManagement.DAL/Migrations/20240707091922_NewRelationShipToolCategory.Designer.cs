@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachEquipManagement.DAL.EFContext;
 
@@ -11,9 +12,11 @@ using TeachEquipManagement.DAL.EFContext;
 namespace TeachEquipManagement.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240707091922_NewRelationShipToolCategory")]
+    partial class NewRelationShipToolCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ApproveDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 829, DateTimeKind.Local).AddTicks(3516));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 16, 19, 22, 152, DateTimeKind.Local).AddTicks(8133));
 
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
@@ -52,7 +55,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 829, DateTimeKind.Local).AddTicks(2565));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 16, 19, 22, 152, DateTimeKind.Local).AddTicks(7171));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -128,7 +131,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 830, DateTimeKind.Local).AddTicks(8162));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 16, 19, 22, 153, DateTimeKind.Local).AddTicks(9536));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -157,7 +160,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 828, DateTimeKind.Local).AddTicks(5059));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 16, 19, 22, 151, DateTimeKind.Local).AddTicks(8112));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
@@ -204,7 +207,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 830, DateTimeKind.Local).AddTicks(1385));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 16, 19, 22, 153, DateTimeKind.Local).AddTicks(4114));
 
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");
@@ -544,7 +547,8 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Tool", b =>
                 {
-                    b.Navigation("Inventory");
+                    b.Navigation("Inventory")
+                        .IsRequired();
 
                     b.Navigation("Invoices");
 

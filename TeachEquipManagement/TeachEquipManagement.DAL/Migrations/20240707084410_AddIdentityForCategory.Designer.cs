@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachEquipManagement.DAL.EFContext;
 
@@ -11,9 +12,11 @@ using TeachEquipManagement.DAL.EFContext;
 namespace TeachEquipManagement.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240707084410_AddIdentityForCategory")]
+    partial class AddIdentityForCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ApproveDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 829, DateTimeKind.Local).AddTicks(3516));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 15, 44, 9, 345, DateTimeKind.Local).AddTicks(9403));
 
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
@@ -52,7 +55,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 829, DateTimeKind.Local).AddTicks(2565));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 15, 44, 9, 345, DateTimeKind.Local).AddTicks(7503));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -128,7 +131,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 830, DateTimeKind.Local).AddTicks(8162));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 15, 44, 9, 347, DateTimeKind.Local).AddTicks(6926));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -157,7 +160,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 828, DateTimeKind.Local).AddTicks(5059));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 15, 44, 9, 344, DateTimeKind.Local).AddTicks(2724));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
@@ -204,7 +207,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 830, DateTimeKind.Local).AddTicks(1385));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 15, 44, 9, 346, DateTimeKind.Local).AddTicks(9716));
 
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");
@@ -255,7 +258,14 @@ namespace TeachEquipManagement.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectRelative")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -268,24 +278,11 @@ namespace TeachEquipManagement.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("SupplierId");
 
                     b.ToTable("Tools");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.ToolCategory", b =>
-                {
-                    b.Property<int>("ToolId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ToolId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ToolCategories");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.User", b =>
@@ -446,32 +443,21 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Tool", b =>
                 {
+                    b.HasOne("TeachEquipManagement.DAL.Models.Category", "Category")
+                        .WithMany("Tools")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TeachEquipManagement.DAL.Models.Supplier", "Supplier")
                         .WithMany("Tools")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.ToolCategory", b =>
-                {
-                    b.HasOne("TeachEquipManagement.DAL.Models.Category", "Category")
-                        .WithMany("ToolCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TeachEquipManagement.DAL.Models.Tool", "Tool")
-                        .WithMany("ToolCategories")
-                        .HasForeignKey("ToolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
 
-                    b.Navigation("Tool");
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.User", b =>
@@ -516,7 +502,7 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Category", b =>
                 {
-                    b.Navigation("ToolCategories");
+                    b.Navigation("Tools");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Inventory", b =>
@@ -544,11 +530,10 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Tool", b =>
                 {
-                    b.Navigation("Inventory");
+                    b.Navigation("Inventory")
+                        .IsRequired();
 
                     b.Navigation("Invoices");
-
-                    b.Navigation("ToolCategories");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.User", b =>

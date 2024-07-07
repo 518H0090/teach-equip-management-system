@@ -1,7 +1,10 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
+using System.Reflection;
+using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
 using TeachEquipManagement.BLL.Services;
@@ -25,7 +28,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add<LogFilterAttribute>();
-    options.SuppressAsyncSuffixInActionNames = false;
 });
 
 #endregion
@@ -105,7 +107,7 @@ builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSectio
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IToolManageService, ToolManageService>();
 builder.Services.AddScoped<IInventoryManageService, InventoryManageService>();
-builder.Services.AddScoped<IAuthenService, AuthenService>();
+builder.Services.AddScoped<IUserManageService, UserManageService>();
 
 builder.Services.AddScoped<IGraphService, GraphService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();

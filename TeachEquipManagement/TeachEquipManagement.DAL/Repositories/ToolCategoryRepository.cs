@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +10,11 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.Repositories
 {
-    public class ToolRepository : GenericRepository<Tool>, IToolRepository
+    public class ToolCategoryRepository : GenericRepository<ToolCategory>, IToolCategoryRepository
     {
         private readonly DataContext _context;
 
-        public ToolRepository(DataContext context) : base(context)
+        public ToolCategoryRepository(DataContext context) : base(context)
         {
             _context = context;
         }

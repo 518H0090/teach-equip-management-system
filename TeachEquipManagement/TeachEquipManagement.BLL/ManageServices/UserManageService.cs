@@ -11,13 +11,13 @@ using TeachEquipManagement.DAL.UnitOfWorks;
 
 namespace TeachEquipManagement.BLL.ManageServices
 {
-    public class AuthenService : IAuthenService
+    public class UserManageService : IUserManageService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public AuthenService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
+        public UserManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
