@@ -14,17 +14,14 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Description { get; set; } = string.Empty;
 
-        public string SubjectRelative { get; set; } = string.Empty;
-
-        public Category Category { get; set; } = new();
-        public int CategoryId { get; set; }
-
-        public Supplier Supplier { get; set; } = new();
+        public Supplier Supplier { get; set; } 
 
         public int SupplierId { get; set; }
 
-        public Inventory Inventory { get; set; } = new();
+        public virtual Inventory? Inventory { get; set; } 
 
-        public List<Invoice> Invoices { get; set; } = new();
+        public virtual List<Invoice>? Invoices { get; set; } 
+
+        public virtual List<ToolCategory>? ToolCategories { get; set; } 
     }
 }
