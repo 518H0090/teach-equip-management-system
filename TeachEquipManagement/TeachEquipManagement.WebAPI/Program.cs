@@ -75,13 +75,6 @@ builder.Services.AddCors(options =>
 
 # endregion
 
-#region FluentValidator
-
-builder.Services.AddScoped<SupplierRequestValidator>();
-builder.Services.AddScoped<SupplierUpdateRequestValidator>();
-
-#endregion
-
 # region Add DbContext
 
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(
@@ -114,7 +107,7 @@ builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSectio
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IToolManageService, ToolManageService>();
 builder.Services.AddScoped<IInventoryManageService, InventoryManageService>();
-builder.Services.AddScoped<IAuthenService, AuthenService>();
+builder.Services.AddScoped<IUserManageService, UserManageService>();
 
 builder.Services.AddScoped<IGraphService, GraphService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();

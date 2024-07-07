@@ -14,6 +14,6 @@ namespace TeachEquipManagement.BLL.ManageServices
 
         IInventoryManageService InventoryManageService { get; }
 
-        IAuthenService AuthenService { get; }
+        IUserManageService AuthenService { get; }
     }
 }

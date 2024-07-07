@@ -31,6 +31,9 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<Tool, ToolResponse>();
             CreateMap<Tool, ToolIncludeSupplierResponse>();
             CreateMap<ToolUpdateRequest, Tool>();
+
+            CreateMap<ToolCategoryRequest, ToolCategory>();
+            CreateMap<ToolCategory, ToolCategoryResponse>();
         }
     }
 }

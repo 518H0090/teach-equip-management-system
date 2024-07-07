@@ -198,5 +198,47 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         #endregion
+
+        #region ToolCategory
+
+        [HttpPost]
+        [Route("create-tool-category")]
+        public async Task<IActionResult> CreateToolCategory([FromBody] ToolCategoryRequest request)
+        {
+            var validationResult = new ToolCategoryRequestValidator().Validate(request);
+
+            var response = await _toolService.ToolCategoryService.Create(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-tool-categories")]
+        public async Task<IActionResult> GetAllToolCategories()
+        {
+            var response = await _toolService.ToolCategoryService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost]
+        [Route("tool-category/find")]
+        public async Task<IActionResult> FindToolCategoryById([FromBody] ToolCategoryRequest request)
+        {
+            var response = await _toolService.ToolCategoryService.GetById(request);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-tool-category")]
+        public async Task<IActionResult> RemoveToolCategory([FromBody] ToolCategoryRequest request)
+        {
+            var response = await _toolService.ToolCategoryService.Remove(request);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        #endregion
     }
 }

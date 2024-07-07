@@ -187,7 +187,7 @@ namespace TeachEquipManagement.BLL.Services
                     else
                     {
                         _logger.Warning("Warning: Not Found Category");
-                        response.Message = "";
+                        response.Message = "Not Found Category";
                         response.StatusCode = StatusCodes.Status404NotFound;
                     }
                 }

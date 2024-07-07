@@ -7,12 +7,12 @@ namespace TeachEquipManagement.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenController : ControllerBase
+    public class UserManageController : ControllerBase
     {
         private readonly IManageService _manageService;
         private readonly IGraphService _graphService;
 
-        public AuthenController(IManageService manageService, IGraphService graphService)
+        public UserManageController(IManageService manageService, IGraphService graphService)
         {
             _manageService = manageService;
             _graphService = graphService;
