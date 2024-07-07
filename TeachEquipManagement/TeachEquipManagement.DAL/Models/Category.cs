@@ -14,6 +14,6 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Unit { get; set; } = string.Empty;
 
-        public List<Tool> Tools { get; set; } = new();
+        public List<ToolCategory> ToolCategories { get; set; } = new();
     }
 }

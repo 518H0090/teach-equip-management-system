@@ -33,6 +33,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
         public DbSet<InventoryHistory> InventoryHistories { get; set; }
 
+        public DbSet<ToolCategory> ToolCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -119,12 +120,16 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 tool.Property(tool => tool.Description).IsRequired();
 
-                tool.Property(tool => tool.SubjectRelative).IsRequired();
-
                 tool.HasOne<Supplier>(tool => tool.Supplier)
                     .WithMany(s => s.Tools)
                     .HasForeignKey(s => s.SupplierId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                tool.HasMany<ToolCategory>(tool => tool.ToolCategories)
+                        .WithOne(tool => tool.Tool)
+                        .HasForeignKey(t => t.ToolId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
             });
 
             modelBuilder.Entity<Category>(category =>
@@ -137,11 +142,16 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 category.Property(category => category.Unit).IsRequired();
 
-                category.HasMany<Tool>(category => category.Tools)
-                        .WithOne(tool => tool.Category)
+                category.HasMany<ToolCategory>(category => category.ToolCategories)
+                        .WithOne(category => category.Category)
                         .HasForeignKey(t => t.CategoryId)
                         .OnDelete(DeleteBehavior.Cascade);
 
+            });
+
+            modelBuilder.Entity<ToolCategory>(tool_category =>
+            {
+                tool_category.HasKey(tool_category => new {tool_category.ToolId, tool_category.CategoryId});
             });
 
             modelBuilder.Entity<Inventory>(inventory =>

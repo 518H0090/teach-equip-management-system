@@ -34,6 +34,8 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         IApprovalRequestRepository ApprovalRequestRepository { get; }
 
+        IToolCategoryRepository ToolCategoryRepository { get; }
+
         Task<bool> SaveChangesAsync();
 
         void CreateTransaction();

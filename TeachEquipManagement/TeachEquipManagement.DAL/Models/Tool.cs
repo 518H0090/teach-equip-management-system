@@ -14,11 +14,6 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Description { get; set; } = string.Empty;
 
-        public string SubjectRelative { get; set; } = string.Empty;
-
-        public Category Category { get; set; } = new();
-        public int CategoryId { get; set; }
-
         public Supplier Supplier { get; set; } = new();
 
         public int SupplierId { get; set; }
@@ -26,5 +21,7 @@ namespace TeachEquipManagement.DAL.Models
         public Inventory Inventory { get; set; } = new();
 
         public List<Invoice> Invoices { get; set; } = new();
+
+        public List<ToolCategory> ToolCategories { get; set; } = new();
     }
 }
