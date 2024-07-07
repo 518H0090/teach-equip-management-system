@@ -83,7 +83,7 @@ namespace TeachEquipManagement.BLL.Services
         {
             ApiResponse<List<ToolCategoryResponse>> response = new();
 
-            var relationship = await _unitOfWork.ToolCategoryRepository.GetAllAsync();
+            var relationship = await _unitOfWork.QueryToolCategoryRepository.GetAllToolCategoryIncludeRelationship();
 
             if (!relationship.Any())
             {
@@ -95,15 +95,6 @@ namespace TeachEquipManagement.BLL.Services
 
             else
             {
-                var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
-                var tools = await _unitOfWork.ToolRepository.GetAllAsync();
-
-                foreach (var relation in relationship)
-                {
-                    relation.Tool = tools!.FirstOrDefault(x => x.Id == relation.ToolId);
-                    relation.Category = categories!.FirstOrDefault(x => x.Id == relation.CategoryId);
-                }
-
                 var dataResponses = _mapper.Map<List<ToolCategoryResponse>>(relationship);
                 response.Data = dataResponses;
                 response.Message = "List Tool Category";
@@ -117,19 +108,10 @@ namespace TeachEquipManagement.BLL.Services
         {
             ApiResponse<ToolCategoryResponse> response = new();
 
-            QueryModel<ToolCategory> query = new QueryModel<ToolCategory>
-            {
-                QueryCondition = query => query.ToolId == request.ToolId 
-                && query.CategoryId == request.CategoryId
-            };
-
-            var toolCategory = _unitOfWork.ToolCategoryRepository.GetQueryable(query).FirstOrDefault();
+            var toolCategory = await _unitOfWork.QueryToolCategoryRepository.GetToolCategoryIncludeRelationship(request.ToolId, request.CategoryId);
 
             if (toolCategory != null)
             {
-                toolCategory.Tool = await _unitOfWork.ToolRepository.GetByIdAsync(request.ToolId);
-                toolCategory.Category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.CategoryId);
-
                 var dataResponse = _mapper.Map<ToolCategoryResponse>(toolCategory);
                 response.Data = dataResponse;
                 response.Message = "Found Relationship";

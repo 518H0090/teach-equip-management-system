@@ -42,6 +42,10 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         public IQueryToolRepository QueryToolRepository => new QueryToolRepository(_context);
 
+        public IQuerySupplierRepository QuerySupplierRepository => new QuerySupplierRepository(_context);
+
+        public IQueryToolCategoryRepository QueryToolCategoryRepository => new QueryToolCategoryRepository(_context);
+
         public void Commit()
         {
             _transaction.Commit();
