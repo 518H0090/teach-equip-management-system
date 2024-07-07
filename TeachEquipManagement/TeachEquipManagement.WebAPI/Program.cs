@@ -1,7 +1,9 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
+using System.Reflection;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
 using TeachEquipManagement.BLL.Services;
@@ -25,7 +27,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add<LogFilterAttribute>();
-    options.SuppressAsyncSuffixInActionNames = false;
 });
 
 #endregion
@@ -72,6 +73,12 @@ builder.Services.AddCors(options =>
 
 
 # endregion
+
+#region FluentValidator
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+#endregion
 
 # region Add DbContext
 
