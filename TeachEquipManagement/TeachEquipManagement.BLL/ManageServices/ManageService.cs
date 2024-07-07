@@ -29,6 +29,6 @@ namespace TeachEquipManagement.BLL.ManageServices
 
         public IInventoryManageService InventoryManageService =>  new InventoryManageService(_unitOfWork, _mapper, _logger);
 
-        public IAuthenService AuthenService => new AuthenService(_unitOfWork, _mapper, _logger);
+        public IUserManageService AuthenService => new UserManageService(_unitOfWork, _mapper, _logger);
     }
 }

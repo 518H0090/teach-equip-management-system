@@ -7,7 +7,7 @@ using TeachEquipManagement.BLL.IServices;
 
 namespace TeachEquipManagement.BLL.ManageServices
 {
-    public interface IAuthenService
+    public interface IUserManageService
     {
         IUserService UserService { get; }
 

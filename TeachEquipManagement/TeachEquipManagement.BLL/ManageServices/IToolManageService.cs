@@ -16,5 +16,7 @@ namespace TeachEquipManagement.BLL.ManageServices
         IInvoiceService InvoiceService { get; }
 
         ICategoryService CategoryService { get; }
+
+        IToolCategoryService ToolCategoryService { get; }
     }
 }

@@ -30,5 +30,7 @@ namespace TeachEquipManagement.BLL.ManageServices
         public IInvoiceService InvoiceService => new InvoiceService(_unitOfWork, _mapper, _logger);
 
         public ICategoryService CategoryService => new CategoryService(_unitOfWork, _mapper, _logger);
+
+        public IToolCategoryService ToolCategoryService => new ToolCategoryService(_unitOfWork, _mapper, _logger);
     }
 }
