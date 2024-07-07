@@ -146,19 +146,120 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public Task<ApiResponse<ToolResponse>> GetById(int id)
+        public async Task<ApiResponse<ToolResponse>> GetById(int id)
         {
-            throw new NotImplementedException();
+            ApiResponse<ToolResponse> response = new();
+
+            var tool = await _unitOfWork.ToolRepository.GetByIdAsync(id);
+
+            if (tool != null)
+            {
+                var dataResponses = _mapper.Map<ToolResponse>(tool);
+                response.Data = dataResponses;
+                response.Message = "Found Tool";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            else
+            {
+                _logger.Warning("Warning: Not Found Tool");
+                response.Data = null;
+                response.Message = "Not Found Tool";
+                response.StatusCode = StatusCodes.Status404NotFound;
+            }
+
+            return response;
         }
 
-        public Task<ApiResponse<bool>> Remove(int id)
+        public async Task<ApiResponse<bool>> Remove(int id)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                _unitOfWork.CreateTransaction();
+
+                var tool = await _unitOfWork.ToolRepository.GetByIdAsync(id);
+
+                if (tool != null)
+                {
+                    _unitOfWork.ToolRepository.Delete(tool!);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    _unitOfWork.Commit();
+
+                    response.Data = true;
+                    response.Message = "Remove Tool";
+                    response.StatusCode = StatusCodes.Status202Accepted;
+                }
+
+                else
+                {
+                    _logger.Warning("Warning: Not Found Tool");
+                    response.Message = "Not Found Tool";
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
         }
 
-        public Task<ApiResponse<bool>> Update(ToolUpdateRequest request, ValidationResult validation)
+        public async Task<ApiResponse<bool>> Update(ToolUpdateRequest request, ValidationResult validation)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                if (validation.IsValid)
+                {
+                    _unitOfWork.CreateTransaction();
+
+                    var tool = await _unitOfWork.ToolRepository.GetByIdAsync(request.Id);
+
+                    if (tool != null)
+                    {
+                        var updateSupplier = _mapper.Map(request, tool);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        _unitOfWork.Commit();
+
+                        response.Data = true;
+                        response.Message = "Update Tool";
+                        response.StatusCode = StatusCodes.Status202Accepted;
+                    }
+
+                    else
+                    {
+                        _logger.Warning("Warning: Not Found Supplier");
+                        response.Message = "";
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                    }
+                }
+
+                else
+                {
+                    response.Data = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = validation.ToString();
+                }
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
         }
     }
 }

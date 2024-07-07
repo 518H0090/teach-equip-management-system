@@ -110,6 +110,12 @@ namespace TeachEquipManagement.DAL.EFContext
                 supplier.Property(supplier => supplier.Address).IsRequired();
 
                 supplier.Property(supplier => supplier.Phone).IsRequired();
+
+                supplier.HasMany<Tool>(supplier => supplier.Tools)
+                    .WithOne(t => t.Supplier)
+                    .HasForeignKey(s => s.SupplierId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
             });
 
             modelBuilder.Entity<Tool>(tool =>

@@ -17,6 +17,7 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<SupplierRequest, Supplier>();
             CreateMap<Supplier, SupplierResponse>();
             CreateMap<SupplierUpdateRequest, Supplier>();
+            CreateMap<Supplier, SupplierIncludeToolResponse>();
 
             CreateMap<CategoryRequest, Category>();
             CreateMap<Category, CategoryResponse>();
@@ -29,6 +30,7 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             .ForAllMembers(opt => opt.Ignore());
             CreateMap<Tool, ToolResponse>();
             CreateMap<Tool, ToolIncludeSupplierResponse>();
+            CreateMap<ToolUpdateRequest, Tool>();
         }
     }
 }

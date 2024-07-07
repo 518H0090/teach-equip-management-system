@@ -3,15 +3,12 @@ using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Serilog;
-using System.Runtime.InteropServices;
 using TeachEquipManagement.BLL.BusinessModels.Common;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
-using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TeachEquipManagement.BLL.Services
 {
@@ -86,6 +83,39 @@ namespace TeachEquipManagement.BLL.Services
             else
             {
                 var dataResponses = _mapper.Map<List<SupplierResponse>>(suppliers);
+                response.Data = dataResponses;
+                response.Message = "List Suppliers";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            return response;
+        }
+
+        public async Task<ApiResponse<List<SupplierIncludeToolResponse>>> GetAllIncludeTools()
+        {
+            ApiResponse<List<SupplierIncludeToolResponse>> response = new();
+
+            var suppliers = await _unitOfWork.SupplierRepository.GetAllAsync();
+            
+
+            if (!suppliers.Any())
+            {
+                _logger.Warning("Warning: Not Found Any Supplier");
+                response.Data = null;
+                response.Message = "Not Found Any Data";
+                response.StatusCode = StatusCodes.Status404NotFound;
+            }
+
+            else
+            {
+                var tools = await _unitOfWork.ToolRepository.GetAllAsync();
+
+                foreach (var supplier in suppliers)
+                {
+                    supplier.Tools = tools.Where(x => x.SupplierId == supplier.Id).ToList();
+                }
+
+                var dataResponses = _mapper.Map<List<SupplierIncludeToolResponse>>(suppliers);
                 response.Data = dataResponses;
                 response.Message = "List Suppliers";
                 response.StatusCode = StatusCodes.Status200OK;

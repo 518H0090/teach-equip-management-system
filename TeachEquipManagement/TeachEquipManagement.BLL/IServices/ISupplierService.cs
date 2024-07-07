@@ -18,5 +18,7 @@ namespace TeachEquipManagement.BLL.IServices
         Task<ApiResponse<bool>> Remove(int id);
         Task<ApiResponse<List<SupplierResponse>>> GetAll();
         Task<ApiResponse<SupplierResponse>> GetById(int id);
+
+        Task<ApiResponse<List<SupplierIncludeToolResponse>>> GetAllIncludeTools();
     }
 }

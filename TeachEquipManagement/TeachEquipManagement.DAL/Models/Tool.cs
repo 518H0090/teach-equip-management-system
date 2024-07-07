@@ -14,7 +14,7 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Description { get; set; } = string.Empty;
 
-        public virtual Supplier? Supplier { get; set; } 
+        public Supplier Supplier { get; set; } 
 
         public int SupplierId { get; set; }
 

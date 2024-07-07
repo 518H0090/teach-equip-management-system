@@ -45,6 +45,15 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("all-supplier-include-tool")]
+        public async Task<IActionResult> GetAllSupplierIncludeTools()
+        {
+            var response = await _toolService.SupplierService.GetAllIncludeTools();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
         [Route("supplier/find/{id}")]
         public async Task<IActionResult> FindSupplierById(int id)
         {
@@ -155,6 +164,35 @@ namespace TeachEquipManagement.WebAPI.Controllers
         public async Task<IActionResult> GetAllToolsIncludeSupplier()
         {
             var response = await _toolService.ToolService.GetAllIncludeSupplier();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("tool/find/{id}")]
+        public async Task<IActionResult> FindToolById(int id)
+        {
+            var response = await _toolService.ToolService.GetById(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-tool/{id}")]
+        public async Task<IActionResult> RemoveTool(int id)
+        {
+            var response = await _toolService.ToolService.Remove(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut]
+        [Route("update-tool")]
+        public async Task<IActionResult> UpdateTool([FromBody] ToolUpdateRequest request)
+        {
+            var validationResult = new ToolUpdateRequestValidator().Validate(request);
+
+            var response = await _toolService.ToolService.Update(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
         }
