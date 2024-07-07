@@ -144,7 +144,7 @@ namespace TeachEquipManagement.BLL.Services
                 else
                 {
                     _logger.Warning("Warning: Not Found Supplier");
-                    response.Message = "";
+                    response.Message = "Not Found Supplier";
                     response.StatusCode = StatusCodes.Status404NotFound;
                 }
             }

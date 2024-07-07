@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,10 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageServic
 {
     public class CategoryResponse
     {
+        [JsonProperty("category_type")]
+        public string Type { get; set; } = string.Empty;
+
+        [JsonProperty("category_unit")]
+        public string Unit { get; set; } = string.Empty;
     }
 }

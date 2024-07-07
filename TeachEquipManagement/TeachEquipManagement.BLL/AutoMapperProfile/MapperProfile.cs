@@ -16,6 +16,10 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<SupplierRequest, Supplier>();
             CreateMap<Supplier, SupplierResponse>();
             CreateMap<SupplierUpdateRequest, Supplier>();
+
+            CreateMap<CategoryRequest, Category>();
+            CreateMap<Category, CategoryResponse>();
+            CreateMap<CategoryUpdateRequest, Category>();
         }
     }
 }

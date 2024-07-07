@@ -131,6 +131,8 @@ namespace TeachEquipManagement.DAL.EFContext
             {
                 category.HasKey(category => category.Id);
 
+                category.Property(category => category.Id).UseIdentityColumn(1, 1);
+
                 category.Property(category => category.Type).IsRequired();
 
                 category.Property(category => category.Unit).IsRequired();

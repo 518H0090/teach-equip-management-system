@@ -22,6 +22,8 @@ namespace TeachEquipManagement.WebAPI.Controllers
             _graphService = graphService;
         }
 
+        #region Supplier
+
         [HttpPost]
         [Route("create-supplier")]
         public async Task<IActionResult> CreateSupplier([FromBody] SupplierRequest request)
@@ -71,5 +73,59 @@ namespace TeachEquipManagement.WebAPI.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        #endregion
+
+        #region Category
+
+        [HttpPost]
+        [Route("create-category")]
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryRequest request)
+        {
+            var validationResult = new CategoryRequestValidator().Validate(request);
+
+            var response = await _toolService.CategoryService.Create(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-categories")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            var response = await _toolService.CategoryService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("category/find/{id}")]
+        public async Task<IActionResult> FindCategoryById(int id)
+        {
+            var response = await _toolService.CategoryService.GetById(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-category/{id}")]
+        public async Task<IActionResult> RemoveCategory(int id)
+        {
+            var response = await _toolService.CategoryService.Remove(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut]
+        [Route("update-category")]
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryUpdateRequest request)
+        {
+            var validationResult = new CategoryUpdateRequestValidator().Validate(request);
+
+            var response = await _toolService.CategoryService.Update(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        #endregion
     }
 }
