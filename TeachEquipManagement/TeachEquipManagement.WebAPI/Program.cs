@@ -22,6 +22,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 # region Register Filter Attribute
 
@@ -110,7 +111,6 @@ builder.Services.AddScoped<IInventoryManageService, InventoryManageService>();
 builder.Services.AddScoped<IUserManageService, UserManageService>();
 
 builder.Services.AddScoped<IGraphService, GraphService>();
-builder.Services.AddScoped<IPaginationService, PaginationService>();
 
 #endregion
 

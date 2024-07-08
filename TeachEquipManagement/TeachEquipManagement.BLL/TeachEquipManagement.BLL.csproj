@@ -16,7 +16,6 @@
     <Folder Include="BusinessModels\Dtos\Request\InventoryManage\" />
     <Folder Include="BusinessModels\Dtos\Response\AuthenService\" />
     <Folder Include="BusinessModels\Dtos\Response\InventoryManage\" />
-    <Folder Include="BusinessModels\Enums\" />
   </ItemGroup>
 
   <ItemGroup>

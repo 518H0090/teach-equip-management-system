@@ -19,6 +19,11 @@ namespace TeachEquipManagement.DAL.Repositories
             _context = context;
         }
 
+        public async Task<List<Tool>> GetAllToolIncludeInvoices()
+        {
+            return await _context.Tools.Include(x => x.Invoices).ToListAsync();
+        }
+
         public async Task<List<Tool>> GetAllToolIncludeSuppliers()
         {
             return await _context.Tools.Include(x => x.Supplier).ToListAsync();
@@ -60,6 +65,21 @@ namespace TeachEquipManagement.DAL.Repositories
             return await _context.Set<ToolCategory>().Include(x => x.Tool)
                 .Include(x => x.Category)
                 .FirstOrDefaultAsync(x => x.ToolId == toolId && x.CategoryId == categoryId);
+        }
+    }
+
+    public class QueryInvoiceRepository : IQueryInvoiceRepository
+    {
+        private readonly DataContext _context;
+
+        public QueryInvoiceRepository(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<Invoice>> GetAllInvoiceIncludeTools()
+        {
+            return await _context.Invoices.Include(x => x.Tool).ToListAsync();
         }
     }
 }

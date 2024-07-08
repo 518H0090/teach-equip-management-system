@@ -39,6 +39,8 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         IQueryToolCategoryRepository QueryToolCategoryRepository { get; }
 
+        IQueryInvoiceRepository QueryInvoiceRepository { get; }
+
         Task<bool> SaveChangesAsync();
 
         void CreateTransaction();

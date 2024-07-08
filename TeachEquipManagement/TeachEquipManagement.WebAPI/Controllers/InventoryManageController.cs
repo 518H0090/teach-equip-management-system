@@ -10,12 +10,10 @@ namespace TeachEquipManagement.WebAPI.Controllers
     public class InventoryManageController : ControllerBase
     {
         private readonly IManageService _manageService;
-        private readonly IGraphService _graphService;
 
-        public InventoryManageController(IManageService manageService, IGraphService graphService)
+        public InventoryManageController(IManageService manageService)
         {
             _manageService = manageService;
-            _graphService = graphService;
         }
     }
 }

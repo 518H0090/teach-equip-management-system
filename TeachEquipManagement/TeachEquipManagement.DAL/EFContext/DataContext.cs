@@ -172,6 +172,8 @@ namespace TeachEquipManagement.DAL.EFContext
             {
                 invoice.HasKey(invoice => invoice.Id);
 
+                invoice.Property(invoice => invoice.Id).UseIdentityColumn(1, 1);
+
                 invoice.Property(invoice => invoice.Price).HasDefaultValue(0).IsRequired();
 
                 invoice.Property(invoice => invoice.InvoiceDate).HasDefaultValue<DateTime>(DateTime.Now).IsRequired();
