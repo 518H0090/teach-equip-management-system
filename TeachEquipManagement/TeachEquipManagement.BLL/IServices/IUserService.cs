@@ -14,6 +14,6 @@ namespace TeachEquipManagement.BLL.IServices
         Task<ApiResponse<bool>> UpdateUser(UserUpdateRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> RemoveUser(int id);
         Task<ApiResponse<List<UserResponse>>> GetAllUser();
-        Task<ApiResponse<UserResponse>> GetUserById(int id);
+        Task<ApiResponse<UserResponse>> GetUserById(Guid id);
     }
 }

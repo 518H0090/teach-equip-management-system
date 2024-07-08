@@ -1,9 +1,12 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
 using System.Reflection;
+using System.Text;
 using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
@@ -100,6 +103,31 @@ builder.Host.UseSerilog((context, configuration) =>
 #region Register Configuration
 
 builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSection("AzureAD"));
+builder.Services.Configure<JwtSecretKeyConfiguration>(builder.Configuration.GetSection("Jwt"));
+
+#endregion
+
+# region JwtToken Authentication
+
+var secretKey = builder.Configuration.GetSection("Jwt:SecretKey").Get<string>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+ .AddJwtBearer(options =>
+ {
+     options.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuer = false,
+         ValidateAudience = false,
+         ValidateLifetime = true,
+         ValidateIssuerSigningKey = true,
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+         ClockSkew = TimeSpan.Zero
+     };
+ });
 
 #endregion
 
@@ -128,6 +156,8 @@ app.UseCors("AllowAllPolicy");
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

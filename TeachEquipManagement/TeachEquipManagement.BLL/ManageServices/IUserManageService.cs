@@ -11,6 +11,8 @@ namespace TeachEquipManagement.BLL.ManageServices
     {
         IUserService UserService { get; }
 
+        ITokenService TokenService { get; }
+
         IUserPermissionService UserPermissionService { get; }
 
         IUserDetailService UserDetailService { get; }
