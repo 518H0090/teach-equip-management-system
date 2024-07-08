@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
+using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
+using TeachEquipManagement.BLL.Services;
 
 namespace TeachEquipManagement.WebAPI.Controllers
 {
@@ -9,21 +13,28 @@ namespace TeachEquipManagement.WebAPI.Controllers
     [ApiController]
     public class UserManageController : ControllerBase
     {
-        private readonly IManageService _manageService;
+        private readonly IUserManageService _userManageService;
         private readonly IGraphService _graphService;
 
-        public UserManageController(IManageService manageService, IGraphService graphService)
+        public UserManageController(IUserManageService userManageService, IGraphService graphService)
         {
-            _manageService = manageService;
+            _userManageService = userManageService;
             _graphService = graphService;
         }
 
-        [HttpGet]
-        [Route("authen-getall")]
-        public async Task<IActionResult> AuthenticationGetAll()
+        #region User
+
+        [HttpPost]
+        [Route("create-user")]
+        public async Task<IActionResult> CreateUser([FromBody] UserRequest request)
         {
-            await _graphService.GetSharePointDataAsync();
-            return Ok();
+            var validationResult = new UserRequestValidator().Validate(request);
+
+            var response = await _userManageService.UserService.CreateUser(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
         }
+
+        #endregion
     }
 }

@@ -8,7 +8,7 @@ using TeachEquipManagement.DAL.IRepositories;
 
 namespace TeachEquipManagement.DAL.UnitOfWorks
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IUserRepository UserRepository { get; }
 

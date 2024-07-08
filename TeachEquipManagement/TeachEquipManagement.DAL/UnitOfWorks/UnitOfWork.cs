@@ -56,6 +56,11 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
             _transaction = _context.Database.BeginTransaction();
         }
 
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
         public void Rollback()
         {
             _transaction.Rollback();

@@ -12,9 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessModels\Dtos\Request\AuthenService\" />
     <Folder Include="BusinessModels\Dtos\Request\InventoryManage\" />
-    <Folder Include="BusinessModels\Dtos\Response\AuthenService\" />
     <Folder Include="BusinessModels\Dtos\Response\InventoryManage\" />
   </ItemGroup>
 

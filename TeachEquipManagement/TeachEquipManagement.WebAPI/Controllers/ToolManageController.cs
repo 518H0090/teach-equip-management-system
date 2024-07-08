@@ -6,6 +6,7 @@ using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
 using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
+using TeachEquipManagement.Utilities.CustomAttribute;
 
 namespace TeachEquipManagement.WebAPI.Controllers
 {

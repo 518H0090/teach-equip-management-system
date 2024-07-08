@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.Graph.Models;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.DAL.Models;
 
@@ -36,7 +37,8 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<InvoceUpdateRequest, Invoice>();
             CreateMap<Invoice, InvoiceIncludeToolResponse>();
 
-
+            CreateMap<User, UserResponse>();
+            CreateMap<UserUpdateRequest, User>();
         }
     }
 }
