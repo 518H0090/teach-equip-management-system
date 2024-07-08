@@ -29,9 +29,7 @@ namespace TeachEquipManagement.BLL.ManageServices
         public IUserPermissionService UserPermissionService => new UserPermissionService(_unitOfWork, _mapper, _logger);
 
         public IUserDetailService UserDetailService => new UserDetailService(_unitOfWork, _mapper, _logger);
-
-        public IRefreshTokenService RefreshTokenService => new RefreshTokenService(_unitOfWork, _mapper, _logger);
-
+        
         public IPermissionService PermissionService => new PermissionService(_unitOfWork, _mapper, _logger);
     }
 }

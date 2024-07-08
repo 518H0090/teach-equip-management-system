@@ -27,8 +27,6 @@ namespace TeachEquipManagement.DAL.EFContext
 
         public DbSet<ApprovalRequest> ApprovalRequests { get; set; }
 
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-
         public DbSet<Tool> Tools { set; get; }
 
         public DbSet<InventoryHistory> InventoryHistories { get; set; }
@@ -52,12 +50,6 @@ namespace TeachEquipManagement.DAL.EFContext
                 user.Property(u => u.PasswordSalt).IsRequired();
 
                 user.Property(u => u.Email).IsRequired();
-
-                user
-                .HasOne(u => u.RefreshToken)
-                .WithOne(rt => rt.User)
-                .HasForeignKey<User>(u => u.RefreshTokenId)
-                .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Permission>(permission =>
@@ -180,6 +172,8 @@ namespace TeachEquipManagement.DAL.EFContext
             {
                 invoice.HasKey(invoice => invoice.Id);
 
+                invoice.Property(invoice => invoice.Id).UseIdentityColumn(1, 1);
+
                 invoice.Property(invoice => invoice.Price).HasDefaultValue(0).IsRequired();
 
                 invoice.Property(invoice => invoice.InvoiceDate).HasDefaultValue<DateTime>(DateTime.Now).IsRequired();
@@ -219,17 +213,6 @@ namespace TeachEquipManagement.DAL.EFContext
                       .WithMany(inventory => inventory.ApprovalRequests)
                       .HasForeignKey(approval_request => approval_request.InventoryId)
                       .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            modelBuilder.Entity<RefreshToken>(refresh_token =>
-            {
-                refresh_token.HasKey(refresh_token => refresh_token.Id);
-
-                refresh_token.Property(refresh_token => refresh_token.Token).IsRequired();
-
-                refresh_token.Property(refresh_token => refresh_token.Created).HasDefaultValue<DateTime>(DateTime.Now).IsRequired();
-
-                refresh_token.Property(refresh_token => refresh_token.Expires).IsRequired();
             });
 
             modelBuilder.Entity<InventoryHistory>(inventory_history =>

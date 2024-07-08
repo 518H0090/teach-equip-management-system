@@ -5,6 +5,8 @@ namespace TeachEquipManagement.DAL.IRepositories
     public interface IQueryToolRepository
     {
         Task<List<Tool>> GetAllToolIncludeSuppliers();
+
+        Task<List<Tool>> GetAllToolIncludeInvoices();
     }
 
     public interface IQuerySupplierRepository
@@ -17,5 +19,10 @@ namespace TeachEquipManagement.DAL.IRepositories
         Task<List<ToolCategory>> GetAllToolCategoryIncludeRelationship();
 
         Task<ToolCategory> GetToolCategoryIncludeRelationship(int toolId, int categoryId);
+    }
+
+    public interface IQueryInvoiceRepository
+    {
+        Task<List<Invoice>> GetAllInvoiceIncludeTools();
     }
 }

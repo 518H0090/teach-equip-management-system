@@ -19,9 +19,6 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         IToolRepository ToolRepository { get; }
 
         ISupplierRepository SupplierRepository { get; }
-
-        IRefreshTokenRepository RefreshTokenRepository { get; }
-
         IPermissionRepository PermissionRepository { get; }
 
         IInvoiceRepository InvoiceRepository { get; }
@@ -41,6 +38,8 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         IQuerySupplierRepository QuerySupplierRepository { get; }
 
         IQueryToolCategoryRepository QueryToolCategoryRepository { get; }
+
+        IQueryInvoiceRepository QueryInvoiceRepository { get; }
 
         Task<bool> SaveChangesAsync();
 

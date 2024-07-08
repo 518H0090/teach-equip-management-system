@@ -10,10 +10,6 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
     {
         public MapperProfile()
         {
-            //CreateMap<User, UserDTOTest>();
-
-            //CreateMap<UserDTOTest, User>();
-
             CreateMap<SupplierRequest, Supplier>();
             CreateMap<Supplier, SupplierResponse>();
             CreateMap<SupplierUpdateRequest, Supplier>();
@@ -34,6 +30,13 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
 
             CreateMap<ToolCategoryRequest, ToolCategory>();
             CreateMap<ToolCategory, ToolCategoryResponse>();
+
+            CreateMap<InvoceRequest, Invoice>();
+            CreateMap<Invoice, InvoiceResponse>();
+            CreateMap<InvoceUpdateRequest, Invoice>();
+            CreateMap<Invoice, InvoiceIncludeToolResponse>();
+
+
         }
     }
 }
