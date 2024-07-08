@@ -18,14 +18,14 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Email { set; get; } = string.Empty;
 
-        public List<UserPermission> UserPermissions { get; set; } = new();
+        public string? RefreshToken { get; set; } = string.Empty;
 
-        public RefreshToken RefreshToken { set; get; } = new();
+        public DateTime? RefreshTokenExpiryTime { get; set; }
 
-        public Guid? RefreshTokenId { set; get; } = null;
+        public virtual List<UserPermission>? UserPermissions { get; set; }
 
-        public List<ApprovalRequest> ApprovalRequests { get; set; } = new();
+        public virtual List<ApprovalRequest>? ApprovalRequests { get; set; } 
 
-        public List<InventoryHistory> InventoryHistories { set; get; } = new();
+        public virtual List<InventoryHistory>? InventoryHistories { set; get; } 
     }
 }

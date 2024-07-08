@@ -19,9 +19,6 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         IToolRepository ToolRepository { get; }
 
         ISupplierRepository SupplierRepository { get; }
-
-        IRefreshTokenRepository RefreshTokenRepository { get; }
-
         IPermissionRepository PermissionRepository { get; }
 
         IInvoiceRepository InvoiceRepository { get; }
