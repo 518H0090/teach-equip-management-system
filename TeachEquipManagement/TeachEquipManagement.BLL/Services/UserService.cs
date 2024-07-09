@@ -11,9 +11,11 @@ using System.Text;
 using TeachEquipManagement.BLL.BusinessModels.Common;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
+using TeachEquipManagement.Utilities.CommonModels;
 using TeachEquipManagement.Utilities.Helper;
 using TeachEquipManagement.Utilities.OptionPattern;
 
@@ -177,7 +179,7 @@ namespace TeachEquipManagement.BLL.Services
 
             var tokeOptions = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: signinCredentials
             );
 
@@ -215,6 +217,70 @@ namespace TeachEquipManagement.BLL.Services
                 throw new SecurityTokenException("Invalid token");
 
             return principal;
+        }
+
+        public async Task<ApiResponse<AuthenticatedResponse>> Login(AuthenticatedRequest request, 
+            ValidationResult validation)
+        {
+            ApiResponse<AuthenticatedResponse> response = new();
+
+            if (!validation.IsValid)
+            {
+                response.Data = null;
+                response.StatusCode = StatusCodes.Status400BadRequest;
+                response.Message = validation.ToString();
+
+                return response;
+            }
+
+            QueryModel<User> query = new QueryModel<User>
+            {
+                QueryCondition = x => x.Username == request.Username
+            };
+
+            var findUser = _unitOfWork.UserRepository.GetQueryable(query).FirstOrDefault();
+
+            if (findUser == null)
+            {
+                response.Data = null;
+                response.Message = "Not Found User";
+                response.StatusCode = StatusCodes.Status404NotFound;
+
+                return response;
+            }
+
+            var isValidPassword = FunctionHelper.VerifyPasswordHash(request.Password, 
+                            findUser.PasswordHash, findUser.PasswordSalt);
+
+            if (!isValidPassword)
+            {
+                response.Data = null;
+                response.Message = "Wrong Password";
+                response.StatusCode = StatusCodes.Status400BadRequest;
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, request.Username)
+            };
+
+            var accessToken = GenerateAccessToken(claims);
+            var refreshToken = GenerateRefreshToken();
+
+            findUser.RefreshToken = refreshToken;
+            findUser.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            response.Data = new AuthenticatedResponse
+                            {
+                                AccessToken = accessToken,
+                                RefreshToken = refreshToken,
+                            };
+            response.Message = "Login Successfully";
+            response.StatusCode = StatusCodes.Status200OK;
+
+            return response;
         }
 
         #endregion

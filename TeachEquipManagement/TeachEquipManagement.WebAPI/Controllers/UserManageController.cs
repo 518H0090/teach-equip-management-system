@@ -61,6 +61,17 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         #region Token
 
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] AuthenticatedRequest request)
+        {
+            var validationResult = new AuthenticatedRequestValidator().Validate(request);
+
+            var response = await _userManageService.TokenService.Login(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         #endregion
     }
 }
