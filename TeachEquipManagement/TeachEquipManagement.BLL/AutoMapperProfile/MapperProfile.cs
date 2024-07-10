@@ -23,8 +23,8 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<ToolRequest, Tool>()
             .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => src.SupplierId))
             .ForMember(dest => dest.ToolName, opt => opt.MapFrom(src => src.ToolName))
-            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-            .ForAllMembers(opt => opt.Ignore());
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
+
             CreateMap<Tool, ToolResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
             CreateMap<Tool, ToolIncludeSupplierResponse>();

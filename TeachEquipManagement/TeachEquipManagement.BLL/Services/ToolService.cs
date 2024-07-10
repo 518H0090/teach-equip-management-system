@@ -50,14 +50,12 @@ namespace TeachEquipManagement.BLL.Services
                         return response;
                     }
 
-                    //var tool = new Tool
-                    //{
-                    //    Supplier = existSupplier,
-                    //    Description = request.Description,
-                    //    ToolName = request.ToolName
-                    //};
-
-                    var tool = _mapper.Map<Tool>(request);
+                    var tool = new Tool
+                    {
+                        Supplier = existSupplier,
+                        Description = request.Description,
+                        ToolName = request.ToolName
+                    };
 
                     var entity = await _unitOfWork.ToolRepository.InsertAsync(tool);
                     await _unitOfWork.SaveChangesAsync();

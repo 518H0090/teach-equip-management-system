@@ -106,16 +106,15 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         [HttpPost]
         [Route("revoke-token")]
-        public async Task<IActionResult> Revoke([FromBody] AuthenticatedRefreshRequest request)
+        public async Task<IActionResult> Revoke([FromBody] string accessToken)
         {
-            var validationResult = new AuthenticatedRefreshRequestValidator().Validate(request);
 
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(accessToken))
             {
                 return BadRequest();
             }
 
-            var response = await _userManageService.TokenService.Revoke(request.AccessToken);
+            var response = await _userManageService.TokenService.Revoke(accessToken);
 
             return StatusCode(response.StatusCode, response);
         }

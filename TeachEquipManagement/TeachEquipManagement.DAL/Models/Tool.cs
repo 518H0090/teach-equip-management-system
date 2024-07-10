@@ -10,9 +10,9 @@ namespace TeachEquipManagement.DAL.Models
     {
         public int Id { get; set; }
 
-        public string ToolName { get; set; } = string.Empty;
+        public string ToolName { get; set; } 
 
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; }
 
         public virtual Supplier Supplier { get; set; } 
 

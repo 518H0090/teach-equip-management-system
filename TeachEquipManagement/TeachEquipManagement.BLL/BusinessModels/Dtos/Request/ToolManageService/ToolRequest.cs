@@ -11,10 +11,10 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService
     public class ToolRequest
     {
         [JsonProperty("tool_name")]
-        public string ToolName { get; set; } = string.Empty;
+        public string ToolName { get; set; }
 
         [JsonProperty("tool_description")]
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; }
 
         [JsonProperty("tool_supplierid")]
         public int SupplierId { get; set; }
