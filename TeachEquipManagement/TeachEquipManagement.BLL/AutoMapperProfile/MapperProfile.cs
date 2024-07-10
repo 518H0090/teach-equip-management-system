@@ -40,6 +40,10 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
 
             CreateMap<Account, AccountResponse>();
             CreateMap<AccountUpdateRequest, Account>();
+
+            CreateMap<RoleRequest, Role>();
+            CreateMap<Role, RoleResponse>();
+            CreateMap<RoleUpdateRequest, Role>();
         }
     }
 }

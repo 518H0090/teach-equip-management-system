@@ -22,8 +22,6 @@ namespace TeachEquipManagement.DAL.Models
 
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
-        public virtual List<UserPermission>? UserPermissions { get; set; }
-
         public virtual List<ApprovalRequest>? ApprovalRequests { get; set; } 
 
         public virtual List<InventoryHistory>? InventoryHistories { set; get; }

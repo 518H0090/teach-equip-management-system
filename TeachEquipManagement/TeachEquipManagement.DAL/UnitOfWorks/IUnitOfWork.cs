@@ -12,14 +12,11 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
     {
         IAccountRepository AccountRepository { get; }
 
-        IAccountPermissionRepository AccountPermissionRepository { get; }
-
         IAccountDetailRepository AccountDetailRepository { get; }
 
         IToolRepository ToolRepository { get; }
 
         ISupplierRepository SupplierRepository { get; }
-        IPermissionRepository PermissionRepository { get; }
 
         IInvoiceRepository InvoiceRepository { get; }
 

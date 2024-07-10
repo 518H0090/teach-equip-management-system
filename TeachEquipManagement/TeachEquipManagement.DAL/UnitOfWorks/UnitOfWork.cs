@@ -16,15 +16,13 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         #pragma warning restore CS8618
 
-        public IAccountRepository AccountRepository => new UserRepository(_context);
-        public IAccountPermissionRepository AccountPermissionRepository => new UserPermissionRepository(_context);
-        public IAccountDetailRepository AccountDetailRepository => new UserDetailRepository(_context);
+        public IAccountRepository AccountRepository => new AccountRepository(_context);
+
+        public IAccountDetailRepository AccountDetailRepository => new AccountDetailRepository(_context);
 
         public IToolRepository ToolRepository =>  new ToolRepository(_context);
 
         public ISupplierRepository SupplierRepository => new SupplierRepository(_context);
-
-        public IPermissionRepository PermissionRepository => new PermissionRepository(_context);
 
         public IInvoiceRepository InvoiceRepository =>  new InvoiceRepository(_context);
 

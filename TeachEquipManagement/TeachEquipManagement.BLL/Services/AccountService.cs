@@ -65,6 +65,17 @@ namespace TeachEquipManagement.BLL.Services
                         userId = Guid.NewGuid();
                     }
 
+                    var existRole = await _unitOfWork.RoleRepository.GetByIdAsync(request.RoleId);
+
+                    if ( existRole == null)
+                    {
+                        response.Data = false;
+                        response.StatusCode = StatusCodes.Status400BadRequest;
+                        response.Message = "Not Found Role which adds to User";
+
+                        return response;
+                    }
+
                     FunctionHelper.CreatePasswordHash(request.Password, out byte[] passwordSalt, out byte[] passwordHash);
 
                     Account newUser = new Account
@@ -74,6 +85,7 @@ namespace TeachEquipManagement.BLL.Services
                         PasswordHash = passwordHash,
                         PasswordSalt = passwordSalt,
                         Username = request.Username,
+                        RoleId = request.RoleId
                     };
 
                     var entity = await _unitOfWork.AccountRepository.InsertAsync(newUser);

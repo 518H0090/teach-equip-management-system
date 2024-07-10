@@ -19,5 +19,8 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService
 
         [JsonProperty("email")]
         public string? Email { set; get; } = null;
+
+        [JsonProperty("role_id")]
+        public int RoleId { set; get; }
     }
 }

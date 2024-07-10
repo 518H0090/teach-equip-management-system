@@ -11,11 +11,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
         public DbSet<Account> Accounts { get; set; }
 
-        public DbSet<Permission> Permissions { get; set; }
-
-        public DbSet<UserPermission> UserPermissions { get; set; }
-
-        public DbSet<UserDetail> UserDetails { get; set; }
+        public DbSet<AccountDetail> UserDetails { get; set; }
 
         public DbSet<Supplier> Suppliers { get; set; }
 
@@ -70,31 +66,7 @@ namespace TeachEquipManagement.DAL.EFContext
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<Permission>(permission =>
-            {
-                permission.HasKey(permission => permission.Id);
-
-                permission.Property(permission => permission.Name).IsRequired();
-
-                permission.Property(permission => permission.Description).IsRequired();
-            });
-
-            modelBuilder.Entity<UserPermission>(user_permission =>
-            {
-                user_permission.HasKey(up => new { up.UserId, up.PermissionId });
-
-                user_permission.HasOne<Account>(up => up.User)
-                                .WithMany(u => u.UserPermissions)
-                                .HasForeignKey(up => up.UserId)
-                                .OnDelete(DeleteBehavior.Cascade);
-
-                user_permission.HasOne<Permission>(up => up.Permission)
-                                .WithMany(u => u.UserPermissions)
-                                .HasForeignKey(up => up.PermissionId)
-                                .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            modelBuilder.Entity<UserDetail>(user_detail =>
+            modelBuilder.Entity<AccountDetail>(user_detail =>
             {
                 user_detail.HasKey(user_detail => user_detail.UserId);
 

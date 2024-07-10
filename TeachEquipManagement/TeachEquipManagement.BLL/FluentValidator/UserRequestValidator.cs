@@ -28,6 +28,11 @@ namespace TeachEquipManagement.BLL.FluentValidator
             .WithMessage("Email is required.")
             .Matches(new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
             .WithMessage("Invalid email address format.");
+
+            RuleFor(x => x.RoleId)
+                .NotEmpty().WithMessage("RoleId is required.")
+                .Must(id => id is int)
+                .WithMessage("Id must be int");
         }
     }
 }

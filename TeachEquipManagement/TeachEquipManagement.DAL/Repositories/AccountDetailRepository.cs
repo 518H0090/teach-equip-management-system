@@ -10,11 +10,11 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.Repositories
 {
-    public class UserDetailRepository : GenericRepository<UserDetail>, IAccountDetailRepository
+    public class AccountDetailRepository : GenericRepository<AccountDetail>, IAccountDetailRepository
     {
         private readonly DataContext _context;
 
-        public UserDetailRepository(DataContext context) : base(context)
+        public AccountDetailRepository(DataContext context) : base(context)
         {
             _context = context;
         }

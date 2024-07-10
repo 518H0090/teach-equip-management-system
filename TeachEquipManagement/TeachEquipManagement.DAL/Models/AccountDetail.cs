@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeachEquipManagement.DAL.Models
 {
-    public class UserDetail
+    public class AccountDetail
     {
         public Account User { get; set; } = new();
             
