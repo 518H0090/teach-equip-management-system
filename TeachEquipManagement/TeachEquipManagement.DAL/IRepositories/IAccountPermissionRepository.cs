@@ -3,7 +3,7 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.IRepositories
 {
-    public interface IUserPermissionRepository : IGenericRepository<UserPermission>
+    public interface IAccountPermissionRepository : IGenericRepository<UserPermission>
     {
     }
 }

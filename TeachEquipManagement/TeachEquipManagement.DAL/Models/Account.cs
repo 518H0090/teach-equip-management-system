@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeachEquipManagement.DAL.Models
 {
-    public class User
+    public class Account
     {
         public Guid Id { get; set; } = new Guid();
 
@@ -26,6 +26,9 @@ namespace TeachEquipManagement.DAL.Models
 
         public virtual List<ApprovalRequest>? ApprovalRequests { get; set; } 
 
-        public virtual List<InventoryHistory>? InventoryHistories { set; get; } 
+        public virtual List<InventoryHistory>? InventoryHistories { set; get; }
+
+        public Role? Role { get; set; }
+        public int? RoleId { get; set; }
     }
 }

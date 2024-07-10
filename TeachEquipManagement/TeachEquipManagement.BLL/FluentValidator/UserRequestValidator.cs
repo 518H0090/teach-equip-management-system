@@ -9,7 +9,7 @@ using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
 
 namespace TeachEquipManagement.BLL.FluentValidator
 {
-    public class UserRequestValidator : AbstractValidator<UserRequest>
+    public class UserRequestValidator : AbstractValidator<AccountRequest>
     {
         public UserRequestValidator()
         {

@@ -26,7 +26,7 @@ namespace TeachEquipManagement.DAL.Models
 
         public bool IsApproved { get; set; }
 
-        public User User { get; set; } = new();
+        public Account User { get; set; } = new();
 
         public Inventory Inventory { get; set; } = new();
     }

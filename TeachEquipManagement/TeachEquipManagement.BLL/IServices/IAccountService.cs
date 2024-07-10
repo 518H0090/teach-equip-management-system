@@ -8,12 +8,12 @@ using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 
 namespace TeachEquipManagement.BLL.IServices
 {
-    public interface IUserService
+    public interface IAccountService
     {
-        Task<ApiResponse<bool>> CreateUser(UserRequest request, ValidationResult validation);
-        Task<ApiResponse<bool>> UpdateUser(UserUpdateRequest request, ValidationResult validation);
+        Task<ApiResponse<bool>> CreateUser(AccountRequest request, ValidationResult validation);
+        Task<ApiResponse<bool>> UpdateUser(AccountUpdateRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> RemoveUser(Guid id);
-        Task<ApiResponse<List<UserResponse>>> GetAllUser();
-        Task<ApiResponse<UserResponse>> GetUserById(Guid id);
+        Task<ApiResponse<List<AccountResponse>>> GetAllUser();
+        Task<ApiResponse<AccountResponse>> GetUserById(Guid id);
     }
 }

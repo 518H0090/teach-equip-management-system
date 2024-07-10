@@ -38,8 +38,8 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<InvoceUpdateRequest, Invoice>();
             CreateMap<Invoice, InvoiceIncludeToolResponse>();
 
-            CreateMap<User, UserResponse>();
-            CreateMap<UserUpdateRequest, User>();
+            CreateMap<Account, AccountResponse>();
+            CreateMap<AccountUpdateRequest, Account>();
         }
     }
 }

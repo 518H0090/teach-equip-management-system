@@ -8,7 +8,7 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class UserPermission
     {
-        public User User { get; set; } = new();
+        public Account User { get; set; } = new();
         public Guid UserId { get; set; }
 
         public Permission Permission { get; set; } = new();

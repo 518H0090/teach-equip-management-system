@@ -9,9 +9,11 @@ namespace TeachEquipManagement.BLL.ManageServices
 {
     public interface IUserManageService
     {
-        IUserService UserService { get; }
+        IAccountService UserService { get; }
 
         ITokenService TokenService { get; }
+
+        IRoleService RoleService { get; }
 
         IUserPermissionService UserPermissionService { get; }
 

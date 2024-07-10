@@ -21,14 +21,14 @@ using TeachEquipManagement.Utilities.OptionPattern;
 
 namespace TeachEquipManagement.BLL.Services
 {
-    public class UserService : IUserService, ITokenService
+    public class AccountService : IAccountService, ITokenService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly JwtSecretKeyConfiguration _jwtSecret;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger,
+        public AccountService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger,
             IOptionsSnapshot<JwtSecretKeyConfiguration> jwtSecret)
         {
             _unitOfWork = unitOfWork;
@@ -39,7 +39,7 @@ namespace TeachEquipManagement.BLL.Services
 
         #region User
 
-        public async Task<ApiResponse<bool>> CreateUser(UserRequest request, ValidationResult validation)
+        public async Task<ApiResponse<bool>> CreateUser(AccountRequest request, ValidationResult validation)
         {
             ApiResponse<bool> response = new ApiResponse<bool>();
 
@@ -55,7 +55,7 @@ namespace TeachEquipManagement.BLL.Services
 
                     for (int i = 0; i < maxRetries; i++)
                     {
-                        var existUser = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+                        var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(userId);
 
                         if (existUser == null)
                         {
@@ -67,7 +67,7 @@ namespace TeachEquipManagement.BLL.Services
 
                     FunctionHelper.CreatePasswordHash(request.Password, out byte[] passwordSalt, out byte[] passwordHash);
 
-                    User newUser = new User
+                    Account newUser = new Account
                     {
                         Id = userId,
                         Email = request.Email,
@@ -76,7 +76,7 @@ namespace TeachEquipManagement.BLL.Services
                         Username = request.Username,
                     };
 
-                    var entity = await _unitOfWork.UserRepository.InsertAsync(newUser);
+                    var entity = await _unitOfWork.AccountRepository.InsertAsync(newUser);
                     await _unitOfWork.SaveChangesAsync();
 
                     _unitOfWork.Commit();
@@ -107,11 +107,11 @@ namespace TeachEquipManagement.BLL.Services
 
         
 
-        public async Task<ApiResponse<List<UserResponse>>> GetAllUser()
+        public async Task<ApiResponse<List<AccountResponse>>> GetAllUser()
         {
-            ApiResponse<List<UserResponse>> response = new();
+            ApiResponse<List<AccountResponse>> response = new();
 
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var users = await _unitOfWork.AccountRepository.GetAllAsync();
 
             if (!users.Any())
             {
@@ -123,7 +123,7 @@ namespace TeachEquipManagement.BLL.Services
 
             else
             {
-                var dataResponses = _mapper.Map<List<UserResponse>>(users);
+                var dataResponses = _mapper.Map<List<AccountResponse>>(users);
                 response.Data = dataResponses;
                 response.Message = "List Users";
                 response.StatusCode = StatusCodes.Status200OK;
@@ -132,15 +132,15 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public async Task<ApiResponse<UserResponse>> GetUserById(Guid id)
+        public async Task<ApiResponse<AccountResponse>> GetUserById(Guid id)
         {
-            ApiResponse<UserResponse> response = new();
+            ApiResponse<AccountResponse> response = new();
 
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            var user = await _unitOfWork.AccountRepository.GetByIdAsync(id);
 
             if (user != null)
             {
-                var dataResponse = _mapper.Map<UserResponse>(user);
+                var dataResponse = _mapper.Map<AccountResponse>(user);
                 response.Data = dataResponse;
                 response.Message = "Found User";
                 response.StatusCode = StatusCodes.Status200OK;
@@ -165,11 +165,11 @@ namespace TeachEquipManagement.BLL.Services
             {
                 _unitOfWork.CreateTransaction();
 
-                var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+                var user = await _unitOfWork.AccountRepository.GetByIdAsync(id);
 
                 if (user != null)
                 {
-                    _unitOfWork.UserRepository.Delete(user!);
+                    _unitOfWork.AccountRepository.Delete(user!);
                     var isDeleted = await _unitOfWork.SaveChangesAsync();
 
                      _unitOfWork.Commit();
@@ -197,7 +197,7 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public async Task<ApiResponse<bool>> UpdateUser(UserUpdateRequest request, ValidationResult validation)
+        public async Task<ApiResponse<bool>> UpdateUser(AccountUpdateRequest request, ValidationResult validation)
         {
             ApiResponse<bool> response = new();
 
@@ -207,7 +207,7 @@ namespace TeachEquipManagement.BLL.Services
                 {
                     _unitOfWork.CreateTransaction();
 
-                    var user = await _unitOfWork.UserRepository.GetByIdAsync(request.Id);
+                    var user = await _unitOfWork.AccountRepository.GetByIdAsync(request.Id);
 
                     if (user != null)
                     {
@@ -327,12 +327,12 @@ namespace TeachEquipManagement.BLL.Services
                 return response;
             }
 
-            QueryModel<User> query = new QueryModel<User>
+            QueryModel<Account> query = new QueryModel<Account>
             {
                 QueryCondition = x => x.Username == request.Username
             };
 
-            var findUser = _unitOfWork.UserRepository.GetQueryable(query).FirstOrDefault();
+            var findUser = _unitOfWork.AccountRepository.GetQueryable(query).FirstOrDefault();
 
             if (findUser == null)
             {
@@ -398,12 +398,12 @@ namespace TeachEquipManagement.BLL.Services
                 var principal = GetPrincipalFromExpiredToken(accessToken);
                 var username = principal.Identity!.Name;
 
-                QueryModel<User> query = new QueryModel<User>
+                QueryModel<Account> query = new QueryModel<Account>
                 {
                     QueryCondition = x => x.Username == username
                 };
 
-                var user = _unitOfWork.UserRepository.GetQueryable(query).FirstOrDefault();
+                var user = _unitOfWork.AccountRepository.GetQueryable(query).FirstOrDefault();
 
                 if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 {
@@ -452,12 +452,12 @@ namespace TeachEquipManagement.BLL.Services
 
                 string username = principal.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.Name).Value.ToString();
 
-                QueryModel<User> query = new QueryModel<User>
+                QueryModel<Account> query = new QueryModel<Account>
                 {
                     QueryCondition = x => x.Username == username
                 };
 
-                var user = _unitOfWork.UserRepository.GetQueryable(query).FirstOrDefault();
+                var user = _unitOfWork.AccountRepository.GetQueryable(query).FirstOrDefault();
 
                 if (user == null)
                 {

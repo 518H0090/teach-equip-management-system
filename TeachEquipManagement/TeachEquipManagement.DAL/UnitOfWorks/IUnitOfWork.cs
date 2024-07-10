@@ -10,11 +10,11 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 {
     public interface IUnitOfWork : IDisposable
     {
-        IUserRepository UserRepository { get; }
+        IAccountRepository AccountRepository { get; }
 
-        IUserPermissionRepository UserPermissionRepository { get; }
+        IAccountPermissionRepository AccountPermissionRepository { get; }
 
-        IUserDetailRepository UserDetailRepository { get; }
+        IAccountDetailRepository AccountDetailRepository { get; }
 
         IToolRepository ToolRepository { get; }
 
@@ -40,6 +40,8 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         IQueryToolCategoryRepository QueryToolCategoryRepository { get; }
 
         IQueryInvoiceRepository QueryInvoiceRepository { get; }
+
+        IRoleRepository RoleRepository { get; }
 
         Task<bool> SaveChangesAsync();
 

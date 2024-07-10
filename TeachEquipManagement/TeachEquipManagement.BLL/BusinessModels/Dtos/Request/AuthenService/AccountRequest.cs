@@ -8,7 +8,7 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService
 {
-    public class UserRequest
+    public class AccountRequest
     {
         [JsonProperty("user_name")]
         public string Username { set; get; } = string.Empty;

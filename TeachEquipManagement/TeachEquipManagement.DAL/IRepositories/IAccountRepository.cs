@@ -8,7 +8,7 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.IRepositories
 {
-    public interface IUserRepository : IGenericRepository<User>
+    public interface IAccountRepository : IGenericRepository<Account>
     {
     }
 }

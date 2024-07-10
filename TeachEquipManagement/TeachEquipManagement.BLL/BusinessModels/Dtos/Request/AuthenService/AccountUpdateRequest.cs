@@ -9,7 +9,7 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService
 {
-    public class UserUpdateRequest
+    public class AccountUpdateRequest
     {
         [JsonProperty("user_id")]
         public Guid Id { get; set; } = Guid.Empty;

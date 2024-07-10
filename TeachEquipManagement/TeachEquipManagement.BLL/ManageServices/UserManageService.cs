@@ -24,7 +24,7 @@ namespace TeachEquipManagement.BLL.ManageServices
             _jwtSecret = jwtSecret;
         }
 
-        public IUserService UserService => new UserService(_unitOfWork, _mapper, _logger, _jwtSecret);
+        public IAccountService UserService => new AccountService(_unitOfWork, _mapper, _logger, _jwtSecret);
 
         public IUserPermissionService UserPermissionService => new UserPermissionService(_unitOfWork, _mapper, _logger);
 
@@ -32,6 +32,8 @@ namespace TeachEquipManagement.BLL.ManageServices
         
         public IPermissionService PermissionService => new PermissionService(_unitOfWork, _mapper, _logger);
 
-        public ITokenService TokenService => new UserService(_unitOfWork, _mapper, _logger, _jwtSecret);
+        public ITokenService TokenService => new AccountService(_unitOfWork, _mapper, _logger, _jwtSecret);
+
+        public IRoleService RoleService => new RoleService(_unitOfWork, _mapper, _logger);
     }
 }

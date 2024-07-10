@@ -9,7 +9,7 @@ namespace TeachEquipManagement.DAL.EFContext
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
         public DbSet<Permission> Permissions { get; set; }
 
@@ -33,23 +33,41 @@ namespace TeachEquipManagement.DAL.EFContext
 
         public DbSet<ToolCategory> ToolCategories { get; set; }
 
+        public DbSet<Role> Roles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>(user =>
+            modelBuilder.Entity<Account>(account =>
             {
-                user.HasKey(user => user.Id);
+                account.HasKey(user => user.Id);
 
-                user.HasIndex(x => x.Id).IsUnique();
+                account.HasIndex(x => x.Id).IsUnique();
 
-                user.Property(u => u.Username).HasColumnType("nvarchar(255)").IsRequired();
+                account.Property(u => u.Username).HasColumnType("nvarchar(255)").IsRequired();
 
-                user.Property(u => u.PasswordHash).IsRequired();
+                account.Property(u => u.PasswordHash).IsRequired();
 
-                user.Property(u => u.PasswordSalt).IsRequired();
+                account.Property(u => u.PasswordSalt).IsRequired();
 
-                user.Property(u => u.Email).IsRequired();
+                account.Property(u => u.Email).IsRequired();
+            });
+
+            modelBuilder.Entity<Role>(role =>
+            {
+                role.HasKey(role => role.Id);
+
+                role.Property(role => role.Id).UseIdentityColumn<int>(1,1);
+
+                role.Property(role => role.RoleName).IsRequired();
+
+                role.Property(role => role.RoleDescription).IsRequired();
+
+                role.HasMany<Account>(role => role.Accounts)
+                    .WithOne(account => account.Role)
+                    .HasForeignKey(account => account.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Permission>(permission =>
@@ -65,7 +83,7 @@ namespace TeachEquipManagement.DAL.EFContext
             {
                 user_permission.HasKey(up => new { up.UserId, up.PermissionId });
 
-                user_permission.HasOne<User>(up => up.User)
+                user_permission.HasOne<Account>(up => up.User)
                                 .WithMany(u => u.UserPermissions)
                                 .HasForeignKey(up => up.UserId)
                                 .OnDelete(DeleteBehavior.Cascade);
@@ -204,7 +222,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 approval_request.Property(approval_request => approval_request.IsApproved).HasDefaultValue<bool>(false).IsRequired();
 
-                approval_request.HasOne<User>(approval_request => approval_request.User)
+                approval_request.HasOne<Account>(approval_request => approval_request.User)
                       .WithMany(user => user.ApprovalRequests)
                       .HasForeignKey(approval_request => approval_request.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
@@ -225,7 +243,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 inventory_history.Property(inventory_history => inventory_history.ActionType).IsRequired();
 
-                inventory_history.HasOne<User>(approval_request => approval_request.User)
+                inventory_history.HasOne<Account>(approval_request => approval_request.User)
                       .WithMany(user => user.InventoryHistories)
                       .HasForeignKey(approval_request => approval_request.UserId)
                       .OnDelete(DeleteBehavior.Cascade);

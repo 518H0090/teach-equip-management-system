@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService
 {
-    public class UserResponse
+    public class AccountResponse
     {
         [JsonProperty("user_id")]
         public Guid Id { get; set; }

@@ -10,7 +10,7 @@ using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.Repositories
 {
-    public class UserPermissionRepository : GenericRepository<UserPermission>, IUserPermissionRepository
+    public class UserPermissionRepository : GenericRepository<UserPermission>, IAccountPermissionRepository
     {
         private readonly DataContext _context;
 

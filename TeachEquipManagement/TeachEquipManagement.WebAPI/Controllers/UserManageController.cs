@@ -31,7 +31,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         [HttpPost]
         [Route("create-user")]
-        public async Task<IActionResult> CreateUser([FromBody] UserRequest request)
+        public async Task<IActionResult> CreateUser([FromBody] AccountRequest request)
         {
             var validationResult = new UserRequestValidator().Validate(request);
 
@@ -60,7 +60,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         [HttpPut]
         [Route("update-user")]
-        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateRequest request)
+        public async Task<IActionResult> UpdateUser([FromBody] AccountUpdateRequest request)
         {
             var validationResult = new UserUpdateRequestValidator().Validate(request);
 
