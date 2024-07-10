@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService
+namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService
 {
-    public class AuthenticatedResponse
+    public class AuthenticatedRefreshRequest
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; } = string.Empty;

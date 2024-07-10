@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
@@ -57,6 +58,26 @@ namespace TeachEquipManagement.WebAPI.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPut]
+        [Route("update-user")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateRequest request)
+        {
+            var validationResult = new UserUpdateRequestValidator().Validate(request);
+
+            var response = await _userManageService.UserService.UpdateUser(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-user/{id}")]
+        public async Task<IActionResult> RemoveUser(Guid id)
+        {
+            var response = await _userManageService.UserService.RemoveUser(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         #endregion
 
         #region Token
@@ -68,6 +89,33 @@ namespace TeachEquipManagement.WebAPI.Controllers
             var validationResult = new AuthenticatedRequestValidator().Validate(request);
 
             var response = await _userManageService.TokenService.Login(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> Refresh([FromBody] AuthenticatedRefreshRequest request)
+        {
+            var validationResult = new AuthenticatedRefreshRequestValidator().Validate(request);
+
+            var response = await _userManageService.TokenService.Refresh(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost]
+        [Route("revoke-token")]
+        public async Task<IActionResult> Revoke([FromBody] AuthenticatedRefreshRequest request)
+        {
+            var validationResult = new AuthenticatedRefreshRequestValidator().Validate(request);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var response = await _userManageService.TokenService.Revoke(request.AccessToken);
 
             return StatusCode(response.StatusCode, response);
         }

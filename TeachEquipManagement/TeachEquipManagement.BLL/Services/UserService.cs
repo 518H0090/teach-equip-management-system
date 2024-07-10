@@ -157,21 +157,115 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public Task<ApiResponse<bool>> RemoveUser(int id)
+        public async Task<ApiResponse<bool>> RemoveUser(Guid id)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                _unitOfWork.CreateTransaction();
+
+                var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+
+                if (user != null)
+                {
+                    _unitOfWork.UserRepository.Delete(user!);
+                    var isDeleted = await _unitOfWork.SaveChangesAsync();
+
+                     _unitOfWork.Commit();
+
+                    response.Data = isDeleted;
+                    response.Message = "Remove User";
+                    response.StatusCode = StatusCodes.Status202Accepted;
+                }
+
+                else
+                {
+                    _logger.Warning("Warning: Not Found User");
+                    response.Message = "Not Found User";
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
         }
 
-        public Task<ApiResponse<bool>> UpdateUser(UserUpdateRequest request, ValidationResult validation)
+        public async Task<ApiResponse<bool>> UpdateUser(UserUpdateRequest request, ValidationResult validation)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                if (validation.IsValid)
+                {
+                    _unitOfWork.CreateTransaction();
+
+                    var user = await _unitOfWork.UserRepository.GetByIdAsync(request.Id);
+
+                    if (user != null)
+                    {
+                        var updateUser = _mapper.Map(request, user);
+
+                        if (!string.IsNullOrEmpty(request.Password))
+                        {
+                            FunctionHelper.CreatePasswordHash(request.Password, out byte[] passwordSalt, out byte[] passwordHash);
+                            updateUser.PasswordSalt = passwordSalt;
+                            updateUser.PasswordHash = passwordHash;
+                        }
+
+                        if (!string.IsNullOrEmpty(request.Email))
+                        {
+                            updateUser.Email = request.Email;
+                        }
+                        
+                        await _unitOfWork.SaveChangesAsync();
+
+                        _unitOfWork.Commit();
+
+                        response.Data = true;
+                        response.Message = "Update User";
+                        response.StatusCode = StatusCodes.Status202Accepted;
+                    }
+
+                    else
+                    {
+                        _logger.Warning("Warning: Not Found User");
+                        response.Message = "Not Found User";
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                    }
+                }
+
+                else
+                {
+                    response.Data = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = validation.ToString();
+                }
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
         }
 
         #endregion
 
         #region Token
 
-        public string GenerateAccessToken(List<Claim> claims)
+        private string GenerateAccessToken(List<Claim> claims)
         {
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret.SecretKey));
 
@@ -187,7 +281,7 @@ namespace TeachEquipManagement.BLL.Services
             return tokenString;
         }
 
-        public string GenerateRefreshToken()
+        private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
@@ -197,7 +291,7 @@ namespace TeachEquipManagement.BLL.Services
             }
         }
 
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -280,6 +374,117 @@ namespace TeachEquipManagement.BLL.Services
             response.Message = "Login Successfully";
             response.StatusCode = StatusCodes.Status200OK;
 
+            return response;
+        }
+
+        public async Task<ApiResponse<AuthenticatedResponse>> Refresh(AuthenticatedRefreshRequest request, ValidationResult validation)
+        {
+            ApiResponse<AuthenticatedResponse> response = new();
+
+            try
+            {
+                if (!validation.IsValid)
+                {
+                    response.Data = null;
+                    response.Message = "Invalid client request";
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+
+                    return response;
+                }
+
+                string accessToken = request.AccessToken;
+                string refreshToken = request.RefreshToken;
+
+                var principal = GetPrincipalFromExpiredToken(accessToken);
+                var username = principal.Identity!.Name;
+
+                QueryModel<User> query = new QueryModel<User>
+                {
+                    QueryCondition = x => x.Username == username
+                };
+
+                var user = _unitOfWork.UserRepository.GetQueryable(query).FirstOrDefault();
+
+                if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                {
+                    response.Data = null;
+                    response.Message = "Invalid client request";
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+
+                    return response;
+                }
+
+                var newAccessToken = GenerateAccessToken(principal.Claims.ToList());
+                var newRefreshToken = GenerateRefreshToken();
+
+                user.RefreshToken = newRefreshToken;
+                var isSuccess = await _unitOfWork.SaveChangesAsync();
+
+                var authenResponse = new AuthenticatedResponse
+                {
+                    AccessToken = newAccessToken,
+                    RefreshToken = newRefreshToken
+                };
+
+                response.Data = authenResponse;
+                response.Message = "Generate new access token";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
+        }
+
+        public async Task<ApiResponse<bool>> Revoke(string accessToken)
+        {
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                var principal = GetPrincipalFromExpiredToken(accessToken);
+
+                string username = principal.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.Name).Value.ToString();
+
+                QueryModel<User> query = new QueryModel<User>
+                {
+                    QueryCondition = x => x.Username == username
+                };
+
+                var user = _unitOfWork.UserRepository.GetQueryable(query).FirstOrDefault();
+
+                if (user == null)
+                {
+                    response.Data = false;
+                    response.Message = "Invalid client request";
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+
+                    return response;
+                }
+
+                user.RefreshToken = null;
+                var isSuccess = await _unitOfWork.SaveChangesAsync();
+
+                response.Data = isSuccess;
+                response.Message = "Revoke Successfully";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+           
             return response;
         }
 

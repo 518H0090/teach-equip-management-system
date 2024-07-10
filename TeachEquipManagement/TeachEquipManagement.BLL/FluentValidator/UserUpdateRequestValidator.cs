@@ -9,23 +9,21 @@ using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
 
 namespace TeachEquipManagement.BLL.FluentValidator
 {
-    public class UserRequestValidator : AbstractValidator<UserRequest>
+    public class UserUpdateRequestValidator : AbstractValidator<UserUpdateRequest>
     {
-        public UserRequestValidator()
+        public UserUpdateRequestValidator()
         {
-            RuleFor(x => x.Username)
-            .NotEmpty().WithMessage("Username is required.")
-            .MaximumLength(20).WithMessage("Username must not exceed 20 characters.");
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage("Id is required.")
+                .Must(id => id is Guid)
+                .WithMessage("Id must be guid");
 
             RuleFor(x => x.Password)
-               .NotEmpty().WithMessage("Password is required.")
                .MinimumLength(8)
                 .WithMessage("Password must be at least 8 characters long.")
                .MaximumLength(20).WithMessage("Password must not exceed 20 characters.");
 
             RuleFor(x => x.Email)
-            .NotEmpty()
-            .WithMessage("Email is required.")
             .Matches(new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
             .WithMessage("Invalid email address format.");
         }

@@ -8,12 +8,10 @@ namespace TeachEquipManagement.BLL.IServices
 {
     public interface ITokenService
     {
-        string GenerateAccessToken(List<Claim> claims);
-
-        string GenerateRefreshToken();
-
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
-
         Task<ApiResponse<AuthenticatedResponse>> Login(AuthenticatedRequest request, ValidationResult validation);
+
+        Task<ApiResponse<AuthenticatedResponse>> Refresh(AuthenticatedRefreshRequest request, ValidationResult validation);
+
+        Task<ApiResponse<bool>> Revoke(string accessToken);
     }
 }
