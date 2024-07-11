@@ -11,7 +11,6 @@ using System.Text;
 using TeachEquipManagement.BLL.BusinessModels.Common;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService;
-using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
@@ -116,9 +115,6 @@ namespace TeachEquipManagement.BLL.Services
 
             return response;
         }
-
-        
-
         public async Task<ApiResponse<List<AccountResponse>>> GetAllUser()
         {
             ApiResponse<List<AccountResponse>> response = new();

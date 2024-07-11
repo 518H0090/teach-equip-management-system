@@ -173,5 +173,19 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         #endregion
+
+        #region Test Graph Api
+
+        [HttpGet]
+        [Route("test-graph-api")]
+        public async Task<IActionResult> TestGraph()
+        {
+            await _graphService.GetSharePointDataAsync();
+
+            return Ok();
+
+        }
+
+        #endregion
     }
 }
