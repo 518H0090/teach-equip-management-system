@@ -1,7 +1,9 @@
+using Azure.Identity;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
@@ -16,6 +18,7 @@ using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities;
 using TeachEquipManagement.Utilities.CustomAttribute;
 using TeachEquipManagement.Utilities.OptionPattern;
+using static Microsoft.VisualStudio.Services.Graph.GraphResourceIds;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -139,6 +142,36 @@ builder.Services.AddScoped<IInventoryManageService, InventoryManageService>();
 builder.Services.AddScoped<IUserManageService, UserManageService>();
 
 builder.Services.AddScoped<IGraphService, GraphService>();
+
+#endregion
+
+# region Graph Service Client
+
+builder.Services.AddSingleton<GraphServiceClient>(serviceProvider =>
+{
+    var clientId = builder.Configuration["AzureAd:ClientId"];
+    var tenantId = builder.Configuration["AzureAd:TenantId"];
+    var clientSecret = builder.Configuration["AzureAd:ClientSecret"];
+
+    var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+    if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(clientSecret))
+    {
+        throw new InvalidOperationException("AzureAd settings are not configured properly.");
+    }
+
+    var options = new ClientSecretCredentialOptions
+    {
+        AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+    };
+
+    var clientSecretCredential = new ClientSecretCredential(
+        tenantId, clientId, clientSecret, options);
+
+    var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+    return graphClient;
+});
 
 #endregion
 

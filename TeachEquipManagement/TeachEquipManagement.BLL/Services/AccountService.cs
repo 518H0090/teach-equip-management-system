@@ -39,7 +39,7 @@ namespace TeachEquipManagement.BLL.Services
             _jwtSecret = jwtSecret.Value;
             _retryPolicy = Policy
                           .Handle<Exception>()
-                          .WaitAndRetryAsync(4, retryAttempt => TimeSpan.FromSeconds(1),
+                          .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(3),
                             (exception, timeSpan, retryCount, context) =>
                             {
                                 _logger.Error(exception, $"Retry attempt {retryCount} failed due to {exception.Message}.");

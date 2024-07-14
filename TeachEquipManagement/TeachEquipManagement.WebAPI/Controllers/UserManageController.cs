@@ -186,6 +186,15 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         }
 
+        [HttpPost("upload")]
+        public async Task<IActionResult> TestPostGraph(IFormFile file)
+        {
+            await _graphService.SharePointUploadFileAsync(file);
+
+            return Ok();
+
+        }
+
         #endregion
     }
 }
