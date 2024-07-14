@@ -1,15 +1,10 @@
 using Azure.Identity;
-using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
-using System.Reflection;
 using System.Text;
-using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
 using TeachEquipManagement.BLL.Services;
@@ -18,7 +13,6 @@ using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities;
 using TeachEquipManagement.Utilities.CustomAttribute;
 using TeachEquipManagement.Utilities.OptionPattern;
-using static Microsoft.VisualStudio.Services.Graph.GraphResourceIds;
 
 var builder = WebApplication.CreateBuilder(args);
 

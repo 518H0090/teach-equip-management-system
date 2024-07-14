@@ -17,14 +17,10 @@ namespace TeachEquipManagement.WebAPI.Controllers
     public class UserManageController : ControllerBase
     {
         private readonly IUserManageService _userManageService;
-        private readonly IGraphService _graphService;
 
-
-        public UserManageController(IUserManageService userManageService, IGraphService graphService)
+        public UserManageController(IUserManageService userManageService)
         {
             _userManageService = userManageService;
-            _graphService = graphService;
-
         }
 
         #region User
@@ -170,29 +166,6 @@ namespace TeachEquipManagement.WebAPI.Controllers
             var response = await _userManageService.RoleService.Update(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
-        }
-
-        #endregion
-
-        #region Test Graph Api
-
-        [HttpGet]
-        [Route("test-graph-api")]
-        public async Task<IActionResult> TestGraph()
-        {
-            await _graphService.GetSharePointDataAsync();
-
-            return Ok();
-
-        }
-
-        [HttpPost("upload")]
-        public async Task<IActionResult> TestPostGraph(IFormFile file)
-        {
-            await _graphService.SharePointUploadFileAsync(file);
-
-            return Ok();
-
         }
 
         #endregion

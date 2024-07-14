@@ -20,5 +20,7 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Avatar { get; set; } = string.Empty;
 
+        public string SpoFileId { get; set; } = string.Empty;
+
     }
 }
