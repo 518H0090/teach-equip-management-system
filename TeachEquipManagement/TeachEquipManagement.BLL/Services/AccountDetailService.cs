@@ -5,10 +5,12 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TeachEquipManagement.BLL.BusinessModels.Common;
-using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.DAL.Models;
@@ -16,20 +18,22 @@ using TeachEquipManagement.DAL.UnitOfWorks;
 
 namespace TeachEquipManagement.BLL.Services
 {
-    public class CategoryService : ICategoryService
+    public class AccountDetailService : IAccountDetailService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IGraphService _graphService;
 
-        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
+        public AccountDetailService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger, IGraphService graphService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _graphService = graphService;
         }
 
-        public async Task<ApiResponse<bool>> Create(CategoryRequest request, ValidationResult validation)
+        public async Task<ApiResponse<bool>> Create(AccountDetailRequest request, ValidationResult validation)
         {
             ApiResponse<bool> response = new ApiResponse<bool>();
 
@@ -39,16 +43,27 @@ namespace TeachEquipManagement.BLL.Services
                 {
                     _unitOfWork.CreateTransaction();
 
-                    var category = _mapper.Map<Category>(request);
+                    var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(request.UserId);
 
-                    var entity = await _unitOfWork.CategoryRepository.InsertAsync(category);
+                    if (existUser == null) {
+                        _logger.Warning("Warning: Not Found User To Mapping");
+                        response.Data = false;
+                        response.Message = "Not Found User To Mapping";
+                        response.StatusCode = StatusCodes.Status404NotFound;
+
+                        return response;
+                    }    
+
+                    var accountDetail = _mapper.Map<AccountDetail>(request);
+
+                    var entity = await _unitOfWork.AccountDetailRepository.InsertAsync(accountDetail);
                     await _unitOfWork.SaveChangesAsync();
 
                     _unitOfWork.Commit();
 
                     response.Data = true;
                     response.StatusCode = StatusCodes.Status201Created;
-                    response.Message = "Create new Category successfully";
+                    response.Message = "Create new AccountDetail successfully";
                 }
 
                 else
@@ -70,15 +85,15 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public async Task<ApiResponse<List<CategoryResponse>>> GetAll()
+        public async Task<ApiResponse<List<AccountDetailResponse>>> GetAll()
         {
-            ApiResponse<List<CategoryResponse>> response = new();
+            ApiResponse<List<AccountDetailResponse>> response = new();
 
-            var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
+            var accountDetails = await _unitOfWork.AccountDetailRepository.GetAllAsync();
 
-            if (!categories.Any())
+            if (!accountDetails.Any())
             {
-                _logger.Warning("Warning: Not Found Any Category");
+                _logger.Warning("Warning: Not Found Any Account Detail");
                 response.Data = null;
                 response.Message = "Not Found Any Data";
                 response.StatusCode = StatusCodes.Status404NotFound;
@@ -86,41 +101,41 @@ namespace TeachEquipManagement.BLL.Services
 
             else
             {
-                var dataResponses = _mapper.Map<List<CategoryResponse>>(categories);
+                var dataResponses = _mapper.Map<List<AccountDetailResponse>>(accountDetails);
                 response.Data = dataResponses;
-                response.Message = "List Categories";
+                response.Message = "List Account Details";
                 response.StatusCode = StatusCodes.Status200OK;
             }
 
             return response;
         }
 
-        public async Task<ApiResponse<CategoryResponse>> GetById(int id)
+        public async Task<ApiResponse<AccountDetailResponse>> GetById(Guid id)
         {
-            ApiResponse<CategoryResponse> response = new();
+            ApiResponse<AccountDetailResponse> response = new();
 
-            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
+            var accountDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(id);
 
-            if (category != null)
+            if (accountDetail != null)
             {
-                var dataResponse = _mapper.Map<CategoryResponse>(category);
+                var dataResponse = _mapper.Map<AccountDetailResponse>(accountDetail);
                 response.Data = dataResponse;
-                response.Message = "Found Category";
+                response.Message = "Found Account Detail";
                 response.StatusCode = StatusCodes.Status200OK;
             }
 
             else
             {
-                _logger.Warning("Warning: Not Found Category");
+                _logger.Warning("Warning: Not Found Account Detail");
                 response.Data = null;
-                response.Message = "Not Found Category";
+                response.Message = "Not Found Account Detail";
                 response.StatusCode = StatusCodes.Status404NotFound;
             }
 
             return response;
         }
 
-        public async Task<ApiResponse<bool>> Remove(int id)
+        public async Task<ApiResponse<bool>> Remove(Guid id)
         {
             ApiResponse<bool> response = new();
 
@@ -128,24 +143,30 @@ namespace TeachEquipManagement.BLL.Services
             {
                 _unitOfWork.CreateTransaction();
 
-                var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
+                var accountDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(id);
 
-                if (category != null)
+                if (accountDetail != null)
                 {
-                    _unitOfWork.CategoryRepository.Delete(category!);
-                    await _unitOfWork.SaveChangesAsync();
+                    _unitOfWork.AccountDetailRepository.Delete(accountDetail!);
+
+                    var isSuccess = await _unitOfWork.SaveChangesAsync();
 
                     _unitOfWork.Commit();
 
-                    response.Data = true;
-                    response.Message = "Remove Category";
+                    if (isSuccess && accountDetail.SpoFileId != null)
+                    {
+                        await _graphService.DeleteDriveItemAsync(accountDetail.SpoFileId);
+                    }
+
+                    response.Data = isSuccess;
+                    response.Message = "Remove Account Detail";
                     response.StatusCode = StatusCodes.Status202Accepted;
                 }
 
                 else
                 {
-                    _logger.Warning("Warning: Not Found Category");
-                    response.Message = "Not Found Category";
+                    _logger.Warning("Warning: Not Found Account Detail");
+                    response.Message = "Not Found Account Detail";
                     response.StatusCode = StatusCodes.Status404NotFound;
                 }
             }
@@ -160,7 +181,7 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public async Task<ApiResponse<bool>> Update(CategoryUpdateRequest request, ValidationResult validation)
+        public async Task<ApiResponse<bool>> Update(AccountDetailUpdateRequest request, ValidationResult validation)
         {
             ApiResponse<bool> response = new();
 
@@ -170,24 +191,37 @@ namespace TeachEquipManagement.BLL.Services
                 {
                     _unitOfWork.CreateTransaction();
 
-                    var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
+                    var accountDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(request.UserId);
 
-                    if (category != null)
+                    if (accountDetail != null)
                     {
-                        var updateItem = _mapper.Map(request, category);
+                        var updateItem = _mapper.Map(request, accountDetail);
+
+                        if (request.FileUpload != null)
+                        {
+                            var spoFileId = await _graphService.UploadDriveItemAsync(request.FileUpload);
+                            var urlShareFile = await _graphService.GetItemShareLink(spoFileId);
+
+                            if (!string.IsNullOrEmpty(spoFileId) || !string.IsNullOrEmpty(urlShareFile))
+                            {
+                                updateItem.SpoFileId = spoFileId;
+                                updateItem.Avatar = urlShareFile;
+                            }
+                        }
+
                         await _unitOfWork.SaveChangesAsync();
 
                         _unitOfWork.Commit();
 
                         response.Data = true;
-                        response.Message = "Update Category";
+                        response.Message = "Update Account Detail";
                         response.StatusCode = StatusCodes.Status202Accepted;
                     }
 
                     else
                     {
-                        _logger.Warning("Warning: Not Found Category");
-                        response.Message = "Not Found Category";
+                        _logger.Warning("Warning: Not Found Account Detail");
+                        response.Message = "Not Found Account Detail";
                         response.StatusCode = StatusCodes.Status404NotFound;
                     }
                 }

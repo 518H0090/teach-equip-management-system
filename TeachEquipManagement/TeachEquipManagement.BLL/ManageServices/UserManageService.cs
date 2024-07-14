@@ -14,19 +14,21 @@ namespace TeachEquipManagement.BLL.ManageServices
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IOptionsSnapshot<JwtSecretKeyConfiguration> _jwtSecret;
+        private readonly IGraphService _graphService;
 
         public UserManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger,
-            IOptionsSnapshot<JwtSecretKeyConfiguration> jwtSecret)
+            IOptionsSnapshot<JwtSecretKeyConfiguration> jwtSecret, IGraphService graphService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _jwtSecret = jwtSecret;
+            _graphService = graphService;
         }
 
-        public IAccountService UserService => new AccountService(_unitOfWork, _mapper, _logger, _jwtSecret);
+        public IAccountService AccountService => new AccountService(_unitOfWork, _mapper, _logger, _jwtSecret);
 
-        public IUserDetailService UserDetailService => new UserDetailService(_unitOfWork, _mapper, _logger);
+        public IAccountDetailService AccountDetailService => new AccountDetailService(_unitOfWork, _mapper, _logger, _graphService);
 
         public ITokenService TokenService => new AccountService(_unitOfWork, _mapper, _logger, _jwtSecret);
 

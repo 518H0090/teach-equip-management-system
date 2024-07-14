@@ -69,11 +69,9 @@ namespace TeachEquipManagement.BLL.Services
             return spoFileId;
         }
 
-        public async Task<bool> DeleteDriveItemAsync(string itemId)
+        public async Task DeleteDriveItemAsync(string itemId)
         {
-            bool result = true;
-
-            result = await _retryPolicy.ExecuteAsync(async () =>
+            await _retryPolicy.ExecuteAsync(async () =>
             {
                var siteId = await GetSiteCollectionId();
 
@@ -83,18 +81,14 @@ namespace TeachEquipManagement.BLL.Services
 
                if (driveItem == null)
                {
-                    result = false;
+                    throw new Exception("Not Found Drive Item");
                }
 
                else
                {
                     await _graphService.Drives[documentId].Items[itemId].DeleteAsync();
                }
-
-               return result;
             });
-
-            return result;
         }
 
         public async Task<string> GetItemShareLink(string itemId)
@@ -112,6 +106,11 @@ namespace TeachEquipManagement.BLL.Services
                 if (driveItem != null)
                 {
                     spoFileUrl = await CreateShareLink(documentId, itemId);
+                }
+
+                else
+                {
+                    throw new Exception("Not Found Drive Item");
                 }
 
                 return spoFileUrl;
@@ -170,107 +169,6 @@ namespace TeachEquipManagement.BLL.Services
 
             return sharingLink;
         }
-
-        #endregion
-
-        #region Test SPO
-
-        public async Task GetSharePointDataAsync()
-        {
-            var testSite = await _graphService.Sites[$"{ConstantValues.tenantName}:{ConstantValues.siteCollectionRelative}:"].GetAsync();
-
-            var testDocument = await _graphService.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Drives.GetAsync();
-
-            var listAlo = await _graphService.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Lists.GetAsync();
-
-            var siteId = await GetSiteCollectionId();
-
-            var documentId = await GetDocumenLibraryId(siteId, ConstantValues.documentLibraryName);
-
-            var result = await GetListDocumentItem(documentId);
-
-            var resultItem = await _graphService.Drives[documentId].Items["01TFPUVZ47X4ET4Y2JAJEZ4CBQUZXE3XQY"].GetAsync();
-
-            var requestBody = new CreateLinkPostRequestBody
-            {
-                Type = "view",
-                Scope = "anonymous",
-                RetainInheritedPermissions = false,
-                Password = "ThisIsMyPrivatePassword",
-            };
-
-            var resultTestLink = await _graphService.Drives[documentId].Items["01TFPUVZ47X4ET4Y2JAJEZ4CBQUZXE3XQY"].CreateLink.PostAsync(requestBody);
-
-            var aa = await CreateShareLink(documentId, "01TFPUVZ47X4ET4Y2JAJEZ4CBQUZXE3XQY");
-
-            var list = await _graphService.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Lists["test"].Items.GetAsync();
-        }
-
-        public async Task<string> SharePointUploadFileAsync(IFormFile file)
-        {
-
-            string newFileId = string.Empty;
-
-            string site = await GetSiteCollectionId();
-
-            string libraryId = await GetDocumenLibraryId(site, ConstantValues.documentLibraryName);
-
-            var documentId = await GetDocumenLibraryId(site, ConstantValues.documentLibraryName);
-
-            var targetFolder = _graphService.Drives[documentId].Root;
-
-            using (var ms = new MemoryStream())
-            {
-                await file.CopyToAsync(ms);
-                ms.Seek(0, SeekOrigin.Begin);
-
-                var Value = await targetFolder
-                          .ItemWithPath(file.FileName)
-                          .Content
-                          .PutAsync(ms);
-
-                var uploadedItem = await targetFolder.ItemWithPath(file.FileName).GetAsync();
-
-                newFileId = uploadedItem.Id;
-            }
-
-            return newFileId;
-        }
-
-        public async Task GetSharePointShareLinkAsync()
-        {
-            var siteId = await GetSiteCollectionId();
-
-            var documentId = await GetDocumenLibraryId(siteId, ConstantValues.documentLibraryName);
-
-            var result = await GetListDocumentItem(documentId);
-
-            var resultItem = await _graphService.Drives[documentId].Items["01TFPUVZ47X4ET4Y2JAJEZ4CBQUZXE3XQY"].GetAsync();
-
-            var requestBody = new CreateLinkPostRequestBody
-            {
-                Type = "view",
-                Scope = "anonymous",
-                RetainInheritedPermissions = false
-            };
-
-            var resultTestLink = await _graphService.Drives[documentId].Items["01TFPUVZ47X4ET4Y2JAJEZ4CBQUZXE3XQY"].CreateLink.PostAsync(requestBody);
-        }
-
-        public async Task DeleteSharePointShareLinkAsync()
-        {
-            var siteId = await GetSiteCollectionId();
-
-            var documentId = await GetDocumenLibraryId(siteId, ConstantValues.documentLibraryName);
-
-            var result = await GetListDocumentItem(documentId);
-
-            var item = await GetDriveItem(documentId, "01TFPUVZ47X4ET4Y2JAJEZ4CBQUZXE3XQY");
-
-            await _graphService.Drives[documentId].Items["01TFPUVZ47X4ET4Y2JAJEZ4CBQUZXE3XQY"].DeleteAsync();
-        }
-
-
 
         #endregion
     }

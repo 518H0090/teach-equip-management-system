@@ -31,7 +31,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         {
             var validationResult = new UserRequestValidator().Validate(request);
 
-            var response = await _userManageService.UserService.CreateUser(request, validationResult);
+            var response = await _userManageService.AccountService.CreateUser(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -40,7 +40,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         [Route("all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var response = await _userManageService.UserService.GetAllUser();
+            var response = await _userManageService.AccountService.GetAllUser();
 
             return StatusCode(response.StatusCode, response);
         }
@@ -49,7 +49,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         [Route("user/find/{id}")]
         public async Task<IActionResult> FindUserById(Guid id)
         {
-            var response = await _userManageService.UserService.GetUserById(id);
+            var response = await _userManageService.AccountService.GetUserById(id);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -60,7 +60,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         {
             var validationResult = new UserUpdateRequestValidator().Validate(request);
 
-            var response = await _userManageService.UserService.UpdateUser(request, validationResult);
+            var response = await _userManageService.AccountService.UpdateUser(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -69,7 +69,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         [Route("remove-user/{id}")]
         public async Task<IActionResult> RemoveUser(Guid id)
         {
-            var response = await _userManageService.UserService.RemoveUser(id);
+            var response = await _userManageService.AccountService.RemoveUser(id);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -164,6 +164,59 @@ namespace TeachEquipManagement.WebAPI.Controllers
             var validationResult = new RoleUpdateRequestValidator().Validate(request);
 
             var response = await _userManageService.RoleService.Update(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        #endregion
+
+        #region User Detail
+
+        [HttpPost]
+        [Route("create-user-detail")]
+        public async Task<IActionResult> CreateUserDetail([FromBody] AccountDetailRequest request)
+        {
+            var validationResult = new AccountDetailRequestValidator().Validate(request);
+
+            var response = await _userManageService.AccountDetailService.Create(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-user-details")]
+        public async Task<IActionResult> GetAllUserDetails()
+        {
+            var response = await _userManageService.AccountDetailService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("user-detail/find/{id}")]
+        public async Task<IActionResult> FindUserDetailById(Guid id)
+        {
+            var response = await _userManageService.AccountDetailService.GetById(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut]
+        [Route("update-user-detail")]
+        public async Task<IActionResult> UpdateUserDetail([FromForm] AccountDetailUpdateRequest request)
+        {
+            var validationResult = new AccountDetailUpdateRequestValidator().Validate(request);
+
+            var response = await _userManageService.AccountDetailService.Update(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-user-detail/{id}")]
+        public async Task<IActionResult> RemoveUserDetail(Guid id)
+        {
+            var response = await _userManageService.AccountDetailService.Remove(id);
 
             return StatusCode(response.StatusCode, response);
         }

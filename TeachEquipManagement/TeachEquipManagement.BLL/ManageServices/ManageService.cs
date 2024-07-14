@@ -20,20 +20,22 @@ namespace TeachEquipManagement.BLL.ManageServices
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IOptionsSnapshot<JwtSecretKeyConfiguration> _jwtSecret;
+        private readonly IGraphService _graphService;
 
         public ManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger,
-            IOptionsSnapshot<JwtSecretKeyConfiguration> jwtSecret)
+            IOptionsSnapshot<JwtSecretKeyConfiguration> jwtSecret, IGraphService graphService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _jwtSecret = jwtSecret;
+            _graphService = graphService;
         }
 
         public IToolManageService ToolManageService =>  new ToolManageService(_unitOfWork, _mapper, _logger);
 
         public IInventoryManageService InventoryManageService =>  new InventoryManageService(_unitOfWork, _mapper, _logger);
 
-        public IUserManageService AuthenService => new UserManageService(_unitOfWork, _mapper, _logger, _jwtSecret);
+        public IUserManageService AuthenService => new UserManageService(_unitOfWork, _mapper, _logger, _jwtSecret, _graphService);
     }
 }

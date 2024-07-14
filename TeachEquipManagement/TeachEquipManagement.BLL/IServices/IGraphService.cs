@@ -9,19 +9,9 @@ namespace TeachEquipManagement.BLL.IServices
 {
     public interface IGraphService
     {
-        Task GetSharePointDataAsync();
-
-        Task<string> SharePointUploadFileAsync(IFormFile file);
-
-        Task GetSharePointShareLinkAsync();
-
-        Task DeleteSharePointShareLinkAsync();
-
-        //======================================================
-
         Task<string> UploadDriveItemAsync(IFormFile file);
 
-        Task<bool> DeleteDriveItemAsync(string itemId);
+        Task DeleteDriveItemAsync(string itemId);
 
         Task<string> GetItemShareLink(string itemId);
     }
