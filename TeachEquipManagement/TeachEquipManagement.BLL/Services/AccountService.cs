@@ -3,6 +3,8 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Polly;
+using Polly.Retry;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -26,6 +28,7 @@ namespace TeachEquipManagement.BLL.Services
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly JwtSecretKeyConfiguration _jwtSecret;
+        private readonly AsyncRetryPolicy _retryPolicy;
 
         public AccountService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger,
             IOptionsSnapshot<JwtSecretKeyConfiguration> jwtSecret)
@@ -34,7 +37,14 @@ namespace TeachEquipManagement.BLL.Services
             _mapper = mapper;
             _logger = logger;
             _jwtSecret = jwtSecret.Value;
-        }
+            _retryPolicy = Policy
+                          .Handle<Exception>()
+                          .WaitAndRetryAsync(4, retryAttempt => TimeSpan.FromSeconds(1),
+                            (exception, timeSpan, retryCount, context) =>
+                            {
+                                _logger.Error(exception, $"Retry attempt {retryCount} failed due to {exception.Message}.");
+                            });
+}
 
         #region User
 
@@ -44,25 +54,23 @@ namespace TeachEquipManagement.BLL.Services
 
             try
             {
-                int maxRetries = 3;
-
                 if (validation.IsValid)
                 {
                     _unitOfWork.CreateTransaction();
 
-                    Guid userId = Guid.NewGuid();
-
-                    for (int i = 0; i < maxRetries; i++)
+                    Guid userId = await _retryPolicy.ExecuteAsync(async () =>
                     {
+                        userId = Guid.NewGuid();
+
                         var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(userId);
 
-                        if (existUser == null)
+                        if (existUser != null)
                         {
-                            break;
+                            throw new Exception("UserId Exist Please Try Again.");
                         }
 
-                        userId = Guid.NewGuid();
-                    }
+                        return userId;
+                    });
 
                     var existRole = await _unitOfWork.RoleRepository.GetByIdAsync(request.RoleId);
 

@@ -57,9 +57,9 @@ namespace TeachEquipManagement.BLL.Services
             var requestBody = new CreateLinkPostRequestBody
             {
                 Type = "view",
-                Password = "ThisIsMyPrivatePassword",
                 Scope = "anonymous",
                 RetainInheritedPermissions = false,
+                Password = "ThisIsMyPrivatePassword",
             };
 
             var resultTestLink = await graphClient.Drives[documentId].Items["01TFPUVZ3NTJXUGS3PV5H2VCRU3PW2IID3"].CreateLink.PostAsync(requestBody);
