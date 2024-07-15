@@ -2,6 +2,8 @@
 using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.IRepositories;
 using TeachEquipManagement.DAL.Repositories;
+using static TeachEquipManagement.DAL.IRepositories.IRepositoryImplement;
+using static TeachEquipManagement.DAL.Repositories.RepositoryImplement;
 
 namespace TeachEquipManagement.DAL.UnitOfWorks
 {
