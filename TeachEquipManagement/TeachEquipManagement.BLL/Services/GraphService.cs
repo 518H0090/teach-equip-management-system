@@ -1,8 +1,13 @@
-﻿using Azure.Identity;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
-using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.Graph.Drives.Item.Items.Item.CreateLink;
+using Microsoft.Graph.Models;
+using Polly;
+using Polly.Retry;
+using Serilog;
 using TeachEquipManagement.BLL.IServices;
+using TeachEquipManagement.Utilities;
 using TeachEquipManagement.Utilities.OptionPattern;
 
 namespace TeachEquipManagement.BLL.Services
@@ -10,52 +15,161 @@ namespace TeachEquipManagement.BLL.Services
     public class GraphService : IGraphService
     {
         private readonly AzureAdConfiguration _azureConfiguration;
-        private readonly string _tokenEndpoint;
+        private readonly GraphServiceClient _graphService;
+        private readonly AsyncRetryPolicy _retryPolicy;
+        private readonly ILogger _logger;
 
-        public GraphService(IOptionsSnapshot<AzureAdConfiguration> azureConfiguration)
+        public GraphService(IOptionsSnapshot<AzureAdConfiguration> azureConfiguration, GraphServiceClient graphService,
+            ILogger logger)
         {
             _azureConfiguration = azureConfiguration.Value;
-            _tokenEndpoint = $"https://login.microsoftonline.com/{_azureConfiguration.TenantId}/oauth2/token";
+            _graphService = graphService;
+            _logger = logger;
+            _retryPolicy = Policy
+                          .Handle<Exception>()
+                          .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(5),
+                            (exception, timeSpan, retryCount, context) =>
+                            {
+                                _logger.Error(exception, $"Retry attempt {retryCount} failed due to {exception.Message}.");
+                            });
         }
 
-
-        public async Task GetSharePointDataAsync()
+        public async Task<string> UploadDriveItemAsync(IFormFile file)
         {
-            var scopes = new[] { "User.Read" };
+            string spoFileId = string.Empty;
 
-            // Multi-tenant apps can use "common",
-            // single-tenant apps must use the tenant ID from the Azure portal
-            var tenantId = _azureConfiguration.TenantId;
-
-            // Value from app registration
-            var clientId = _azureConfiguration.ClientId;
-
-            // using Azure.Identity;
-            var options = new UsernamePasswordCredentialOptions
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            spoFileId = await _retryPolicy.ExecuteAsync(async () =>
             {
-                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+                string site = await GetSiteCollectionId();
+
+                var documentId = await GetDocumenLibraryId(site, ConstantValues.documentLibraryName);
+
+                var targetFolder = _graphService.Drives[documentId].Root;
+
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    await targetFolder
+                              .ItemWithPath(file.FileName)
+                              .Content
+                              .PutAsync(stream);
+
+                    var uploadedItem = await targetFolder.ItemWithPath(file.FileName).GetAsync();
+
+                    spoFileId = uploadedItem?.Id;
+                }
+
+                return spoFileId;
+            });
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+            return spoFileId;
+        }
+
+        public async Task DeleteDriveItemAsync(string itemId)
+        {
+            await _retryPolicy.ExecuteAsync(async () =>
+            {
+               var siteId = await GetSiteCollectionId();
+
+               var documentId = await GetDocumenLibraryId(siteId, ConstantValues.documentLibraryName);
+
+               var driveItem = await GetDriveItem(documentId, itemId);
+
+               if (driveItem == null)
+               {
+                    throw new Exception("Not Found Drive Item");
+               }
+
+               else
+               {
+                    await _graphService.Drives[documentId].Items[itemId].DeleteAsync();
+               }
+            });
+        }
+
+        public async Task<string> GetItemShareLink(string itemId)
+        {
+            string spoFileUrl = string.Empty;
+
+            spoFileUrl = await _retryPolicy.ExecuteAsync(async () =>
+            {
+                var siteId = await GetSiteCollectionId();
+
+                var documentId = await GetDocumenLibraryId(siteId, ConstantValues.documentLibraryName);
+
+                var driveItem = await GetDriveItem(documentId, itemId);
+
+                if (driveItem != null)
+                {
+                    spoFileUrl = await CreateShareLink(documentId, itemId);
+                }
+
+                else
+                {
+                    throw new Exception("Not Found Drive Item");
+                }
+
+                return spoFileUrl;
+            });
+
+            return spoFileUrl;
+        }
+
+        #region Support Function
+
+        private async Task<string> GetSiteCollectionId()
+        {
+            var siteInfo = await _graphService.Sites[$"{ConstantValues.tenantName}:{ConstantValues.siteCollectionRelative}:"].GetAsync();
+            var siteId = siteInfo?.Id?.Split(",")[1];
+
+            return siteId ?? string.Empty;
+        }
+
+        private async Task<string> GetDocumenLibraryId(string siteId, string folderName)
+        {
+            var siteDocuments = await _graphService.Sites[siteId].Drives.GetAsync();
+
+            var documentId = siteDocuments?.Value?.FirstOrDefault(x => x.Name == folderName)?.Id;
+
+            return documentId ?? string.Empty;
+        }
+
+        private async Task<DriveItemCollectionResponse?> GetListDocumentItem(string documentId)
+        {
+
+            var result = await _graphService.Drives[documentId].Items["root"].Children.GetAsync();
+
+            return result;
+        }
+
+        private async Task<DriveItem?> GetDriveItem(string documentId, string itemId)
+        {
+
+            var result = await _graphService.Drives[documentId].Items[itemId].GetAsync();
+
+            return result;
+        }
+
+        private async Task<string> CreateShareLink(string documentId, string itemId)
+        {
+            var requestBody = new CreateLinkPostRequestBody
+            {
+                Type = "view",
+                Scope = "anonymous",
+                RetainInheritedPermissions = false
             };
 
-            var userName = "HuynhTran@TrungHieu1204.onmicrosoft.com";
-            var password = "TrungHieu1204@";
+            var resultShareLink = await _graphService.Drives[documentId].Items[itemId].CreateLink.PostAsync(requestBody);
 
-            // https://learn.microsoft.com/dotnet/api/azure.identity.usernamepasswordcredential
-            var userNamePasswordCredential = new UsernamePasswordCredential(
-                userName, password, tenantId, clientId, options);
+            var sharingLink = resultShareLink.Link.WebUrl ?? string.Empty;
 
-            var graphClient = new GraphServiceClient(userNamePasswordCredential, scopes);
-
-            var testSite = await graphClient.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].GetAsync();
-
-            var testDocument = await graphClient.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Drives.GetAsync();
-
-            var siteId = testSite?.Id?.Split(",")[1];
-
-            var documentId = testDocument?.Value?.FirstOrDefault(x => x.Name == "Avatars")?.Id;
-
-            var result = await graphClient.Drives[documentId].Items["root"].Children.GetAsync();
-
-            var list = await graphClient.Sites["trunghieu1204.sharepoint.com:/sites/FamilyTree:"].Lists["test"].Items.GetAsync();
+            return sharingLink;
         }
+
+        #endregion
     }
 }

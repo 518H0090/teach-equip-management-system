@@ -11,12 +11,12 @@ namespace TeachEquipManagement.Utilities.Helper
     {
         #region Process Password
 
-        public static void CreatePasswordHash(string password, out byte[] PasswordHash, out byte[] PasswordSalt)
+        public static void CreatePasswordHash(string password, out byte[] passwordSalt, out byte[] passwordHash)
         {
             using (var hmac = new HMACSHA512())
             {
-                PasswordSalt = hmac.Key;
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
 

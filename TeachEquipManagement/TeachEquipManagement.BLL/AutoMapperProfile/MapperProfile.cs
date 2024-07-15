@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.Graph.Models;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.DAL.Models;
 
@@ -22,9 +23,10 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<ToolRequest, Tool>()
             .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => src.SupplierId))
             .ForMember(dest => dest.ToolName, opt => opt.MapFrom(src => src.ToolName))
-            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-            .ForAllMembers(opt => opt.Ignore());
-            CreateMap<Tool, ToolResponse>();
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
+
+            CreateMap<Tool, ToolResponse>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
             CreateMap<Tool, ToolIncludeSupplierResponse>();
             CreateMap<ToolUpdateRequest, Tool>();
 
@@ -36,7 +38,16 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<InvoceUpdateRequest, Invoice>();
             CreateMap<Invoice, InvoiceIncludeToolResponse>();
 
+            CreateMap<Account, AccountResponse>();
+            CreateMap<AccountUpdateRequest, Account>();
 
+            CreateMap<RoleRequest, Role>();
+            CreateMap<Role, RoleResponse>();
+            CreateMap<RoleUpdateRequest, Role>();
+
+            CreateMap<AccountDetailRequest, AccountDetail>();
+            CreateMap<AccountDetail, AccountDetailResponse>();
+            CreateMap<AccountDetailUpdateRequest, AccountDetail>();
         }
     }
 }

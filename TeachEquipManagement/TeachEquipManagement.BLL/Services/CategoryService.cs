@@ -39,9 +39,9 @@ namespace TeachEquipManagement.BLL.Services
                 {
                     _unitOfWork.CreateTransaction();
 
-                    var supplier = _mapper.Map<Category>(request);
+                    var category = _mapper.Map<Category>(request);
 
-                    var entity = await _unitOfWork.CategoryRepository.InsertAsync(supplier);
+                    var entity = await _unitOfWork.CategoryRepository.InsertAsync(category);
                     await _unitOfWork.SaveChangesAsync();
 
                     _unitOfWork.Commit();

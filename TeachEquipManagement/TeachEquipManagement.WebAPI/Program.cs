@@ -1,10 +1,10 @@
-using FluentValidation;
+using Azure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
-using Microsoft.TeamFoundation.TestManagement.WebApi;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Reflection;
-using TeachEquipManagement.BLL.FluentValidator;
+using System.Text;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
 using TeachEquipManagement.BLL.Services;
@@ -100,6 +100,31 @@ builder.Host.UseSerilog((context, configuration) =>
 #region Register Configuration
 
 builder.Services.Configure<AzureAdConfiguration>(builder.Configuration.GetSection("AzureAD"));
+builder.Services.Configure<JwtSecretKeyConfiguration>(builder.Configuration.GetSection("Jwt"));
+
+#endregion
+
+# region JwtToken Authentication
+
+var secretKey = builder.Configuration.GetSection("Jwt:SecretKey").Get<string>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+ .AddJwtBearer(options =>
+ {
+     options.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuer = false,
+         ValidateAudience = false,
+         ValidateLifetime = true,
+         ValidateIssuerSigningKey = true,
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+         ClockSkew = TimeSpan.Zero
+     };
+ });
 
 #endregion
 
@@ -111,6 +136,36 @@ builder.Services.AddScoped<IInventoryManageService, InventoryManageService>();
 builder.Services.AddScoped<IUserManageService, UserManageService>();
 
 builder.Services.AddScoped<IGraphService, GraphService>();
+
+#endregion
+
+# region Graph Service Client
+
+builder.Services.AddSingleton<GraphServiceClient>(serviceProvider =>
+{
+    var clientId = builder.Configuration["AzureAd:ClientId"];
+    var tenantId = builder.Configuration["AzureAd:TenantId"];
+    var clientSecret = builder.Configuration["AzureAd:ClientSecret"];
+
+    var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+    if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(clientSecret))
+    {
+        throw new InvalidOperationException("AzureAd settings are not configured properly.");
+    }
+
+    var options = new ClientSecretCredentialOptions
+    {
+        AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+    };
+
+    var clientSecretCredential = new ClientSecretCredential(
+        tenantId, clientId, clientSecret, options);
+
+    var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+    return graphClient;
+});
 
 #endregion
 
@@ -128,6 +183,8 @@ app.UseCors("AllowAllPolicy");
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

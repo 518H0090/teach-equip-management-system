@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeachEquipManagement.DAL.GenericRepository;
-using TeachEquipManagement.DAL.IRepositories;
+﻿using TeachEquipManagement.DAL.IRepositories;
+using static TeachEquipManagement.DAL.IRepositories.IRepositoryImplement;
 
 namespace TeachEquipManagement.DAL.UnitOfWorks
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        IUserRepository UserRepository { get; }
+        IAccountRepository AccountRepository { get; }
 
-        IUserPermissionRepository UserPermissionRepository { get; }
-
-        IUserDetailRepository UserDetailRepository { get; }
+        IAccountDetailRepository AccountDetailRepository { get; }
 
         IToolRepository ToolRepository { get; }
 
         ISupplierRepository SupplierRepository { get; }
-        IPermissionRepository PermissionRepository { get; }
 
         IInvoiceRepository InvoiceRepository { get; }
 
@@ -40,6 +32,8 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         IQueryToolCategoryRepository QueryToolCategoryRepository { get; }
 
         IQueryInvoiceRepository QueryInvoiceRepository { get; }
+
+        IRoleRepository RoleRepository { get; }
 
         Task<bool> SaveChangesAsync();
 

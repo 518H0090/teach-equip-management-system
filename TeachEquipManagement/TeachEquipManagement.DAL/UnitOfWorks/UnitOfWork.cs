@@ -2,6 +2,8 @@
 using TeachEquipManagement.DAL.EFContext;
 using TeachEquipManagement.DAL.IRepositories;
 using TeachEquipManagement.DAL.Repositories;
+using static TeachEquipManagement.DAL.IRepositories.IRepositoryImplement;
+using static TeachEquipManagement.DAL.Repositories.RepositoryImplement;
 
 namespace TeachEquipManagement.DAL.UnitOfWorks
 {
@@ -16,15 +18,13 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         #pragma warning restore CS8618
 
-        public IUserRepository UserRepository => new UserRepository(_context);
-        public IUserPermissionRepository UserPermissionRepository => new UserPermissionRepository(_context);
-        public IUserDetailRepository UserDetailRepository => new UserDetailRepository(_context);
+        public IAccountRepository AccountRepository => new AccountRepository(_context);
+
+        public IAccountDetailRepository AccountDetailRepository => new AccountDetailRepository(_context);
 
         public IToolRepository ToolRepository =>  new ToolRepository(_context);
 
         public ISupplierRepository SupplierRepository => new SupplierRepository(_context);
-
-        public IPermissionRepository PermissionRepository => new PermissionRepository(_context);
 
         public IInvoiceRepository InvoiceRepository =>  new InvoiceRepository(_context);
 
@@ -46,6 +46,8 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
 
         public IQueryInvoiceRepository QueryInvoiceRepository => new QueryInvoiceRepository(_context);
 
+        public IRoleRepository RoleRepository => new RoleRepository(_context);
+
         public void Commit()
         {
             _transaction.Commit();
@@ -54,6 +56,11 @@ namespace TeachEquipManagement.DAL.UnitOfWorks
         public void CreateTransaction()
         {
             _transaction = _context.Database.BeginTransaction();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
 
         public void Rollback()
