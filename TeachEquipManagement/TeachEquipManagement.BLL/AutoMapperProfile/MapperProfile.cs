@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.InventoryManage;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.DAL.Models;
 
@@ -48,6 +50,10 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<AccountDetailRequest, AccountDetail>();
             CreateMap<AccountDetail, AccountDetailResponse>();
             CreateMap<AccountDetailUpdateRequest, AccountDetail>();
+
+            CreateMap<InventoryRequest, Inventory>();
+            CreateMap<Inventory, InventoryResponse>();
+            CreateMap<InventoryUpdateRequest, Inventory>();
         }
     }
 }
