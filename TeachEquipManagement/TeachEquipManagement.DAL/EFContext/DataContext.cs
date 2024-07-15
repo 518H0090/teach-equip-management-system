@@ -176,7 +176,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<ApprovalRequest>(approval_request =>
             {
-                approval_request.HasKey(approval_request => new { approval_request.UserId, approval_request.InventoryId });
+                approval_request.HasKey(approval_request => new { approval_request.AccountId, approval_request.InventoryId });
 
                 approval_request.Property(approval_request => approval_request.Quantity).HasDefaultValue(0).IsRequired();
 
@@ -194,9 +194,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 approval_request.Property(approval_request => approval_request.IsApproved).HasDefaultValue<bool>(false).IsRequired();
 
-                approval_request.HasOne<Account>(approval_request => approval_request.User)
+                approval_request.HasOne<Account>(approval_request => approval_request.Account)
                       .WithMany(user => user.ApprovalRequests)
-                      .HasForeignKey(approval_request => approval_request.UserId)
+                      .HasForeignKey(approval_request => approval_request.AccountId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 approval_request.HasOne<Inventory>(approval_request => approval_request.Inventory)

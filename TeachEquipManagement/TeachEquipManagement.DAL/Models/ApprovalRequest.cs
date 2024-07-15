@@ -8,7 +8,7 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class ApprovalRequest
     {
-        public Guid UserId { get; set; }
+        public Guid AccountId { get; set; }
 
         public Guid InventoryId { get; set; }   
 
@@ -26,8 +26,8 @@ namespace TeachEquipManagement.DAL.Models
 
         public bool IsApproved { get; set; }
 
-        public Account User { get; set; } = new();
+        public virtual Account? Account { get; set; }
 
-        public Inventory Inventory { get; set; } = new();
+        public virtual Inventory? Inventory { get; set; }
     }
 }
