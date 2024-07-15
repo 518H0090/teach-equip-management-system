@@ -41,9 +41,7 @@ namespace TeachEquipManagement.BLL.Services
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             spoFileId = await _retryPolicy.ExecuteAsync(async () =>
             {
-                string site = await GetSiteCollectionId();
-
-                var documentId = await GetDocumenLibraryId(site, ConstantValues.documentLibraryName);
+                var documentId = await GetDocumenLibraryId(ConstantValues.documentLibraryName);
 
                 var targetFolder = _graphService.Drives[documentId].Root;
 
@@ -73,9 +71,7 @@ namespace TeachEquipManagement.BLL.Services
         {
             await _retryPolicy.ExecuteAsync(async () =>
             {
-               var siteId = await GetSiteCollectionId();
-
-               var documentId = await GetDocumenLibraryId(siteId, ConstantValues.documentLibraryName);
+               var documentId = await GetDocumenLibraryId(ConstantValues.documentLibraryName);
 
                var driveItem = await GetDriveItem(documentId, itemId);
 
@@ -97,9 +93,7 @@ namespace TeachEquipManagement.BLL.Services
 
             spoFileUrl = await _retryPolicy.ExecuteAsync(async () =>
             {
-                var siteId = await GetSiteCollectionId();
-
-                var documentId = await GetDocumenLibraryId(siteId, ConstantValues.documentLibraryName);
+                var documentId = await GetDocumenLibraryId(ConstantValues.documentLibraryName);
 
                 var driveItem = await GetDriveItem(documentId, itemId);
 
@@ -121,17 +115,9 @@ namespace TeachEquipManagement.BLL.Services
 
         #region Support Function
 
-        private async Task<string> GetSiteCollectionId()
+        private async Task<string> GetDocumenLibraryId(string folderName)
         {
-            var siteInfo = await _graphService.Sites[$"{ConstantValues.tenantName}:{ConstantValues.siteCollectionRelative}:"].GetAsync();
-            var siteId = siteInfo?.Id?.Split(",")[1];
-
-            return siteId ?? string.Empty;
-        }
-
-        private async Task<string> GetDocumenLibraryId(string siteId, string folderName)
-        {
-            var siteDocuments = await _graphService.Sites[siteId].Drives.GetAsync();
+            var siteDocuments = await _graphService.Sites[$"{ConstantValues.tenantName}:{ConstantValues.siteCollectionRelative}:"].Drives.GetAsync();
 
             var documentId = siteDocuments?.Value?.FirstOrDefault(x => x.Name == folderName)?.Id;
 
@@ -163,9 +149,9 @@ namespace TeachEquipManagement.BLL.Services
                 RetainInheritedPermissions = false
             };
 
-            var resultShareLink = await _graphService.Drives[documentId].Items[itemId].CreateLink.PostAsync(requestBody);
+            var driveItemLink = await _graphService.Drives[documentId].Items[itemId].CreateLink.PostAsync(requestBody);
 
-            var sharingLink = resultShareLink.Link.WebUrl ?? string.Empty;
+            var sharingLink = driveItemLink.Link.WebUrl ?? string.Empty;
 
             return sharingLink;
         }

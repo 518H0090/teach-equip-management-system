@@ -46,13 +46,27 @@ namespace TeachEquipManagement.BLL.Services
                     var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(request.UserId);
 
                     if (existUser == null) {
+
                         _logger.Warning("Warning: Not Found User To Mapping");
                         response.Data = false;
                         response.Message = "Not Found User To Mapping";
                         response.StatusCode = StatusCodes.Status404NotFound;
 
                         return response;
-                    }    
+
+                    }
+
+                    var existUserDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(request.UserId);
+
+                    if (existUserDetail != null)
+                    {
+                        _logger.Warning("Warning: UseDetail is already exist");
+                        response.Data = false;
+                        response.Message = "UseDetail is already exist";
+                        response.StatusCode = StatusCodes.Status400BadRequest;
+
+                        return response;
+                    }
 
                     var accountDetail = _mapper.Map<AccountDetail>(request);
 
