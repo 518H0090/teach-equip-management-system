@@ -20,9 +20,9 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Status { get; set; } = string.Empty;
 
-        public string ManagerApprove { get; set; } = string.Empty;
+        public string? ManagerApprove { get; set; } = string.Empty;
 
-        public DateTime ApproveDate { get; set; }   
+        public DateTime? ApproveDate { get; set; }   
 
         public bool IsApproved { get; set; }
 

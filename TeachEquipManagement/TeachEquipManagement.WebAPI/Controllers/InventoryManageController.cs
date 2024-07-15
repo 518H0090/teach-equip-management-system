@@ -72,5 +72,31 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         #endregion
+
+        #region Enum Type
+
+        [HttpGet]
+        [Route("approval-enums")]
+        public  IActionResult GetAllApprovalEnums()
+        {
+            var response = _inventoryService.ApprovalRequestService.GetListApprovalEnum();
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("request-type-enums")]
+        public IActionResult GetAllRequestTypeEnums()
+        {
+            var response = _inventoryService.ApprovalRequestService.GetListRequestTypeEnum();
+
+            return Ok(response);
+        }
+
+        #endregion
+
+        #region ApprovalRequest
+
+        #endregion
     }
 }

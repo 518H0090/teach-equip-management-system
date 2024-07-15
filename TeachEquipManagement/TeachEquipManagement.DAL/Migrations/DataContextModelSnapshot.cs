@@ -117,10 +117,8 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<Guid>("InventoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ApproveDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 11, 9, 7, 152, DateTimeKind.Local).AddTicks(5600));
+                    b.Property<DateTime?>("ApproveDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
@@ -128,7 +126,6 @@ namespace TeachEquipManagement.DAL.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("ManagerApprove")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
@@ -139,7 +136,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 11, 9, 7, 152, DateTimeKind.Local).AddTicks(5323));
+                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(882));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -215,7 +212,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 11, 9, 7, 152, DateTimeKind.Local).AddTicks(8660));
+                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(4357));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -244,7 +241,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 11, 9, 7, 152, DateTimeKind.Local).AddTicks(3085));
+                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 842, DateTimeKind.Local).AddTicks(8375));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()

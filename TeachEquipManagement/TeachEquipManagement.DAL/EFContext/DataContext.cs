@@ -182,15 +182,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 approval_request.Property(approval_request => approval_request.RequestType).IsRequired();
 
-                approval_request.Property(approval_request => approval_request.RequestType).IsRequired();
-
                 approval_request.Property(approval_request => approval_request.RequestDate).HasDefaultValue<DateTime>(DateTime.Now).IsRequired();
 
                 approval_request.Property(approval_request => approval_request.Status).IsRequired();
-
-                approval_request.Property(approval_request => approval_request.ManagerApprove).IsRequired();
-
-                approval_request.Property(approval_request => approval_request.ApproveDate).HasDefaultValue<DateTime>(DateTime.Now).IsRequired();
 
                 approval_request.Property(approval_request => approval_request.IsApproved).HasDefaultValue<bool>(false).IsRequired();
 
