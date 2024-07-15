@@ -9,9 +9,16 @@ namespace TeachEquipManagement.BLL.BusinessModels
 {
     public enum RequestTypeEnum
     {
-        [Description("Pending")]
-        ApprovalPending,
-        [Description("Accept")]
-        ApprovalAccept,
+        [Description("Borrow")]
+        RequestBorrowType,
+
+        [Description("Return")]
+        RequestReturnType,
+
+        [Description("Buy")]
+        RequestBuyType,
+
+        [Description("Sell")]
+        RequestSellType
     }
 }

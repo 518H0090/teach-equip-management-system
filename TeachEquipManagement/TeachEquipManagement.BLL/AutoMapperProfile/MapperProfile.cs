@@ -56,6 +56,9 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             CreateMap<InventoryUpdateRequest, Inventory>();
 
             CreateMap<ApprovalProcessRequest, ApprovalRequest>();
+            CreateMap<ApprovalRequest, ApprovalProcessResponse>();
+            CreateMap<ApprovalProcessUpdateRequest, ApprovalRequest>();
+
         }
     }
 }

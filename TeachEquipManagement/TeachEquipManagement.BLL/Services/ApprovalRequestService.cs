@@ -14,9 +14,11 @@ using TeachEquipManagement.BLL.BusinessModels.Common;
 using TeachEquipManagement.BLL.BusinessModels.Dtos;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.InventoryManage;
+using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
+using TeachEquipManagement.Utilities.CommonModels;
 using TeachEquipManagement.Utilities.Helper;
 
 namespace TeachEquipManagement.BLL.Services
@@ -46,7 +48,34 @@ namespace TeachEquipManagement.BLL.Services
                 {
                     _unitOfWork.CreateTransaction();
 
+                    var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(request.AccountId);
+
+                    var existInventory = await _unitOfWork.InventoryRepository.GetByIdAsync(request.InventoryId);
+
+                    if (existUser == null || existInventory == null)
+                    {
+                        response.Data = false;
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                        response.Message = "Missing Object to create request";
+
+                        return response;
+                    }
+
+                    var listRequestType = GetListRequestTypeEnum();
+
+                    if (!listRequestType.Contains(request.RequestType))
+                    {
+                        response.Data = false;
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                        response.Message = "Invalid RequestType";
+
+                        return response;
+                    }
+
                     var approval = _mapper.Map<ApprovalRequest>(request);
+
+                    approval.RequestDate = DateTime.Now;
+                    approval.Status = ApprovalStatusEnum.ApprovalPending.GetDescription();
 
                     var entity = await _unitOfWork.ApprovalRequestRepository.InsertAsync(approval);
                     await _unitOfWork.SaveChangesAsync();
@@ -77,21 +106,128 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public Task<ApiResponse<List<ApprovalProcessResponse>>> GetAll()
+        public async Task<ApiResponse<List<ApprovalProcessResponse>>> GetAll()
         {
-            throw new NotImplementedException();
+            ApiResponse<List<ApprovalProcessResponse>> response = new();
+
+            var approvalRequests = await _unitOfWork.ApprovalRequestRepository.GetAllAsync();
+
+            if (!approvalRequests.Any())
+            {
+                _logger.Warning("Warning: Not Found Any Approval Request");
+                response.Data = null;
+                response.Message = "Not Found Any Approval Request";
+                response.StatusCode = StatusCodes.Status404NotFound;
+            }
+
+            else
+            {
+                var dataResponses = _mapper.Map<List<ApprovalProcessResponse>>(approvalRequests);
+                response.Data = dataResponses;
+                response.Message = "List Approval Requests";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            return response;
         }
 
-        public Task<ApiResponse<ApprovalProcessResponse>> GetById(int id)
+        public ApiResponse<ApprovalProcessResponse> GetApprovalProcess(ProcessRequest request, ValidationResult validation)
         {
-            throw new NotImplementedException();
+            ApiResponse<ApprovalProcessResponse> response = new();
+
+            if (validation.IsValid)
+            {
+                QueryModel<ApprovalRequest> query = new QueryModel<ApprovalRequest>
+                {
+                    QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
+                };
+
+                var approvalRequest = _unitOfWork.ApprovalRequestRepository.GetQueryable(query).FirstOrDefault();
+
+                if (approvalRequest != null)
+                {
+                    var dataResponse = _mapper.Map<ApprovalProcessResponse>(approvalRequest);
+                    response.Data = dataResponse;
+                    response.Message = "Found ApprovalRequest";
+                    response.StatusCode = StatusCodes.Status200OK;
+                }
+
+                else
+                {
+                    _logger.Warning("Warning: Not Found ApprovalRequest");
+                    response.Data = null;
+                    response.Message = "Not Found ApprovalRequest";
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                }
+            }
+
+            else
+            {
+                _logger.Warning("Warning: Invalid Request");
+                response.Data = null;
+                response.StatusCode = StatusCodes.Status400BadRequest;
+                response.Message = validation.ToString();
+            }
+
+            return response;
         }
 
-       
-
-        public Task<ApiResponse<bool>> Remove(int id)
+        public async Task<ApiResponse<bool>> Remove(ProcessRequest request, ValidationResult validation)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            if (validation.IsValid)
+            {
+                try
+                {
+                    _unitOfWork.CreateTransaction();
+
+                    QueryModel<ApprovalRequest> query = new QueryModel<ApprovalRequest>
+                    {
+                        QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
+                    };
+
+                    var approvalRequest = _unitOfWork.ApprovalRequestRepository.GetQueryable(query).FirstOrDefault();
+
+                    if (approvalRequest != null)
+                    {
+                        _unitOfWork.ApprovalRequestRepository.Delete(approvalRequest!);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        _unitOfWork.Commit();
+
+                        response.Data = true;
+                        response.Message = "Remove Approval Request";
+                        response.StatusCode = StatusCodes.Status202Accepted;
+                    }
+
+                    else
+                    {
+                        _logger.Warning("Warning: Not Found Approval Request");
+                        response.Data = false;
+                        response.Message = "Not Found Approval Request";
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.Error($"Error with : {e.Message}");
+                    response.Data = false;
+                    response.Message = $"{e.InnerException}";
+                    response.StatusCode = StatusCodes.Status500InternalServerError;
+                    _unitOfWork.Rollback();
+                }
+            }
+
+            else
+            {
+                _logger.Warning("Warning: Invalid Request");
+                response.Data = false;
+                response.StatusCode = StatusCodes.Status400BadRequest;
+                response.Message = validation.ToString();
+            }
+
+            return response;
         }
      
 
@@ -103,10 +239,10 @@ namespace TeachEquipManagement.BLL.Services
         #endregion
 
         #region Process Enum
-        public IEnumerable<string> GetListApprovalEnum()
+        public IEnumerable<string> GetListApprovalStatusEnum()
         {
 
-            IEnumerable<string> approvalEnums = Enum.GetValues(typeof(ApprovalEnum)).Cast<ApprovalEnum>().Select(value => value.GetDescription()).ToList();
+            IEnumerable<string> approvalEnums = Enum.GetValues(typeof(ApprovalStatusEnum)).Cast<ApprovalStatusEnum>().Select(value => value.GetDescription()).ToList();
 
             return approvalEnums;
         }

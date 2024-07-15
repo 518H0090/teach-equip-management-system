@@ -18,14 +18,12 @@ namespace TeachEquipManagement.BLL.FluentValidator
             .WithName("ToolId must be int");
 
             RuleFor(x => x.TotalQuantity)
-            .NotEmpty().WithMessage("TotalQuantity is required.")
             .GreaterThanOrEqualTo(0)
             .WithMessage("TotalQuantity must be greater than or equal to 0.")
             .Must(id => id is int)
             .WithName("ToolId must be int");
 
             RuleFor(x => x.AmountBorrow)
-           .NotEmpty().WithMessage("AmountBorrow is required.")
            .GreaterThanOrEqualTo(0)
            .WithMessage("AmountBorrow must be greater than or equal to 0.")
            .Must(id => id is int)

@@ -18,11 +18,11 @@ namespace TeachEquipManagement.BLL.IServices
     {
         Task<ApiResponse<bool>> Create(ApprovalProcessRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> Update(ApprovalProcessUpdateRequest request, ValidationResult validation);
-        Task<ApiResponse<bool>> Remove(int id);
+        Task<ApiResponse<bool>> Remove(ProcessRequest request, ValidationResult validation);
         Task<ApiResponse<List<ApprovalProcessResponse>>> GetAll();
-        Task<ApiResponse<ApprovalProcessResponse>> GetById(int id);
+        ApiResponse<ApprovalProcessResponse> GetApprovalProcess(ProcessRequest request, ValidationResult validation);
 
-        IEnumerable<string> GetListApprovalEnum();
+        IEnumerable<string> GetListApprovalStatusEnum();
 
         IEnumerable<string> GetListRequestTypeEnum();
     }

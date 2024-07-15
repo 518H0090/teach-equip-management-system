@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
@@ -79,7 +80,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         [Route("approval-enums")]
         public  IActionResult GetAllApprovalEnums()
         {
-            var response = _inventoryService.ApprovalRequestService.GetListApprovalEnum();
+            var response = _inventoryService.ApprovalRequestService.GetListApprovalStatusEnum();
 
             return Ok(response);
         }
@@ -96,6 +97,48 @@ namespace TeachEquipManagement.WebAPI.Controllers
         #endregion
 
         #region ApprovalRequest
+
+        [HttpPost]
+        [Route("create-approval-request")]
+        public async Task<IActionResult> CreateApprovalRequest([FromBody] ApprovalProcessRequest request)
+        {
+            var validationResult = new ApprovalProcessRequestValidator().Validate(request);
+
+            var response = await _inventoryService.ApprovalRequestService.Create(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-approval-requests")]
+        public async Task<IActionResult> GetAllApprovalRequests()
+        {
+            var response = await _inventoryService.ApprovalRequestService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost]
+        [Route("approval-request")]
+        public IActionResult GetApprovalRequest([FromBody] ProcessRequest request)
+        {
+            var validationResult = new ProcessRequestValidator().Validate(request);
+
+            var response = _inventoryService.ApprovalRequestService.GetApprovalProcess(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-request")]
+        public async Task<IActionResult> RemoveApprovalRequest([FromBody] ProcessRequest request)
+        {
+            var validationResult = new ProcessRequestValidator().Validate(request);
+
+            var response = await _inventoryService.ApprovalRequestService.Remove(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
 
         #endregion
     }

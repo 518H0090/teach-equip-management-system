@@ -10,31 +10,31 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.InventoryManage
 {
     public class ApprovalProcessResponse
     {
-        [JsonProperty("")]
+        [JsonProperty("account_id")]
         public Guid AccountId { get; set; }
 
-        [JsonProperty("")]
+        [JsonProperty("inventory_id")]
         public Guid InventoryId { get; set; }
 
-        [JsonProperty("")]
+        [JsonProperty("quantity")]
         public int Quantity { get; set; }
 
-        [JsonProperty("")]
+        [JsonProperty("request_type")]
         public string RequestType { get; set; } = string.Empty;
 
-        [JsonProperty("")]
+        [JsonProperty("request_date")]
         public DateTime RequestDate { get; set; }
 
-        [JsonProperty("")]
+        [JsonProperty("status")]
         public string Status { get; set; } = string.Empty;
 
-        [JsonProperty("")]
+        [JsonProperty("manager_approve")]
         public string? ManagerApprove { get; set; } = string.Empty;
 
-        [JsonProperty("")]
+        [JsonProperty("approve_date")]
         public DateTime? ApproveDate { get; set; }
 
-        [JsonProperty("")]
+        [JsonProperty("is_approved")]
         public bool IsApproved { get; set; }
     }
 }
