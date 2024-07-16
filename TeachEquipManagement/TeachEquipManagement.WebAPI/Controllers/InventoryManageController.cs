@@ -140,6 +140,17 @@ namespace TeachEquipManagement.WebAPI.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPut]
+        [Route("update-approval-request")]
+        public async Task<IActionResult> UpdateApprovalRequest([FromBody] ApprovalProcessUpdateRequest request)
+        {
+            var validationResult = new ApprovalProcessUpdateRequestValidator().Validate(request);
+
+            var response = await _inventoryService.ApprovalRequestService.Update(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         #endregion
     }
 }

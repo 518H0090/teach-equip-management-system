@@ -231,9 +231,72 @@ namespace TeachEquipManagement.BLL.Services
         }
      
 
-        public Task<ApiResponse<bool>> Update(ApprovalProcessUpdateRequest request, ValidationResult validation)
+        public async Task<ApiResponse<bool>> Update(ApprovalProcessUpdateRequest request, ValidationResult validation)
         {
-            throw new NotImplementedException();
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                if (validation.IsValid)
+                {
+                    _unitOfWork.CreateTransaction();
+
+                    var listRequestType = GetListApprovalStatusEnum();
+
+                    if (!listRequestType.Contains(request.Status))
+                    {
+                        response.Data = false;
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                        response.Message = "Invalid Approval Type";
+
+                        return response;
+                    }
+
+                    QueryModel<ApprovalRequest> query = new QueryModel<ApprovalRequest>
+                    {
+                        QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
+                    };
+
+                    var approvalRequest = _unitOfWork.ApprovalRequestRepository.GetQueryable(query).FirstOrDefault();
+
+                    if (approvalRequest != null)
+                    {
+                        var updateItem = _mapper.Map(request, approvalRequest);
+                        updateItem.ApproveDate = DateTime.Now;
+                        await _unitOfWork.SaveChangesAsync();
+
+                        _unitOfWork.Commit();
+
+                        response.Data = true;
+                        response.Message = "Update Approval Request";
+                        response.StatusCode = StatusCodes.Status202Accepted;
+                    }
+
+                    else
+                    {
+                        _logger.Warning("Warning: Not Found Approval Request");
+                        response.Message = "Not Found Approval Request";
+                        response.StatusCode = StatusCodes.Status404NotFound;
+                    }
+                }
+
+                else
+                {
+                    response.Data = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = validation.ToString();
+                }
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+            return response;
         }
 
         #endregion
