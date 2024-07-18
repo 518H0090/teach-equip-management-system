@@ -1,3 +1,24 @@
+<script setup>
+
+import { onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore()
+
+const is_expanded = ref(localStorage.getItem('is_expanded') === 'true')
+
+const ToggleMenu = async () => {
+    is_expanded.value = !is_expanded.value
+
+    //Hieu: this state always reset when we refresh page - just use for test
+    await store.dispatch('setIsExpanded', is_expanded.value)
+
+    //Hieu: this is to store persistent state - must pay attention at this please.
+    await localStorage.setItem('is_expanded', store.state.is_expanded)
+}
+
+</script>
+
 
 <template>
     <aside :class="`${is_expanded ? 'is-expanded' : ''}`">
@@ -38,20 +59,6 @@
           </div>
     </aside>
 </template>
-
-<script setup>
-
-import { ref } from 'vue';
-
-const is_expanded = ref(localStorage.getItem("is_expanded") === 'true')
-
-const ToggleMenu = () => {
-    is_expanded.value = !is_expanded.value
-
-    localStorage.setItem("is_expanded", is_expanded.value)
-}
-
-</script>
 
 <style lang="scss" scoped>
 
