@@ -21,22 +21,21 @@
                 <span class="text">Home</span>
             </RouterLink>
 
-            <RouterLink class="button" to="/">
-                <span class="material-icons">visibility</span>
-                <span class="text">About</span>
-            </RouterLink>
-
-            <RouterLink class="button" to="/">
+            <RouterLink class="button" to="/dashboard">
                 <span class="material-icons">group</span>
                 <span class="text">Team</span>
             </RouterLink>
 
-            <RouterLink class="button" to="/">
-                <span class="material-icons">email</span>
-                <span class="text">Contact</span>
-            </RouterLink>
          </div>
 
+         <!-- Settings -->
+          <div class="flex"></div>
+          <div class="menu">
+            <RouterLink class="button" to="/settings">
+                <span class="material-icons">settings</span>
+                <span class="text">Settings</span>
+            </RouterLink>
+          </div>
     </aside>
 </template>
 
@@ -44,10 +43,12 @@
 
 import { ref } from 'vue';
 
-const is_expanded = ref(false)
+const is_expanded = ref(localStorage.getItem("is_expanded") === 'true')
 
 const ToggleMenu = () => {
     is_expanded.value = !is_expanded.value
+
+    localStorage.setItem("is_expanded", is_expanded.value)
 }
 
 </script>
@@ -64,6 +65,10 @@ aside {
     height: 100vh;
     padding: 1rem;
     transition: .2s ease-out;
+
+    .flex {
+        flex: 1 1 0;
+    }
 
     .logo {
         margin-bottom: 1rem;
@@ -103,6 +108,13 @@ aside {
     h3, .button .text {
         opacity: 0;
         transition: .3s ease-out ;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+    }
+
+    h3 {
+        color: var(--grey);
+        font-size: 0.875rem;
     }
 
     .menu {
@@ -125,15 +137,22 @@ aside {
             .text {
                 color: var(--light);
                 transition: .2s ease-out;
+                align-self: flex-end;
+                margin-top: 1rem;
             }
 
-            &:hover {
+            &:hover, &.router-link-exact-active {
                 background: var(--dark-alt);
 
                 .material-icons, .text {
                     color: var(--primary);
                 }
             }
+
+            &.router-link-exact-active {
+                border-right: 5px solid var(--primary);
+            }
+
         }
     }
 

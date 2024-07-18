@@ -6,6 +6,6 @@ import SideBar from '@/components/SideBar.vue';
 
 <template>
 
-    <SideBar />
+<h3>hahha</h3>
 
 </template>
