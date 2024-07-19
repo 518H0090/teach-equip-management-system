@@ -1,7 +1,6 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import SideBar from './components/SideBar.vue';
-
+import { RouterLink, RouterView } from "vue-router";
+import SideBar from "./components/SideBar.vue";
 </script>
 
 <template>
@@ -12,21 +11,20 @@ import SideBar from './components/SideBar.vue';
 </template>
 
 <style lang="scss">
-
 :root {
   --primary: #4ade80;
-  --grey:#64748b;
-  --dark:#1e293b;
-  --dark-alt:#334155;
-  --light:#f1f5f9;
-  --sidebar-width:300px;
+  --grey: #64748b;
+  --dark: #1e293b;
+  --dark-alt: #334155;
+  --light: #f1f5f9;
+  --sidebar-width: 300px;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
 }
 
 body {
@@ -55,5 +53,4 @@ button {
     padding-left: 6rem;
   }
 }
-
 </style>
