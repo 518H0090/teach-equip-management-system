@@ -17,6 +17,7 @@ const props = defineProps({
 const mobile = ref(false);
 const mobileNav = ref(false);
 const windowWidth = ref(0);
+const is_expanded = ref(store.state.is_expanded === "true");
 
 const ToggleMobileNav = async () => {
   mobileNav.value = !mobileNav.value;
@@ -41,7 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <header :class="`'is-expanded' : ${store.state.is_expanded}`" >
+  <header :class="{'is-expanded' : is_expanded}">
     <nav>
       <ul class="navigation" v-show="!mobile">
         <li>
