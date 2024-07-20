@@ -5,6 +5,8 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
+console.log(store.state.is_expanded)
+
 const props = defineProps({
   title: {
     type: String,
@@ -12,7 +14,7 @@ const props = defineProps({
   },
 });
 
-const mobile = ref(true);
+const mobile = ref(false);
 const mobileNav = ref(false);
 const windowWidth = ref(0);
 
@@ -33,13 +35,13 @@ const CheckScreen = () => {
 
 onMounted(() => {
   window.addEventListener('resize', CheckScreen);
-  CheckScreen(); 
+  CheckScreen();
 });
 
 </script>
 
 <template>
-  <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`" >
+  <header :class="`'is-expanded' : ${store.state.is_expanded}`" >
     <nav>
       <ul class="navigation" v-show="!mobile">
         <li>
