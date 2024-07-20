@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 
 const store = createStore({
     state: {
-        is_expanded: localStorage.getItem("is_expanded")
+        is_expanded: localStorage.getItem("is_expanded") || false
     },
     mutations: {
         SET_EXPANDED: (state, expanded) =>{

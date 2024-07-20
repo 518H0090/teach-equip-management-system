@@ -1,11 +1,9 @@
 <script setup>
-import { defineProps, onMounted, ref } from "vue";
+import { defineProps, onBeforeMount, onMounted, ref } from "vue";
 
 import { useStore } from "vuex";
 
 const store = useStore();
-
-console.log(store.state.is_expanded)
 
 const props = defineProps({
   title: {
@@ -17,11 +15,10 @@ const props = defineProps({
 const mobile = ref(false);
 const mobileNav = ref(false);
 const windowWidth = ref(0);
-const is_expanded = ref(store.state.is_expanded === "true");
 
 const ToggleMobileNav = async () => {
   mobileNav.value = !mobileNav.value;
-}
+};
 
 const CheckScreen = () => {
   windowWidth.value = window.innerWidth;
@@ -32,17 +29,20 @@ const CheckScreen = () => {
   mobile.value = false;
   mobileNav.value = false;
   return;
-}
+};
 
-onMounted(() => {
-  window.addEventListener('resize', CheckScreen);
-  CheckScreen();
+onBeforeMount(async () => {
+  await store.dispatch("setIsExpanded", false);
 });
 
+onMounted(() => {
+  window.addEventListener("resize", CheckScreen);
+  CheckScreen();
+});
 </script>
 
 <template>
-  <header :class="{'is-expanded' : is_expanded}">
+  <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
       <ul class="navigation" v-show="!mobile">
         <li>
@@ -58,31 +58,30 @@ onMounted(() => {
           <RouterLink class="link">Delete</RouterLink>
         </li>
       </ul>
-      <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile" >
+      <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
-     <div class="mobile-nav">
-      <ul class="dropdown-nav" v-show="mobileNav">
-       <li>
-          <RouterLink class="link">Add</RouterLink>
-        </li>
-        <li>
-          <RouterLink class="link">Update</RouterLink>
-        </li>
-        <li>
-          <RouterLink class="link">Edit</RouterLink>
-        </li>
-        <li>
-          <RouterLink class="link">Delete</RouterLink>
-        </li>
-      </ul>
-     </div>
+      <div class="mobile-nav">
+        <ul class="dropdown-nav" v-show="mobileNav">
+          <li>
+            <RouterLink class="link">Add</RouterLink>
+          </li>
+          <li>
+            <RouterLink class="link">Update</RouterLink>
+          </li>
+          <li>
+            <RouterLink class="link">Edit</RouterLink>
+          </li>
+          <li>
+            <RouterLink class="link">Delete</RouterLink>
+          </li>
+        </ul>
+      </div>
     </nav>
   </header>
 </template>
 
 <style lang="scss" scoped>
-
 header {
   width: calc(100vw - (2rem + 32px));
   background-color: rgba(0, 0, 0, 0.6);
@@ -120,7 +119,7 @@ header {
 
     @media (min-width: 1140px) {
       max-width: 1280px;
-    } 
+    }
 
     ul,
     .link {
@@ -146,7 +145,6 @@ header {
         color: #00afea;
         border-color: #00afea;
       }
-
     }
 
     .navigation {
@@ -160,7 +158,7 @@ header {
       display: flex;
       align-items: center;
       position: absolute;
-      top:0;
+      top: 0;
       right: 24px;
       height: 100%;
 
@@ -188,17 +186,16 @@ header {
       top: 3.4rem;
       right: 0;
       box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-     
 
       li {
         margin-left: 0;
-        cursor:pointer;
+        cursor: pointer;
 
         &:hover {
           background: var(--dark-alt);
           max-width: 100%;
           border-right: 5px solid var(--primary);
-       
+
           .link {
             color: var(--primary);
             transition: 0.2s ease-out;
@@ -208,12 +205,8 @@ header {
         .link {
           color: var(--light);
         }
-        
       }
     }
-
-
   }
-
 }
 </style>
