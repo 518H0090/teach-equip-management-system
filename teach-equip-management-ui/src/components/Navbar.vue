@@ -101,7 +101,6 @@ header {
 
   @media (max-width: 768px) {
     margin-left: calc(2rem + 32px);
-    padding: 1rem;
 
     &.is-expanded {
       transform: translateX(-100%);
@@ -116,6 +115,7 @@ header {
     width: 90%;
     margin: 0 auto;
     position: relative;
+    height: 4rem;
 
     @media (min-width: 1140px) {
       max-width: 1280px;

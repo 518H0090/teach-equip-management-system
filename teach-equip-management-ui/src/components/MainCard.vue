@@ -1,7 +1,12 @@
 <script setup>
+import { onBeforeMount } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
+
+onBeforeMount(async () => {
+  await store.dispatch("setIsExpanded", false);
+});
 </script>
 
 <template>
@@ -14,10 +19,12 @@ const store = useStore();
 main {
   width: calc(100vw - (2rem + 32px));
   padding: 2rem;
+  margin-top: 4rem;
 
   * {
     max-width: 99%;
-    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   &.is-expanded {
