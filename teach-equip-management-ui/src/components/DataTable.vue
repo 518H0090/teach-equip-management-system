@@ -25,47 +25,70 @@ const handleSearch = (search) => {
 </script>
 
 <template>
-  <div class="bg-white relative border rounded-lg">
-    <div class="flex items-center justify-between">
-        <!-- Search bar   -->
-        <SearchForm  @search="handleSearch"/>
-
-        <div class="flex items-center justify-end text-sm font-semibold">
-          <!-- Radio buttons   -->
-          <FilterRadio />
-          <!-- List of filters for statues   -->
-          <FilterDropdown />
+  <div class="flex flex-col bg-white relative border rounded-lg">
+    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+        <div class="overflow-hidden">
+          <div class="flex items-center justify-between">
+            <!-- Search bar   -->
+            <SearchForm  @search="handleSearch"/>
+    
+            <div class="flex items-center justify-end text-sm font-semibold">
+              <!-- Radio buttons   -->
+              <FilterRadio />
+              <!-- List of filters for statues   -->
+              <FilterDropdown />
+            </div>
         </div>
+          <table
+            class="min-w-full text-left text-sm font-light text-surface dark:text-white">
+            <thead
+              class="border-b border-neutral-200 font-medium dark:border-white/10">
+              <tr>
+                <th class="px-4 py-3">UserId</th>
+                <th class="px-4 py-3">Id</th>
+                <th class="px-4 py-3">Title</th>
+                <th class="px-4 py-3">Completed</th>
+                <th class="px-4 py-3">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in filteredItems" :key="item.id" class="border-b">
+                <td class="px-4 py-3 font-medium text-gray-900">{{ item.id }}</td>
+                <td class="px-4 py-3 font-medium text-gray-900">{{ item.userId }}</td>
+                <td class="px-4 py-3">{{ item.title }}</td>
+                <td class="px-4 py-3">{{ item.completed }}</td>
+                <td class="px-4 py-3 flex items-center justify-end">
+                  <RouterLink to="/" class="text-indigo-500 hover:underline"
+                    >Details</RouterLink
+                  >
+                </td>
+              </tr>
+            
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-
-    <table class="w-full text-sm text-left text-gray-500">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-        <tr>
-          <th class="px-4 py-3">UserId</th>
-          <th class="px-4 py-3">Id</th>
-          <th class="px-4 py-3">Title</th>
-          <th class="px-4 py-3">Completed</th>
-          <th class="px-4 py-3">
-            <span class="sr-only">Actions</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in filteredItems" :key="item.id" class="border-b">
-          <td class="px-4 py-3 font-medium text-gray-900">{{ item.id }}</td>
-          <td class="px-4 py-3 font-medium text-gray-900">{{ item.userId }}</td>
-          <td class="px-4 py-3">{{ item.title }}</td>
-          <td class="px-4 py-3">{{ item.completed }}</td>
-          <td class="px-4 py-3">{{ item.id }}</td>
-          <td class="px-4 py-3 flex items-center justify-end">
-            <RouterLink to="/" class="text-indigo-500 hover:underline"
-              >Details</RouterLink
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
+
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+@media (max-width:768px) {
+  table {
+    width: 60%;
+  }
+}
+
+
+@media (max-width:468px) {
+  table {
+    width: 10%;
+  }
+}
+
+</style>

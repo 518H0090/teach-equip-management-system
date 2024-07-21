@@ -28,6 +28,7 @@ main {
   padding: 2rem;
   margin-top: 4rem;
   height: calc(100vh - 4rem);
+  overflow: scroll;
 
   * {
     max-width: 99%;
