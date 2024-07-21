@@ -1,30 +1,26 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
-
+import DataTable from "@/components/DataTable.vue";
 import { useStore } from "vuex";
+import { onMounted, ref } from "vue";
 
 const store = useStore();
+
+const items = ref([]);
+
+// Default Fetch Api
+onMounted(async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+  items.value = await response.json();
+});
 </script>
 
 <template>
   <div class="content">
     <Navbar />
     <MainCard>
-      <h1>Home</h1>
-      <p>
-        This is home
-        pagaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-      </p>
-      <p>{{ store.state.is_expanded }}</p>
-      <img
-        src="https://trunghieu1204.sharepoint.com/:i:/s/FamilyTree/EQ_iu-huGVxDua8NcXLOkyUBn8z3Z1czavxDt0vZCVyARg"
-        alt=""
-      />
-      <img
-        src="https://trunghieu1204.sharepoint.com/sites/FamilyTree/Avatars/landscape-countryside-cartoon-scene-background-green-field-with-dirt-path-and-mountain-background-generative-ai-photo.jpg"
-        alt=""
-      />
+      <DataTable :items="items" />
     </MainCard>
   </div>
 </template>

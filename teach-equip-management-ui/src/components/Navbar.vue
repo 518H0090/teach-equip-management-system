@@ -8,7 +8,7 @@ const store = useStore();
 const props = defineProps({
   title: {
     type: String,
-    default: "ppepepepepepepepepepepepep",
+    default: "This is a default title",
   },
 });
 
@@ -31,11 +31,10 @@ const CheckScreen = () => {
   return;
 };
 
-const aside = document.querySelector('aside');
+const aside = document.querySelector("aside");
 
 onBeforeMount(async () => {
-
-  if (!aside.classList.contains('is-expanded')) {
+  if (!aside.classList.contains("is-expanded")) {
     await store.dispatch("setIsExpanded", false);
   }
 

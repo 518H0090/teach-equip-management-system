@@ -24,9 +24,10 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 main {
-  width: calc(100vw - (2rem + 32px));
+  width: calc(100vw - (2rem + 50px));
   padding: 2rem;
   margin-top: 4rem;
+  height: calc(100vh - 4rem);
 
   * {
     max-width: 99%;
