@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, onBeforeMount, onMounted, ref } from "vue";
+import { computed, defineProps, onBeforeMount, onMounted, ref } from "vue";
 
 import { useStore } from "vuex";
 
@@ -31,8 +31,15 @@ const CheckScreen = () => {
   return;
 };
 
+const aside = document.querySelector('aside');
+
 onBeforeMount(async () => {
-  await store.dispatch("setIsExpanded", false);
+
+  if (!aside.classList.contains('is-expanded')) {
+    await store.dispatch("setIsExpanded", false);
+  }
+
+  await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
 });
 
 onMounted(() => {

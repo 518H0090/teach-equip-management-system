@@ -4,9 +4,16 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
+const aside = document.querySelector('aside');
+
 onBeforeMount(async () => {
-  await store.dispatch("setIsExpanded", false);
+  await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
+
+  if (!aside.classList.contains('is-expanded')) {
+    await store.dispatch("setIsExpanded", false);
+  }
 });
+
 </script>
 
 <template>
