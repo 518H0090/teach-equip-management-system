@@ -96,6 +96,7 @@ header {
   position: fixed;
   transition: 0.4s ease-out all;
   color: var(--light);
+  padding: 0.2rem;
 
   * {
     max-width: 99%;
@@ -143,14 +144,21 @@ header {
     }
 
     .link {
-      font-size: 14px;
+      font-size: 1rem;
       transition: 0.3s ease-out;
       padding-bottom: 4px;
+      padding-right: 4px;
       border-bottom: 1px solid transparent;
 
       &:hover {
-        color: #00afea;
-        border-color: #00afea;
+        max-width: 100%;
+        border-right: 5px solid var(--primary);
+        color: var(--primary);
+        transition: 0.2s ease-out;
+        border-color: var(--primary);
+        opacity: 0.8;
+        font-weight: 600;
+        transition: 0.3s ease-in all;
       }
     }
 

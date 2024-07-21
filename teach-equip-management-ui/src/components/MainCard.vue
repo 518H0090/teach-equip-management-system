@@ -37,5 +37,9 @@ main {
   &.is-expanded {
     width: calc(100vw - var(--sidebar-width));
   }
+
+  @media (max-width: 768px) {
+    padding-left: 6rem;
+  }
 }
 </style>
