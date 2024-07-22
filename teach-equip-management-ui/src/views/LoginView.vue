@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+const aside = document.querySelector("aside");
+
+aside.style.display = "none";
+</script>
 
 <template>
   <section
@@ -74,6 +78,10 @@
 </template>
 
 <style lang="scss" scoped>
+aside {
+  display: none;
+}
+
 .move-icon {
   margin-top: -0.2rem;
   margin-left: -0.16rem;

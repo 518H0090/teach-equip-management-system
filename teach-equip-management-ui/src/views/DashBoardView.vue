@@ -1,7 +1,6 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
-import SideBar from "@/components/SideBar.vue";
 
 import { useStore } from "vuex";
 import { defineProps } from "vue";
@@ -17,8 +16,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <SideBar v-show="isShow" />
-  <div v-show="isShow" class="content">
+  <div class="content">
     <Navbar />
     <MainCard>
       <h1>Home</h1>
