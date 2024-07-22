@@ -1,20 +1,21 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
-
+import SideBar from "@/components/SideBar.vue";
 import { useStore } from "vuex";
 
 const store = useStore();
 </script>
 
 <template>
+  <SideBar />
   <div class="content">
     <Navbar />
     <MainCard>
       <h1>Home</h1>
       <p>
         This is home
-        pagaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        pagaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
       </p>
       <p>{{ store.state.is_expanded }}</p>
       <img

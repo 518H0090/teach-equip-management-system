@@ -2,10 +2,15 @@
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
 import DataTable from "@/components/DataTable.vue";
-import { useStore } from "vuex";
-import { onMounted, ref } from "vue";
+import SideBar from "@/components/SideBar.vue";
+import { onMounted, ref, defineProps } from "vue";
 
-const store = useStore();
+const props = defineProps({
+  isShow: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 const items = ref([]);
 
@@ -17,7 +22,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="content">
+  <SideBar v-show="isShow" />
+  <div v-show="isShow" class="content">
     <Navbar />
     <MainCard>
       <DataTable :items="items" />
