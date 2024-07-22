@@ -17,6 +17,5 @@ namespace TeachEquipManagement.Utilities
         public const string tenantName = $"trunghieu1204.sharepoint.com";
 
         public const string siteCollectionRelative = $"/sites/{siteCollectionName}";
-
     }
 }
