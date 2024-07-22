@@ -1,6 +1,7 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
+import eventBus from '@/eventBus';
 
 const store = useStore();
 
@@ -11,6 +12,23 @@ const ToggleMenu = async () => {
 
   await store.dispatch("setIsExpanded", is_expanded.value);
 };
+
+const selectedRoute = ref('');
+
+const handleRouteSelected = (path) => {
+  selectedRoute.value = path;
+  console.log(selectedRoute.value)
+};
+
+onMounted(() => {
+  eventBus.on('data-sent', handleRouteSelected);
+});
+
+onUnmounted(() => {
+  eventBus.off('data-sent', handleRouteSelected);
+});
+
+
 </script>
 
 <template>
@@ -39,7 +57,7 @@ const ToggleMenu = async () => {
         <span class="text">Team</span>
       </RouterLink>
 
-      <RouterLink class="button" to="/about">
+      <RouterLink class="button about" to="/about/getpage">
         <span class="material-icons">group</span>
         <span class="text">About</span>
       </RouterLink>

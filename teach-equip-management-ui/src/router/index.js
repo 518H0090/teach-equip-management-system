@@ -4,6 +4,8 @@ import DashBoardView from '../views/DashBoardView.vue'
 import LoginView from '../views/LoginView.vue'
 import About from '@/views/About.vue'
 import AddPage from '@/components/AddPage.vue'
+import EditPage from '@/components/EditPage.vue'
+import GetPage from '@/components/GetPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,7 +30,19 @@ const router = createRouter({
       component: About,
       children: [
         {
-          path: "newnewnew",
+          path: "",
+          redirect: "getpage"
+        },
+        {
+          path: "getpage",
+          component: GetPage
+        },
+        {
+          path: "editpage",
+          component: EditPage
+        },
+        {
+          path: "addpage",
           component: AddPage
         }
       ]
