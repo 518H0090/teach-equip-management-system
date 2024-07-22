@@ -38,6 +38,11 @@ const ToggleMenu = async () => {
         <span class="material-icons">group</span>
         <span class="text">Team</span>
       </RouterLink>
+
+      <RouterLink class="button" to="/about">
+        <span class="material-icons">group</span>
+        <span class="text">About</span>
+      </RouterLink>
     </div>
 
     <!-- Settings -->
