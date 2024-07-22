@@ -1,11 +1,10 @@
 <script setup>
+import { defineEmits } from "vue";
 
-import { defineEmits } from 'vue';
-
-const emit = defineEmits('search');
+const emit = defineEmits("search");
 
 const search = (e) => {
-    emit('search', e.target.value); 
+  emit("search", e.target.value);
 };
 </script>
 
@@ -23,4 +22,9 @@ const search = (e) => {
   </form>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+input[type="text"] {
+  border-radius: 5px;
+  padding-left: 1rem;
+}
+</style>

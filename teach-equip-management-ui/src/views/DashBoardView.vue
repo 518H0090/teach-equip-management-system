@@ -2,20 +2,29 @@
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
 import SideBar from "@/components/SideBar.vue";
+
 import { useStore } from "vuex";
+import { defineProps } from "vue";
 
 const store = useStore();
+
+const props = defineProps({
+  isShow: {
+    type: Boolean,
+    default: true,
+  },
+});
 </script>
 
 <template>
-  <SideBar />
-  <div class="content">
+  <SideBar v-show="isShow" />
+  <div v-show="isShow" class="content">
     <Navbar />
     <MainCard>
       <h1>Home</h1>
       <p>
         This is home
-        pagaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        pagaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
       </p>
       <p>{{ store.state.is_expanded }}</p>
       <img
