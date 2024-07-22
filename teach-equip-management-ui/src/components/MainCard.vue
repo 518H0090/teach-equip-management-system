@@ -4,16 +4,15 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
-const aside = document.querySelector('aside');
+const aside = document.querySelector("aside");
 
 onBeforeMount(async () => {
   await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
 
-  if (!aside.classList.contains('is-expanded')) {
+  if (!aside.classList.contains("is-expanded")) {
     await store.dispatch("setIsExpanded", false);
   }
 });
-
 </script>
 
 <template>
@@ -24,11 +23,14 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 main {
-  width: calc(100vw - (2rem + 50px));
+  width: calc(100vw - (2rem + 32px));
   padding: 2rem;
   margin-top: 4rem;
   height: calc(100vh - 4rem);
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #642bff #d1e5ff;
 
   * {
     max-width: 99%;
