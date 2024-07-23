@@ -12,17 +12,23 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  page_name: {
+    type: String,
+    default: ''
+  }
 });
 
 onMounted(() => {
-  const aside_item = document.querySelector("aside .menu .about");
+  const itemSelector = `aside .menu .${props.page_name}`
+  const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
 });
 
 onUnmounted(() => {
-  const aside_item = document.querySelector("aside .menu .about");
+  const itemSelector = `aside .menu .${props.page_name}`
+  const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.remove("router-link-active");
   aside_item.classList.remove("router-link-exact-active");
