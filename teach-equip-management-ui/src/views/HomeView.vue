@@ -1,8 +1,8 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
-import DataTable from "@/components/DataTable.vue";
 import { onMounted, ref, defineProps } from "vue";
+import Dashboard from "@/components/Dashboard.vue";
 
 const props = defineProps({
   isShow: {
@@ -13,7 +13,6 @@ const props = defineProps({
 
 const items = ref([]);
 
-// Default Fetch Api
 onMounted(async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
   items.value = await response.json();
@@ -28,7 +27,7 @@ onMounted(async () => {
       </li>
     </Navbar>
     <MainCard>
-      <h1>DashBoard</h1>
+      <Dashboard />
     </MainCard>
   </div>
   <RouterView />
