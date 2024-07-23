@@ -27,6 +27,34 @@ onUnmounted(() => {
   aside_item.classList.remove("router-link-active");
   aside_item.classList.remove("router-link-exact-active");
 });
+
+const setError = (element, message) => {
+  const inputControl = element.parentElement;
+  const errorDisplay = inputControl.querySelector(".error");
+  errorDisplay.innerText = message;
+  console.log(inputControl);
+  inputControl.classList.add("error");
+  inputControl.classList.remove("success");
+};
+
+const setSuccess = (element) => {
+  const inputControl = element.parentElement;
+  const errorDisplay = inputControl.querySelector(".error");
+  errorDisplay.innerText = "";
+  inputControl.classList.add("success");
+  inputControl.classList.remove("error");
+};
+
+const validateInputs = () => {
+  const test = document.querySelector("#name");
+  const testValue = test.value.trim();
+
+  if (testValue === "") {
+    setError(test, "This is required");
+  } else {
+    setSuccess(test);
+  }
+};
 </script>
 
 <template>
@@ -34,10 +62,10 @@ onUnmounted(() => {
     <section class="bg-green-50">
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
-          <form>
+          <form @submit.prevent="validateInputs">
             <h2 class="text-3xl text-center font-semibold mb-6">Add Job</h2>
 
-            <div class="mb-4">
+            <div class="input-control mb-4">
               <label for="type" class="block text-gray-700 font-bold mb-2"
                 >Job Type</label
               >
@@ -52,9 +80,11 @@ onUnmounted(() => {
                 <option value="Remote">Remote</option>
                 <option value="Internship">Internship</option>
               </select>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
-            <div class="mb-4">
+            <div class="input-control mb-4">
               <label class="block text-gray-700 font-bold mb-2"
                 >Job Listing Name</label
               >
@@ -64,11 +94,12 @@ onUnmounted(() => {
                 name="name"
                 class="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. Beautiful Apartment In Miami"
-                required
               />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
-            <div class="mb-4">
+            <div class="input-control mb-4">
               <label for="type" class="block text-gray-700 font-bold mb-2"
                 >Salary</label
               >
@@ -76,7 +107,6 @@ onUnmounted(() => {
                 id="salary"
                 name="salary"
                 class="border rounded w-full py-2 px-3"
-                required
               >
                 <option value="Under $50K">under $50K</option>
                 <option value="$50K - $60K">$50 - $60K</option>
@@ -90,9 +120,11 @@ onUnmounted(() => {
                 <option value="$175K - $200K">$175 - $200K</option>
                 <option value="Over $200K">Over $200K</option>
               </select>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
-            <div class="mb-4">
+            <div class="input-control mb-4">
               <label class="block text-gray-700 font-bold mb-2">
                 Location
               </label>
@@ -102,13 +134,14 @@ onUnmounted(() => {
                 name="location"
                 class="border rounded w-full py-2 px-3 mb-2"
                 placeholder="Company Location"
-                required
               />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
             <h3 class="text-2xl mb-5">Company Info</h3>
 
-            <div class="mb-4">
+            <div class="input-control mb-4">
               <label for="company" class="block text-gray-700 font-bold mb-2"
                 >Company Name</label
               >
@@ -119,9 +152,11 @@ onUnmounted(() => {
                 class="border rounded w-full py-2 px-3"
                 placeholder="Company Name"
               />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
-            <div class="mb-4">
+            <div class="input-control mb-4">
               <label
                 for="company_description"
                 class="block text-gray-700 font-bold mb-2"
@@ -134,6 +169,8 @@ onUnmounted(() => {
                 rows="4"
                 placeholder="What does your company do?"
               ></textarea>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
             <div>
@@ -156,10 +193,40 @@ onUnmounted(() => {
   max-width: 980px;
 
   form {
-    padding: 2rem 4rem;
+    padding: 1rem 0;
     button {
       padding: 1rem;
     }
   }
+}
+
+.input-control.success {
+  border: 2px solid #09c372;
+  padding: 0.4rem;
+  border-radius: 10px;
+  display: block;
+
+  input:focus,
+  textarea:focus {
+    outline: 0;
+  }
+}
+
+.input-control.error {
+  border: 2px solid #ff3860;
+  padding: 0.4rem;
+  border-radius: 10px;
+  display: block;
+  color: inherit;
+
+  input:focus,
+  textarea:focus {
+    outline: 0;
+  }
+}
+
+.error {
+  color: #ff3860;
+  padding: 1rem 0.4rem;
 }
 </style>
