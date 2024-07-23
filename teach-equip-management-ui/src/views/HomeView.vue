@@ -24,17 +24,11 @@ onMounted(async () => {
   <div class="content">
     <Navbar>
       <li>
-        <RouterLink to="/" class="link">View</RouterLink>
-      </li>
-      <li>
-        <RouterLink to="/h" class="link">Add</RouterLink>
-      </li>
-      <li>
-        <RouterLink to="/h2" class="link">Edit</RouterLink>
+        <RouterLink to="/" class="link">DashBoard</RouterLink>
       </li>
     </Navbar>
     <MainCard>
-      <DataTable :items="items" />
+      <h1>DashBoard</h1>
     </MainCard>
   </div>
   <RouterView />

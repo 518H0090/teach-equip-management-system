@@ -113,9 +113,9 @@ header {
       transition: 0.2s ease-in font-weight, 0.4s ease-in all;
     }
 
-    @media (min-width: 1140px) {
-      max-width: 1280px;
-    }
+    // @media (min-width: 1140px) {
+    //   max-width: 1280px;
+    // }
 
     ul,
     .link {
