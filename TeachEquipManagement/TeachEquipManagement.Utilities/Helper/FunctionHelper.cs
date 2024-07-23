@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Text;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace TeachEquipManagement.Utilities.Helper
 {
@@ -11,12 +13,12 @@ namespace TeachEquipManagement.Utilities.Helper
     {
         #region Process Password
 
-        public static void CreatePasswordHash(string password, out byte[] PasswordHash, out byte[] PasswordSalt)
+        public static void CreatePasswordHash(string password, out byte[] passwordSalt, out byte[] passwordHash)
         {
             using (var hmac = new HMACSHA512())
             {
-                PasswordSalt = hmac.Key;
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
 
@@ -31,4 +33,21 @@ namespace TeachEquipManagement.Utilities.Helper
 
         #endregion
     }
+
+    public static class EnumExtensions
+    {
+        #region Process Enum
+
+        public static string GetDescription(this Enum value)
+        {
+            FieldInfo field = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+        }
+
+        #endregion
+    }
+
 }

@@ -18,8 +18,8 @@ namespace TeachEquipManagement.DAL.Models
 
         public string ActionType { get; set; } = string.Empty;
 
-        public User User { get; set; } = new();
+        public Account User { get; set; }
 
-        public Inventory Inventory { get; set; } = new();
+        public Inventory Inventory { get; set; }
     }
 }

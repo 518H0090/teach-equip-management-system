@@ -18,6 +18,6 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Phone { get; set; } = string.Empty;
 
-        public List<Tool> Tools { get; set; }
+        public virtual List<Tool> Tools { get; set; }
     }
 }

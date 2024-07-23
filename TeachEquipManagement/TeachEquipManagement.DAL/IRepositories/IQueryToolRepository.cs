@@ -10,5 +10,7 @@ namespace TeachEquipManagement.DAL.IRepositories
     public interface IQueryToolRepository
     {
         Task<List<Tool>> GetAllToolIncludeSuppliers();
+
+        Task<List<Tool>> GetAllToolIncludeInvoices();
     }
 }

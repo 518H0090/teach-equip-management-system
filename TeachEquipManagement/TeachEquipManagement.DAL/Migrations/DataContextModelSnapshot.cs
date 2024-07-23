@@ -22,18 +22,103 @@ namespace TeachEquipManagement.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.ApprovalRequest", b =>
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.Account", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.AccountDetail", b =>
                 {
                     b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasDefaultValue("");
+
+                    b.Property<string>("Avatar")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasDefaultValue("");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasDefaultValue("");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasDefaultValue("");
+
+                    b.Property<string>("SpoFileId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("UserDetails");
+                });
+
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.ApprovalRequest", b =>
+                {
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("InventoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ApproveDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 829, DateTimeKind.Local).AddTicks(3516));
+                    b.Property<DateTime?>("ApproveDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
@@ -41,7 +126,6 @@ namespace TeachEquipManagement.DAL.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("ManagerApprove")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
@@ -52,7 +136,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 829, DateTimeKind.Local).AddTicks(2565));
+                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(882));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -62,7 +146,7 @@ namespace TeachEquipManagement.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "InventoryId");
+                    b.HasKey("AccountId", "InventoryId");
 
                     b.HasIndex("InventoryId");
 
@@ -128,7 +212,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 830, DateTimeKind.Local).AddTicks(8162));
+                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(4357));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -157,7 +241,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 828, DateTimeKind.Local).AddTicks(5059));
+                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 842, DateTimeKind.Local).AddTicks(8375));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
@@ -174,7 +258,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.Permission", b =>
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -182,40 +266,17 @@ namespace TeachEquipManagement.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
+                    b.Property<string>("RoleDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.RefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 7, 20, 45, 28, 830, DateTimeKind.Local).AddTicks(1385));
-
-                    b.Property<DateTime>("Expires")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
+                    b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Supplier", b =>
@@ -288,119 +349,44 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.ToTable("ToolCategories");
                 });
 
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.User", b =>
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.Account", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("TeachEquipManagement.DAL.Models.Role", "Role")
+                        .WithMany("Accounts")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<Guid?>("RefreshTokenId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("RefreshTokenId")
-                        .IsUnique()
-                        .HasFilter("[RefreshTokenId] IS NOT NULL");
-
-                    b.ToTable("Users");
+                    b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.UserDetail", b =>
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.AccountDetail", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasDefaultValue("");
-
-                    b.Property<string>("Avatar")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasDefaultValue("");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasDefaultValue("");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasDefaultValue("");
-
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("UserDetails");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.UserPermission", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "PermissionId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("UserPermissions");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.ApprovalRequest", b =>
                 {
+                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "Account")
+                        .WithMany("ApprovalRequests")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TeachEquipManagement.DAL.Models.Inventory", "Inventory")
                         .WithMany("ApprovalRequests")
                         .HasForeignKey("InventoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TeachEquipManagement.DAL.Models.User", "User")
-                        .WithMany("ApprovalRequests")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Account");
 
                     b.Navigation("Inventory");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Inventory", b =>
@@ -422,7 +408,7 @@ namespace TeachEquipManagement.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TeachEquipManagement.DAL.Models.User", "User")
+                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "User")
                         .WithMany("InventoryHistories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -474,44 +460,11 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Navigation("Tool");
                 });
 
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.User", b =>
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.Account", b =>
                 {
-                    b.HasOne("TeachEquipManagement.DAL.Models.RefreshToken", "RefreshToken")
-                        .WithOne("User")
-                        .HasForeignKey("TeachEquipManagement.DAL.Models.User", "RefreshTokenId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.Navigation("ApprovalRequests");
 
-                    b.Navigation("RefreshToken");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.UserDetail", b =>
-                {
-                    b.HasOne("TeachEquipManagement.DAL.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.UserPermission", b =>
-                {
-                    b.HasOne("TeachEquipManagement.DAL.Models.Permission", "Permission")
-                        .WithMany("UserPermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TeachEquipManagement.DAL.Models.User", "User")
-                        .WithMany("UserPermissions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("User");
+                    b.Navigation("InventoryHistories");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Category", b =>
@@ -526,15 +479,9 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Navigation("InventoryHistories");
                 });
 
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.Permission", b =>
+            modelBuilder.Entity("TeachEquipManagement.DAL.Models.Role", b =>
                 {
-                    b.Navigation("UserPermissions");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.RefreshToken", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Supplier", b =>
@@ -544,20 +491,12 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Tool", b =>
                 {
-                    b.Navigation("Inventory");
+                    b.Navigation("Inventory")
+                        .IsRequired();
 
                     b.Navigation("Invoices");
 
                     b.Navigation("ToolCategories");
-                });
-
-            modelBuilder.Entity("TeachEquipManagement.DAL.Models.User", b =>
-                {
-                    b.Navigation("ApprovalRequests");
-
-                    b.Navigation("InventoryHistories");
-
-                    b.Navigation("UserPermissions");
                 });
 #pragma warning restore 612, 618
         }

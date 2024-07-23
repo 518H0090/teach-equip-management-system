@@ -14,12 +14,12 @@ namespace TeachEquipManagement.DAL.Models
 
         public int AmountBorrow { get; set; }
 
-        public Tool Tool { get; set; } = new();
+        public virtual Tool? Tool { get; set; }
 
         public int ToolId {set; get;}
 
-        public List<ApprovalRequest> ApprovalRequests { get; set; } = new();
+        public virtual List<ApprovalRequest>? ApprovalRequests { get; set; }
 
-        public List<InventoryHistory> InventoryHistories { set; get; } = new();
+        public virtual List<InventoryHistory>? InventoryHistories { set; get; }
     }
 }
