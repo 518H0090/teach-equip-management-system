@@ -62,8 +62,9 @@ namespace TeachEquipManagement.BLL.AutoMapperProfile
             .ForMember(dest => dest.InventoryId, opt => opt.MapFrom(src => src.InventoryId))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
-            .ForMember(dest => dest.ManagerApprove, opt => opt.MapFrom(src => src.ManagerApprove))
-             .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => src.IsApproved));
+            .ForMember(dest => dest.ManagerApprove, opt => opt.MapFrom(src => src.ManagerApprove));
+
+            CreateMap<InventoryHistory, InventoryHistoryResponse>();
         }
     }
 }

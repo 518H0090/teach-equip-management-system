@@ -24,8 +24,5 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage
 
         [JsonProperty("manager_approve")]
         public string? ManagerApprove { get; set; } = string.Empty;
-
-        [JsonProperty("is_approved")]
-        public bool IsApproved { get; set; }
     }
 }
