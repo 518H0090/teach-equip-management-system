@@ -95,8 +95,8 @@ namespace TeachEquipManagement.BLL.Services
         {
             ApiResponse<List<SupplierIncludeToolResponse>> response = new();
 
-            var suppliers = await _unitOfWork.SupplierRepository.GetAllAsync();
-            
+            var suppliers = await _unitOfWork.QuerySupplierRepository.GetAllSupplierIncludeTools();
+
 
             if (!suppliers.Any())
             {
@@ -108,13 +108,6 @@ namespace TeachEquipManagement.BLL.Services
 
             else
             {
-                var tools = await _unitOfWork.ToolRepository.GetAllAsync();
-
-                foreach (var supplier in suppliers)
-                {
-                    supplier.Tools = tools.Where(x => x.SupplierId == supplier.Id).ToList();
-                }
-
                 var dataResponses = _mapper.Map<List<SupplierIncludeToolResponse>>(suppliers);
                 response.Data = dataResponses;
                 response.Message = "List Suppliers";

@@ -57,8 +57,6 @@ namespace TeachEquipManagement.BLL.Services
                         ToolName = request.ToolName
                     };
 
-                    //var tool = _mapper.Map<Tool>(request);
-
                     var entity = await _unitOfWork.ToolRepository.InsertAsync(tool);
                     await _unitOfWork.SaveChangesAsync();
 
@@ -75,14 +73,6 @@ namespace TeachEquipManagement.BLL.Services
                     response.StatusCode = StatusCodes.Status400BadRequest;
                     response.Message = validation.ToString();
                 }
-            }
-
-            catch (AutoMapperMappingException ex)
-            {
-                // Log or handle the exception appropriately.
-                // Example:
-                Console.WriteLine($"AutoMapper mapping error: {ex.Message}");
-                throw; // Re-throw or handle as needed.
             }
 
             catch (Exception e)
@@ -238,7 +228,7 @@ namespace TeachEquipManagement.BLL.Services
                     else
                     {
                         _logger.Warning("Warning: Not Found Supplier");
-                        response.Message = "";
+                        response.Message = "Not Found Supplier";
                         response.StatusCode = StatusCodes.Status404NotFound;
                     }
                 }

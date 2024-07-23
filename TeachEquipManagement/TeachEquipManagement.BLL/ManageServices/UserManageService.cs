@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.Services;
 using TeachEquipManagement.DAL.UnitOfWorks;
+using TeachEquipManagement.Utilities.OptionPattern;
+using Microsoft.Extensions.Options;
 
 namespace TeachEquipManagement.BLL.ManageServices
 {
@@ -16,22 +13,25 @@ namespace TeachEquipManagement.BLL.ManageServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IOptionsSnapshot<JwtSecretKeyConfiguration> _jwtSecret;
+        private readonly IGraphService _graphService;
 
-        public UserManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
+        public UserManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger,
+            IOptionsSnapshot<JwtSecretKeyConfiguration> jwtSecret, IGraphService graphService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _jwtSecret = jwtSecret;
+            _graphService = graphService;
         }
 
-        public IUserService UserService => new UserService(_unitOfWork, _mapper, _logger);
+        public IAccountService AccountService => new AccountService(_unitOfWork, _mapper, _logger, _jwtSecret);
 
-        public IUserPermissionService UserPermissionService => new UserPermissionService(_unitOfWork, _mapper, _logger);
+        public IAccountDetailService AccountDetailService => new AccountDetailService(_unitOfWork, _mapper, _logger, _graphService);
 
-        public IUserDetailService UserDetailService => new UserDetailService(_unitOfWork, _mapper, _logger);
+        public ITokenService TokenService => new AccountService(_unitOfWork, _mapper, _logger, _jwtSecret);
 
-        public IRefreshTokenService RefreshTokenService => new RefreshTokenService(_unitOfWork, _mapper, _logger);
-
-        public IPermissionService PermissionService => new PermissionService(_unitOfWork, _mapper, _logger);
+        public IRoleService RoleService => new RoleService(_unitOfWork, _mapper, _logger);
     }
 }

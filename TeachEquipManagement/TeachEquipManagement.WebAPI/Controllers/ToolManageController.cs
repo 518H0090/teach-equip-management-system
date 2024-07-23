@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeachEquipManagement.BLL.BusinessModels.Common;
@@ -6,6 +7,7 @@ using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
 using TeachEquipManagement.BLL.FluentValidator;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.BLL.ManageServices;
+using TeachEquipManagement.Utilities.CustomAttribute;
 
 namespace TeachEquipManagement.WebAPI.Controllers
 {
@@ -14,12 +16,10 @@ namespace TeachEquipManagement.WebAPI.Controllers
     public class ToolManageController : ControllerBase
     {
         private readonly IToolManageService _toolService;
-        private readonly IGraphService _graphService;
 
-        public ToolManageController(IToolManageService toolService, IGraphService graphService)
+        public ToolManageController(IToolManageService toolService)
         {
             _toolService = toolService;
-            _graphService = graphService;
         }
 
         #region Supplier
@@ -235,6 +235,86 @@ namespace TeachEquipManagement.WebAPI.Controllers
         public async Task<IActionResult> RemoveToolCategory([FromBody] ToolCategoryRequest request)
         {
             var response = await _toolService.ToolCategoryService.Remove(request);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        #endregion
+
+        #region Invoice
+
+        [HttpPost]
+        [Route("create-invoice")]
+        public async Task<IActionResult> CreateInvoice([FromBody] InvoceRequest request)
+        {
+            var validationResult = new InvoceRequestValidator().Validate(request);
+
+            var response = await _toolService.InvoiceService.Create(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-invoices")]
+        public async Task<IActionResult> GetAllInvoices()
+        {
+            var response = await _toolService.InvoiceService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("all-invoice-include-tools")]
+        public async Task<IActionResult> GetAllInvoiceIncludeTools()
+        {
+            var response = await _toolService.InvoiceService.GetAllIncludeTools();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("invoice/find/{id}")]
+        public async Task<IActionResult> FindInvoiceById(int id)
+        {
+            var response = await _toolService.InvoiceService.GetById(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("invoice/latest-invoice/tool/{toolId}")]
+        public async Task<IActionResult> GetLatestInvoiceWithToolId(int toolId)
+        {
+            var response = await _toolService.InvoiceService.GetLatestInvoiceWithToolId(toolId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("invoice-include-tool/latest-invoice/tool/{toolId}")]
+        public async Task<IActionResult> GetLatestInvoiceIncludeByToolId(int toolId)
+        {
+            var response = await _toolService.InvoiceService.GetLatestInvoiceWithTool(toolId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("remove-invoice/{id}")]
+        public async Task<IActionResult> RemoveInvoice(int id)
+        {
+            var response = await _toolService.InvoiceService.Remove(id);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut]
+        [Route("update-invoice")]
+        public async Task<IActionResult> UpdateInvoice([FromBody] InvoceUpdateRequest request)
+        {
+            var validationResult = new InvoceUpdateRequestValidator().Validate(request);
+
+            var response = await _toolService.InvoiceService.Update(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
         }

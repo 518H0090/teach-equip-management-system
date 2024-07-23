@@ -1,0 +1,49 @@
+<script setup>
+import { onBeforeMount } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const aside = document.querySelector("aside");
+
+onBeforeMount(async () => {
+  await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
+
+  if (!aside.classList.contains("is-expanded")) {
+    await store.dispatch("setIsExpanded", false);
+  }
+});
+</script>
+
+<template>
+  <main :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
+    <slot></slot>
+  </main>
+</template>
+
+<style lang="scss" scoped>
+main {
+  width: calc(100vw - (2rem + 32px));
+  padding: 2rem;
+  margin-top: 4rem;
+  height: calc(100vh - 4rem);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #642bff #d1e5ff;
+
+  * {
+    max-width: 99%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  &.is-expanded {
+    width: calc(100vw - var(--sidebar-width));
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 6rem;
+  }
+}
+</style>

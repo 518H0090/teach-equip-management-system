@@ -8,7 +8,7 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class ApprovalRequest
     {
-        public Guid UserId { get; set; }
+        public Guid AccountId { get; set; }
 
         public Guid InventoryId { get; set; }   
 
@@ -20,14 +20,14 @@ namespace TeachEquipManagement.DAL.Models
 
         public string Status { get; set; } = string.Empty;
 
-        public string ManagerApprove { get; set; } = string.Empty;
+        public string? ManagerApprove { get; set; } = string.Empty;
 
-        public DateTime ApproveDate { get; set; }   
+        public DateTime? ApproveDate { get; set; }   
 
         public bool IsApproved { get; set; }
 
-        public User User { get; set; } = new();
+        public virtual Account? Account { get; set; }
 
-        public Inventory Inventory { get; set; } = new();
+        public virtual Inventory? Inventory { get; set; }
     }
 }
