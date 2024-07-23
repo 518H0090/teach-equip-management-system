@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
 using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.EFContext
@@ -48,6 +49,11 @@ namespace TeachEquipManagement.DAL.EFContext
                 account.Property(u => u.PasswordSalt).IsRequired();
 
                 account.Property(u => u.Email).IsRequired();
+
+                account.HasOne<AccountDetail>(account => account.AccountDetail)
+                   .WithOne(account => account.Account)
+                   .HasForeignKey<AccountDetail>(account => account.AccountId)
+                   .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Role>(role =>
@@ -68,7 +74,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<AccountDetail>(user_detail =>
             {
-                user_detail.HasKey(user_detail => user_detail.UserId);
+                user_detail.HasKey(user_detail => user_detail.AccountId);
 
                 user_detail.Property(user_detail => user_detail.FullName).HasDefaultValue(string.Empty).HasMaxLength(255);
 
