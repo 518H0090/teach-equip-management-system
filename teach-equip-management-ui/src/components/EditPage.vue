@@ -193,7 +193,7 @@ const validateInputs = () => {
   max-width: 980px;
 
   form {
-    padding: 1rem 0;
+    padding: 2rem 2rem;
     button {
       padding: 1rem;
     }
