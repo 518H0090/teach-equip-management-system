@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
-import eventBus from '@/eventBus';
+import eventBus from "@/eventBus";
 
 const store = useStore();
 
@@ -13,22 +13,20 @@ const ToggleMenu = async () => {
   await store.dispatch("setIsExpanded", is_expanded.value);
 };
 
-const selectedRoute = ref('');
+const selectedRoute = ref("");
 
 const handleRouteSelected = (path) => {
   selectedRoute.value = path;
-  console.log(selectedRoute.value)
+  console.log(selectedRoute.value);
 };
 
 onMounted(() => {
-  eventBus.on('data-sent', handleRouteSelected);
+  eventBus.on("data-sent", handleRouteSelected);
 });
 
 onUnmounted(() => {
-  eventBus.off('data-sent', handleRouteSelected);
+  eventBus.off("data-sent", handleRouteSelected);
 });
-
-
 </script>
 
 <template>

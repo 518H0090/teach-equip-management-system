@@ -1,16 +1,42 @@
 <script setup>
-const aside_item = document.querySelector('aside .menu .about');
+import Navbar from "@/components/Navbar.vue";
+import MainCard from "@/components/MainCard.vue";
 
-aside_item.classList.add('router-link-active');
-aside_item.classList.add('router-link-exact-active')
+import { useStore } from "vuex";
+import { defineProps, onMounted, onUnmounted, ref } from "vue";
+import DataTable from "@/components/DataTable.vue";
+
+const store = useStore();
+
+const props = defineProps({
+  isShow: {
+    type: Boolean,
+    default: true,
+  },
+});
+
+const items = ref([]);
+
+onMounted(async () => {
+  const aside_item = document.querySelector("aside .menu .about");
+
+  aside_item.classList.add("router-link-active");
+  aside_item.classList.add("router-link-exact-active");
+
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+  items.value = await response.json();
+});
+
+onUnmounted(() => {
+  const aside_item = document.querySelector("aside .menu .about");
+
+  aside_item.classList.remove("router-link-active");
+  aside_item.classList.remove("router-link-exact-active");
+});
 </script>
 
 <template>
-  <h1>This Is Nested GET Page</h1>
+  <MainCard>
+    <DataTable :items="items" />
+  </MainCard>
 </template>
-
-<style lang="scss" scoped>
-h1 {
-  margin-left: 20rem;
-}
-</style>

@@ -1,6 +1,18 @@
 <script setup>
+import Navbar from "@/components/Navbar.vue";
+import MainCard from "@/components/MainCard.vue";
 
-import { onMounted, onUnmounted } from "vue";
+import { useStore } from "vuex";
+import { defineProps, onMounted, onUnmounted } from "vue";
+
+const store = useStore();
+
+const props = defineProps({
+  isShow: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 onMounted(() => {
   const aside_item = document.querySelector("aside .menu .about");
@@ -18,11 +30,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <h1>This Is Nested Edit Page</h1>
+  <MainCard>
+    <h1>Home</h1>
+    <p>This is home Edit Test</p>
+    <img
+      src="https://trunghieu1204.sharepoint.com/:i:/s/FamilyTree/EQ_iu-huGVxDua8NcXLOkyUBn8z3Z1czavxDt0vZCVyARg"
+      alt=""
+    />
+    <img
+      src="https://trunghieu1204.sharepoint.com/sites/FamilyTree/Avatars/landscape-countryside-cartoon-scene-background-green-field-with-dirt-path-and-mountain-background-generative-ai-photo.jpg"
+      alt=""
+    />
+  </MainCard>
 </template>
-
-<style lang="scss" scoped>
-h1 {
-  margin-left: 20rem;
-}
-</style>

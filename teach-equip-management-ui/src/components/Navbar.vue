@@ -52,16 +52,16 @@ onMounted(() => {
     <nav>
       <ul class="navigation" v-show="!mobile">
         <li>
-          <RouterLink class="link">Add</RouterLink>
+          <RouterLink to="/about/getpage" class="link">Add</RouterLink>
         </li>
         <li>
-          <RouterLink class="link">Update</RouterLink>
+          <RouterLink to="/about/editpage" class="link">Update</RouterLink>
         </li>
         <li>
-          <RouterLink class="link">Edit</RouterLink>
+          <RouterLink to="/about/addpage" class="link">Edit</RouterLink>
         </li>
         <li>
-          <RouterLink class="link">Delete</RouterLink>
+          <RouterLink to="/about/heheh" class="link">Delete</RouterLink>
         </li>
       </ul>
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
@@ -70,16 +70,16 @@ onMounted(() => {
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
           <li>
-            <RouterLink class="link">Add</RouterLink>
+            <RouterLink to="/about/getpage" class="link">Add</RouterLink>
           </li>
           <li>
-            <RouterLink class="link">Update</RouterLink>
+            <RouterLink to="/about/addpage" class="link">Update</RouterLink>
           </li>
           <li>
-            <RouterLink class="link">Edit</RouterLink>
+            <RouterLink to="/about/getpage" class="link">Edit</RouterLink>
           </li>
           <li>
-            <RouterLink class="link">Delete</RouterLink>
+            <RouterLink to="/about/heheh" class="link">Delete</RouterLink>
           </li>
         </ul>
       </div>
@@ -123,6 +123,16 @@ header {
     margin: 0 auto;
     position: relative;
     height: 4rem;
+
+    & ul.navigation li .router-link-active.router-link-exact-active {
+      border-right: 5px solid var(--primary);
+      background: var(--primary);
+      color: var(--light);
+      padding: 0.4rem 1rem;
+      font-weight: 700;
+      border-radius: 0.4rem;
+      transition: 0.2s ease-in font-weight, 0.4s ease-in all;
+    }
 
     @media (min-width: 1140px) {
       max-width: 1280px;
