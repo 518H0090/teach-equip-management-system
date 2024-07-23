@@ -3,13 +3,31 @@ import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
 
 import { useStore } from "vuex";
+import { defineProps } from "vue";
 
 const store = useStore();
+
+const props = defineProps({
+  isShow: {
+    type: Boolean,
+    default: true,
+  },
+});
 </script>
 
 <template>
   <div class="content">
-    <Navbar />
+    <Navbar>
+      <li>
+        <RouterLink to="/dashboard" class="link">View</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/aaa" class="link">Add</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/aaaa" class="link">Edit</RouterLink>
+      </li>
+    </Navbar>
     <MainCard>
       <h1>Home</h1>
       <p>

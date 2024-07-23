@@ -36,9 +36,9 @@ const handleSearch = (search) => {
 
             <div class="flex items-center justify-end text-sm font-semibold">
               <!-- Radio buttons   -->
-              <FilterRadio />
+              <!-- <FilterRadio /> -->
               <!-- List of filters for statues   -->
-              <FilterDropdown />
+              <!-- <FilterDropdown /> -->
             </div>
           </div>
           <table

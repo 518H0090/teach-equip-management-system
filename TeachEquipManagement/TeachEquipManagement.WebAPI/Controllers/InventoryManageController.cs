@@ -152,5 +152,29 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         #endregion
+
+        #region Inventory History
+
+        [HttpGet]
+        [Route("all-inventory-histories")]
+        public async Task<IActionResult> GetAllInventoryHistories()
+        {
+            var response = await _inventoryService.InventoryHistoryService.GetAll();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost]
+        [Route("inventory-history")]
+        public IActionResult GetInventoryHistory([FromBody] ProcessRequest request)
+        {
+            var validationResult = new ProcessRequestValidator().Validate(request);
+
+            var response = _inventoryService.InventoryHistoryService.GetInventoryHistory(request, validationResult);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        #endregion
     }
 }

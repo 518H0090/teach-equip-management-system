@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import SideBar from "./components/SideBar.vue";
+import SideBar from "@/components/SideBar.vue";
 </script>
 
 <template>
@@ -41,11 +41,6 @@ button {
 
 .app {
   display: flex;
-
-  main {
-    flex: 1 1 0;
-    padding: 2rem;
-  }
 }
 
 @media (max-width: 768px) {

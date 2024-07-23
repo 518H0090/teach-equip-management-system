@@ -51,43 +51,21 @@ onMounted(() => {
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
       <ul class="navigation" v-show="!mobile">
-        <li>
-          <RouterLink class="link">Add</RouterLink>
-        </li>
-        <li>
-          <RouterLink class="link">Update</RouterLink>
-        </li>
-        <li>
-          <RouterLink class="link">Edit</RouterLink>
-        </li>
-        <li>
-          <RouterLink class="link">Delete</RouterLink>
-        </li>
+        <slot></slot>
       </ul>
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
-          <li>
-            <RouterLink class="link">Add</RouterLink>
-          </li>
-          <li>
-            <RouterLink class="link">Update</RouterLink>
-          </li>
-          <li>
-            <RouterLink class="link">Edit</RouterLink>
-          </li>
-          <li>
-            <RouterLink class="link">Delete</RouterLink>
-          </li>
+          <slot></slot>
         </ul>
       </div>
     </nav>
   </header>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 header {
   width: calc(100vw - (2rem + 32px));
   background-color: rgba(0, 0, 0, 0.6);
@@ -124,9 +102,20 @@ header {
     position: relative;
     height: 4rem;
 
-    @media (min-width: 1140px) {
-      max-width: 1280px;
+    & ul.navigation li .router-link-active.router-link-exact-active,
+    & ul.dropdown-nav li .router-link-active.router-link-exact-active {
+      border-right: 5px solid var(--primary);
+      background: var(--primary);
+      color: var(--light);
+      padding: 0.4rem 1rem;
+      font-weight: 700;
+      border-radius: 0.4rem;
+      transition: 0.2s ease-in font-weight, 0.4s ease-in all;
     }
+
+    // @media (min-width: 1140px) {
+    //   max-width: 1280px;
+    // }
 
     ul,
     .link {

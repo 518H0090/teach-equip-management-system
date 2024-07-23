@@ -252,6 +252,17 @@ namespace TeachEquipManagement.BLL.Services
                         return response;
                     }
 
+                    var account = await _unitOfWork.AccountRepository.GetByIdAsync(request.AccountId);
+                    var inventory = await _unitOfWork.InventoryRepository.GetByIdAsync(request.InventoryId);
+
+                    if (account == null || inventory == null)
+                    {
+                        response.Data = false;
+                        response.StatusCode = StatusCodes.Status400BadRequest;
+                        response.Message = "Your reference object is not found";
+                        return response;
+                    }
+
                     QueryModel<ApprovalRequest> query = new QueryModel<ApprovalRequest>
                     {
                         QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
@@ -259,10 +270,68 @@ namespace TeachEquipManagement.BLL.Services
 
                     var approvalRequest = _unitOfWork.ApprovalRequestRepository.GetQueryable(query).FirstOrDefault();
 
+                    bool isApproved = false;
+
+                    if (request.Status == ApprovalStatusEnum.ApprovalAccept.GetDescription())
+                    {
+                        int itemQuantity = inventory!.TotalQuantity - request.Quantity;
+
+                        if ((approvalRequest.RequestType == RequestTypeEnum.RequestBorrowType.GetDescription() 
+                            || approvalRequest.RequestType == RequestTypeEnum.RequestSellType.GetDescription())
+                            && itemQuantity < 0)
+                        {
+                            response.Data = false;
+                            response.StatusCode = StatusCodes.Status400BadRequest;
+                            response.Message = "Quantity of item in inventory is less than your borrow";
+                            return response;
+                        }
+
+                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestReturnType.GetDescription())
+                        {
+                            inventory.AmountBorrow -= request.Quantity;
+                            inventory.TotalQuantity += request.Quantity;
+                        }
+
+                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestBuyType.GetDescription())
+                        {
+                            inventory.TotalQuantity += request.Quantity;
+                        }
+
+                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestBorrowType.GetDescription() && itemQuantity > 0)
+                        {
+                            inventory.AmountBorrow += request.Quantity;
+                            inventory.TotalQuantity -= request.Quantity;
+                        }
+
+                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestSellType.GetDescription() && itemQuantity > 0)
+                        {
+                            inventory.TotalQuantity -= request.Quantity;
+                        }
+
+                        isApproved = true;
+                    }
+
                     if (approvalRequest != null)
                     {
                         var updateItem = _mapper.Map(request, approvalRequest);
+                        updateItem.IsApproved = isApproved;
                         updateItem.ApproveDate = DateTime.Now;
+
+                        if (isApproved)
+                        {
+                            var inventoryHistory = new InventoryHistory
+                            {
+                                UserId = updateItem.AccountId,
+                                InventoryId = updateItem.InventoryId,
+                                Quantity = updateItem.Quantity,
+                                ActionDate = DateTime.Now,
+                                ActionType = updateItem.RequestType
+                            };
+
+                            await _unitOfWork.InventoryHistoryRepository.InsertAsync(inventoryHistory);
+                            _unitOfWork.InventoryRepository.Update(inventory);
+                        }
+
                         await _unitOfWork.SaveChangesAsync();
 
                         _unitOfWork.Commit();
