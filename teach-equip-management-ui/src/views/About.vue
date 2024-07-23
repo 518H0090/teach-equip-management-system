@@ -21,10 +21,10 @@ onMounted(async () => {
         <RouterLink to="/about/getpage" class="link">View</RouterLink>
       </li>
       <li>
-        <RouterLink to="/about/editpage" class="link">Add</RouterLink>
+        <RouterLink to="/about/addpage" class="link">Add</RouterLink>
       </li>
       <li>
-        <RouterLink to="/about/addpage" class="link">Edit</RouterLink>
+        <RouterLink to="/about/editpage" class="link">Edit</RouterLink>
       </li>
     </Navbar>
     <RouterView :items="items" />

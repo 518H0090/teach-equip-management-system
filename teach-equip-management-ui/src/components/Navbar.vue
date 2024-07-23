@@ -102,7 +102,8 @@ header {
     position: relative;
     height: 4rem;
 
-    & ul.navigation li .router-link-active.router-link-exact-active {
+    & ul.navigation li .router-link-active.router-link-exact-active,
+    & ul.dropdown-nav li .router-link-active.router-link-exact-active {
       border-right: 5px solid var(--primary);
       background: var(--primary);
       color: var(--light);
