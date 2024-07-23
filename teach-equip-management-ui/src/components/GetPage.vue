@@ -9,22 +9,17 @@ import DataTable from "@/components/DataTable.vue";
 const store = useStore();
 
 const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
+  items: {
+    type: Array,
+    default: [],
   },
 });
-
-const items = ref([]);
 
 onMounted(async () => {
   const aside_item = document.querySelector("aside .menu .about");
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
-
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-  items.value = await response.json();
 });
 
 onUnmounted(() => {
@@ -37,6 +32,6 @@ onUnmounted(() => {
 
 <template>
   <MainCard>
-    <DataTable :items="items" />
+    <DataTable :items="props.items" />
   </MainCard>
 </template>

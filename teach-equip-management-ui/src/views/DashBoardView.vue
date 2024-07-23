@@ -17,7 +17,17 @@ const props = defineProps({
 
 <template>
   <div class="content">
-    <Navbar />
+    <Navbar>
+      <li>
+        <RouterLink to="/dashboard" class="link">View</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/aaa" class="link">Add</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/aaaa" class="link">Edit</RouterLink>
+      </li>
+    </Navbar>
     <MainCard>
       <h1>Home</h1>
       <p>

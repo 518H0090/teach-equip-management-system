@@ -1,27 +1,33 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import { useRoute } from "vue-router";
-import { computed } from "vue";
-import eventBus from "@/eventBus";
+import { computed, onMounted, ref } from "vue";
 import Navbar from "@/components/Navbar.vue";
 
 const route = useRoute();
 
-const isRouteActive = computed(() => {
-  return (prefix) => {
-    return route.path.startsWith(prefix);
-  };
-});
+const items = ref([]);
 
-const updatePath = (path) => {
-  eventBus.emit("data-sent", path);
-};
+onMounted(async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+  items.value = await response.json();
+});
 </script>
 
 <template>
   <div class="content">
-    <Navbar />
-    <RouterView />
+    <Navbar>
+      <li>
+        <RouterLink to="/about/getpage" class="link">View</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/about/editpage" class="link">Add</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/about/addpage" class="link">Edit</RouterLink>
+      </li>
+    </Navbar>
+    <RouterView :items="items" />
   </div>
 </template>
 

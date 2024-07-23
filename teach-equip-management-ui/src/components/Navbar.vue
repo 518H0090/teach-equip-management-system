@@ -51,43 +51,21 @@ onMounted(() => {
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
       <ul class="navigation" v-show="!mobile">
-        <li>
-          <RouterLink to="/about/getpage" class="link">Add</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/about/editpage" class="link">Update</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/about/addpage" class="link">Edit</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/about/heheh" class="link">Delete</RouterLink>
-        </li>
+        <slot></slot>
       </ul>
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
-          <li>
-            <RouterLink to="/about/getpage" class="link">Add</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/about/addpage" class="link">Update</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/about/getpage" class="link">Edit</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/about/heheh" class="link">Delete</RouterLink>
-          </li>
+          <slot></slot>
         </ul>
       </div>
     </nav>
   </header>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 header {
   width: calc(100vw - (2rem + 32px));
   background-color: rgba(0, 0, 0, 0.6);
