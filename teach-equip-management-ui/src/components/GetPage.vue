@@ -13,15 +13,18 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  keys: {
+    type: Array,
+    default: [],
+  },
   page_name: {
     type: String,
-    default: ''
-  }
+    default: "",
+  },
 });
 
 onMounted(async () => {
-
-  const itemSelector = `aside .menu .${props.page_name}`
+  const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
@@ -29,8 +32,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-
-  const itemSelector = `aside .menu .${props.page_name}`
+  const itemSelector = `aside .menu .${props.page_name}`;
 
   const aside_item = document.querySelector(itemSelector);
 
@@ -41,6 +43,6 @@ onUnmounted(() => {
 
 <template>
   <MainCard>
-    <DataTable :items="props.items" />
+    <DataTable :keys="keys" :items="props.items" />
   </MainCard>
 </template>

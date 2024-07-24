@@ -7,7 +7,8 @@ import axios from "axios";
 
 const route = useRoute();
 
-const items = ref();
+const items = ref({});
+const keys = ref([]);
 
 onMounted(async () => {
   try {
@@ -22,8 +23,9 @@ onMounted(async () => {
 
     let uniqueKeys = [...new Set(allKeys)];
 
-    console.log(uniqueKeys);
-    console.log(response.data.data);
+    keys.value = uniqueKeys;
+
+    console.log(keys.value);
     console.log(items.value);
   } catch (error) {
     console.log("Error Fetching jobs", error);
@@ -44,7 +46,7 @@ onMounted(async () => {
         <RouterLink to="/supplier/editpage" class="link">Edit</RouterLink>
       </li>
     </Navbar>
-    <RouterView :items="items" page_name="supplier" />
+    <RouterView :keys="keys" :items="items" page_name="supplier" />
   </div>
 </template>
 

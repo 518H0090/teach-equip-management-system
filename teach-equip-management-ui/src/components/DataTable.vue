@@ -6,6 +6,7 @@ import FilterDropdown from "@/components/FilterDropdown.vue";
 
 const props = defineProps({
   items: Array,
+  keys: Array,
 });
 
 const searchFilter = ref("");
@@ -47,7 +48,7 @@ const handleSearch = (search) => {
             <thead
               class="border-b border-neutral-200 font-medium dark:border-white/10"
             >
-              <tr>
+              <tr v-show="props.keys === null">
                 <th class="px-4 py-3">UserId</th>
                 <th class="px-4 py-3">Id</th>
                 <th class="px-4 py-3">Title</th>
@@ -56,9 +57,19 @@ const handleSearch = (search) => {
                   <span class="sr-only">Actions</span>
                 </th>
               </tr>
+              <tr v-show="props.keys !== null">
+                <th v-for="key in keys" :key="key" class="px-4 py-3">
+                  {{ key }}
+                </th>
+              </tr>
             </thead>
             <tbody>
-              <tr v-for="item in filteredItems" :key="item.id" class="border-b">
+              <tr
+                v-show="props.keys === null"
+                v-for="item in filteredItems"
+                :key="item.id"
+                class="border-b"
+              >
                 <td class="px-4 py-3 font-medium text-gray-900">
                   {{ item.id }}
                 </td>
@@ -71,6 +82,21 @@ const handleSearch = (search) => {
                   <RouterLink to="/" class="text-indigo-500 hover:underline"
                     >Details</RouterLink
                   >
+                </td>
+              </tr>
+
+              <tr
+                v-show="props.keys !== null"
+                v-for="item in filteredItems"
+                :key="item.id"
+                class="border-b"
+              >
+                <td
+                  v-for="value in item"
+                  :key="value"
+                  class="px-4 py-3 font-medium text-gray-900"
+                >
+                  {{ value }}
                 </td>
               </tr>
             </tbody>

@@ -6,7 +6,8 @@ import Navbar from "@/components/Navbar.vue";
 
 const route = useRoute();
 
-const items = ref([]);
+const items = ref({});
+const keys = ref([]);
 
 onMounted(async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
@@ -14,15 +15,15 @@ onMounted(async () => {
   items.value = await response.json();
 
   let allKeys = items.value.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    let uniqueKeys = [...new Set(allKeys)];
+  let uniqueKeys = [...new Set(allKeys)];
 
-    console.log(uniqueKeys);
+  keys.value = uniqueKeys;
 
-    console.log(items.value);
-
+  console.log(keys.value);
+  console.log(items.value);
 });
 </script>
 
@@ -30,7 +31,7 @@ onMounted(async () => {
   <div class="content">
     <Navbar>
       <li>
-        <RouterLink to="/about/getpage"  class="link">View</RouterLink>
+        <RouterLink to="/about/getpage" class="link">View</RouterLink>
       </li>
       <li>
         <RouterLink to="/about/addpage" class="link">Add</RouterLink>
@@ -39,7 +40,7 @@ onMounted(async () => {
         <RouterLink to="/about/editpage" class="link">Edit</RouterLink>
       </li>
     </Navbar>
-    <RouterView :items="items" page_name="about" />
+    <RouterView :keys="keys" :items="items" page_name="about" />
   </div>
 </template>
 
