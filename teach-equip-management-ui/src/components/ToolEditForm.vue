@@ -136,9 +136,7 @@ const ItemById = async (itemId) => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Edit Category
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Edit Tool</h2>
 
             <div class="input-control mb-4">
               <label class="block text-gray-700 font-bold mb-2">Type</label>
@@ -173,7 +171,7 @@ const ItemById = async (itemId) => {
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Edit Category
+                Edit Tool
               </button>
             </div>
           </form>

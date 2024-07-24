@@ -114,11 +114,11 @@ const router = createRouter({
         },
         {
           path: "editpage/:id",
-          component: ToolForm
+          component: ToolEditForm
         },
         {
           path: "addpage",
-          component: ToolEditForm
+          component:  ToolForm
         }
       ]
     }

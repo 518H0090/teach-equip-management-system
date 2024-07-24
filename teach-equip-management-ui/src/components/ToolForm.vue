@@ -4,7 +4,7 @@ import MainCard from "@/components/MainCard.vue";
 import eventBus from "@/eventBus";
 
 import { useStore } from "vuex";
-import { defineProps, onMounted, onUnmounted, reactive } from "vue";
+import { defineProps, onMounted, onUnmounted, reactive, ref } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
@@ -25,8 +25,9 @@ const props = defineProps({
 });
 
 const form = reactive({
-  type: "",
-  unit: "",
+  toolName: "",
+  description: "",
+  supplierId: "Remote",
 });
 
 onMounted(() => {
@@ -101,6 +102,13 @@ const validateInputs = async () => {
     }
   }
 };
+
+const dropdownOpen = ref(false);
+const selectedOptions = ref(["heheh", "fsfsa", "aaaa"]);
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
 </script>
 
 <template>
@@ -109,17 +117,15 @@ const validateInputs = async () => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Add Category
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Add Tool</h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2">Type</label>
+              <label class="block text-gray-700 font-bold mb-2">ToolName</label>
               <input
-                v-model="form.type"
+                v-model="form.toolName"
                 type="text"
-                id="type"
-                name="type"
+                id="tool_name"
+                name="tool_name"
                 class="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. everyday"
               />
@@ -128,17 +134,81 @@ const validateInputs = async () => {
             </div>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2">unit</label>
-              <input
-                v-model="form.unit"
-                type="text"
-                id="unit"
-                name="unit"
-                class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. unit"
-              />
+              <label
+                for="company_description"
+                class="block text-gray-700 font-bold mb-2"
+                >Company Description</label
+              >
+              <textarea
+                v-model="form.description"
+                id="company_description"
+                name="company_description"
+                class="border rounded w-full py-2 px-3"
+                rows="4"
+                placeholder="What does your company do?"
+              ></textarea>
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label for="type" class="block text-gray-700 font-bold mb-2"
+                >Supplier</label
+              >
+              <select
+                id="type"
+                v-model="form.supplierId"
+                name="type"
+                class="border rounded w-full py-2 px-3"
+                required
+              >
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Remote">Remote</option>
+                <option value="Internship">Internship</option>
+              </select>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <div class="border rounded w-full py-2 px-3 dropdown">
+                <button @click="toggleDropdown">
+                  {{ dropdownOpen ? "Close Dropdown" : "Open Dropdown" }}
+                </button>
+                <div v-if="dropdownOpen" class="dropdown-content">
+                  <label for="type" class="block text-gray-700 font-bold mb-2">
+                    <input
+                      type="checkbox"
+                      value="heheh"
+                      v-model="selectedOptions"
+                    />
+                    heheh
+                  </label>
+
+                  <label for="type" class="block text-gray-700 font-bold mb-2">
+                    <input
+                      type="checkbox"
+                      value="fsfsa"
+                      v-model="selectedOptions"
+                    />
+                    fsfsa
+                  </label>
+
+                  <label for="type" class="block text-gray-700 font-bold mb-2">
+                    <input
+                      type="checkbox"
+                      value="aaaa"
+                      v-model="selectedOptions"
+                    />
+                    aaaa
+                  </label>
+                </div>
+
+                <p class="border rounded w-full py-2 px-3 mb-2">
+                  Selected Options: {{ selectedOptions }}
+                </p>
+              </div>
             </div>
 
             <div>
@@ -146,7 +216,7 @@ const validateInputs = async () => {
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Add Category
+                Add Tool
               </button>
             </div>
           </form>
