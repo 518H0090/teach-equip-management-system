@@ -78,16 +78,16 @@ const removeItem = async (id) => {
               class="border-b border-neutral-200 font-medium dark:border-white/10"
             >
               <tr v-show="props.keys === null">
-                <th class="px-4 py-3">UserId</th>
-                <th class="px-4 py-3">Id</th>
-                <th class="px-4 py-3">Title</th>
-                <th class="px-4 py-3">Completed</th>
-                <th class="px-4 py-3">
+                <th class="px-4 py-3 uppercase">UserId</th>
+                <th class="px-4 py-3 uppercase">Id</th>
+                <th class="px-4 py-3 uppercase">Title</th>
+                <th class="px-4 py-3 uppercase">Completed</th>
+                <th class="px-4 py-3 uppercase">
                   <span class="sr-only">Actions</span>
                 </th>
               </tr>
               <tr v-show="props.keys !== null">
-                <th v-for="key in keys" :key="key" class="px-4 py-3">
+                <th v-for="key in keys" :key="key" class="px-4 py-3 uppercase">
                   {{ key }}
                 </th>
               </tr>
