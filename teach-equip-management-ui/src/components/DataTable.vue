@@ -7,15 +7,27 @@ import FilterDropdown from "@/components/FilterDropdown.vue";
 const props = defineProps({
   items: Array,
   keys: Array,
+  page_name: {
+    type: String,
+    default: "",
+  },
 });
 
 const searchFilter = ref("");
 
 const filteredItems = computed(() => {
   if (searchFilter.value !== "") {
-    return props.items.filter((item) =>
-      item.title.includes(searchFilter.value)
-    );
+    if (props.page_name === "about") {
+      return props.items.filter((item) =>
+        item.title.includes(searchFilter.value)
+      );
+    } else if (props.page_name === "supplier") {
+      return props.items.filter(
+        (item) =>
+          item.supplierName.includes(searchFilter.value) ||
+          item.phone.includes(searchFilter.value)
+      );
+    }
   }
 
   return props.items;

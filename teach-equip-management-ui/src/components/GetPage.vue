@@ -43,6 +43,6 @@ onUnmounted(() => {
 
 <template>
   <MainCard>
-    <DataTable :keys="keys" :items="props.items" />
+    <DataTable :keys="keys" :items="props.items" :page_name="page_name" />
   </MainCard>
 </template>
