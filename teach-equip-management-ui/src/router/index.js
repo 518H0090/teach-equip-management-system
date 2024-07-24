@@ -12,6 +12,9 @@ import SupplierEditForm from '@/components/SupplierEditForm.vue'
 import Category from '@/views/Category.vue'
 import CategoryForm from '@/components/CategoryForm.vue'
 import CategoryEditForm from '@/components/CategoryEditForm.vue'
+import ToolView from '@/views/ToolView.vue'
+import ToolForm from '@/components/ToolForm.vue'
+import ToolEditForm from '@/components/ToolEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -94,6 +97,28 @@ const router = createRouter({
         {
           path: "addpage",
           component: CategoryForm
+        }
+      ]
+    },
+    {
+      path: '/tool',
+      component: ToolView,
+      children: [
+        {
+          path: "",
+          redirect: "getpage"
+        },
+        {
+          path: "getpage",
+          component: GetPage
+        },
+        {
+          path: "editpage/:id",
+          component: ToolForm
+        },
+        {
+          path: "addpage",
+          component: ToolEditForm
         }
       ]
     }

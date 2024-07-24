@@ -32,6 +32,8 @@ onMounted(async () => {
     aboutFetchs();
   } else if (props.page_name === "category") {
     allCategory();
+  } else if (props.page_name === "tool") {
+    allTool();
   }
 });
 
@@ -69,6 +71,43 @@ const allCategory = async () => {
       "https://localhost:7112/api/toolmanage/all-categories"
     );
     items.value = response.data.data;
+
+    let allKeys = response.data.data.reduce((keys, obj) => {
+      return keys.concat(Object.keys(obj));
+    }, []);
+
+    let uniqueKeys = [...new Set(allKeys)];
+
+    keys.value = uniqueKeys;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const allTool = async () => {
+  try {
+    // const response = await axios.get(
+    //   "https://localhost:7112/api/toolmanage/all-tools"
+    // );
+
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-tools-include-supplier"
+    );
+
+    const datajson = response.data.data;
+
+    const mappedData = datajson.map((item) => ({
+      toolName: item.toolName,
+      description: item.description,
+      supplier: {
+        supplierId: item.supplier.id,
+        supplierName: item.supplier.supplierName,
+      },
+    }));
+
+    console.log(mappedData);
+
+    items.value = mappedData;
 
     let allKeys = response.data.data.reduce((keys, obj) => {
       return keys.concat(Object.keys(obj));

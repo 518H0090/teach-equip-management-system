@@ -125,7 +125,15 @@ const removeItem = async (id) => {
                   :key="value"
                   class="px-4 py-3 font-medium text-gray-900"
                 >
-                  {{ value }}
+                  <span
+                    :id="`${value.supplierId}`"
+                    v-if="value.supplierId && value.supplierName"
+                  >
+                    {{ value.supplierName }}
+                  </span>
+                  <span v-else>
+                    {{ value }}
+                  </span>
                 </td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <RouterLink
