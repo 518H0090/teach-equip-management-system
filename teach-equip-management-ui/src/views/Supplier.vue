@@ -3,34 +3,6 @@ import { RouterLink, RouterView } from "vue-router";
 import { useRoute } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import Navbar from "@/components/Navbar.vue";
-import axios from "axios";
-
-const route = useRoute();
-
-const items = ref({});
-const keys = ref([]);
-
-onMounted(async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-supplier"
-    );
-    items.value = response.data.data;
-
-    let allKeys = response.data.data.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
-
-    let uniqueKeys = [...new Set(allKeys)];
-
-    keys.value = uniqueKeys;
-
-    console.log(keys.value);
-    console.log(items.value);
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-  }
-});
 </script>
 
 <template>
@@ -46,7 +18,7 @@ onMounted(async () => {
         <RouterLink to="/supplier/editpage" class="link">Edit</RouterLink>
       </li>
     </Navbar>
-    <RouterView :keys="keys" :items="items" page_name="supplier" />
+    <RouterView page_name="supplier" />
   </div>
 </template>
 

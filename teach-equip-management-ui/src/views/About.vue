@@ -3,28 +3,6 @@ import { RouterLink, RouterView } from "vue-router";
 import { useRoute } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import Navbar from "@/components/Navbar.vue";
-
-const route = useRoute();
-
-const items = ref({});
-const keys = ref([]);
-
-onMounted(async () => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-
-  items.value = await response.json();
-
-  let allKeys = items.value.reduce((keys, obj) => {
-    return keys.concat(Object.keys(obj));
-  }, []);
-
-  let uniqueKeys = [...new Set(allKeys)];
-
-  keys.value = uniqueKeys;
-
-  console.log(keys.value);
-  console.log(items.value);
-});
 </script>
 
 <template>

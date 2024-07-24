@@ -64,7 +64,6 @@ onUnmounted(() => {
         <span class="material-icons">storefront</span>
         <span class="text">Supplier</span>
       </RouterLink>
-
     </div>
 
     <!-- Settings -->
