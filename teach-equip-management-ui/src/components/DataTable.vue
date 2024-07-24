@@ -40,14 +40,12 @@ const handleSearch = (search) => {
 };
 
 const removeItem = async (id) => {
-  var confirm = window.confirm(
-    "Are you sure you want to remove this supplier?"
-  );
+  var confirm = window.confirm("Are you sure you want to remove this item?");
 
   if (confirm) {
     try {
       const response = await axios.delete(
-        `https://localhost:7112/api/toolmanage/remove-supplier/${id}`
+        `https://localhost:7112/api/toolmanage/remove-${props.page_name}/${id}`
       );
       router.go();
     } catch (error) {
@@ -129,15 +127,15 @@ const removeItem = async (id) => {
                 >
                   {{ value }}
                 </td>
-                <td class="px-4 py-3 flex items-center justify-evenly">
+                <td class="px-4 py-3 flex items-center justify-end">
                   <RouterLink
-                    :to="`/supplier/editpage/${item.id}`"
-                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    :to="`/${props.page_name}/editpage/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                     >Edit</RouterLink
                   >
                   <button
                     @click="removeItem(item.id)"
-                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
                   >
                     Remove
                   </button>

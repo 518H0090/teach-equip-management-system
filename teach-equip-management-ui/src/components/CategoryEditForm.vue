@@ -25,10 +25,9 @@ const props = defineProps({
 });
 
 const form = reactive({
-  supplierName: "",
-  contactName: "",
-  address: "",
-  phone: "",
+  id: "",
+  type: "",
+  unit: "",
 });
 
 let paramId = route.params.id;
@@ -41,7 +40,7 @@ onMounted(() => {
   aside_item.classList.add("router-link-exact-active");
   paramId = route.params.id;
   if (paramId !== undefined || paramId !== null) {
-    supplierById(paramId);
+    ItemById(paramId);
   }
 });
 
@@ -70,85 +69,61 @@ const setSuccess = (element) => {
 };
 
 const validateInputs = async () => {
-  const supplierName = document.querySelector("#supplier_name");
-  const contactName = document.querySelector("#contact_name");
-  const address = document.querySelector("#address");
-  const phone = document.querySelector("#phone");
+  const type = document.querySelector("#type");
+  const unit = document.querySelector("#unit");
 
-  const supplierNameValue = supplierName.value.trim();
-  const contactNameValue = contactName.value.trim();
-  const addressValue = address.value.trim();
-  const phoneValue = phone.value.trim();
-  const regexPhone = /^0?\d{8,14}$/;
+  const typeValue = type.value.trim();
+  const unitValue = unit.value.trim();
   let isProcess = true;
 
-  if (supplierNameValue === "") {
-    setError(supplierName, "This is required");
+  if (typeValue === "") {
+    setError(type, "This is required");
     isProcess = false;
   } else {
-    setSuccess(supplierName);
+    setSuccess(type);
   }
 
-  if (contactNameValue === "") {
-    setError(contactName, "This is required");
+  if (unitValue === "") {
+    setError(unit, "This is required");
     isProcess = false;
   } else {
-    setSuccess(contactName);
+    setSuccess(unit);
   }
 
-  if (addressValue === "") {
-    setError(address, "This is required");
-    isProcess = false;
-  } else {
-    setSuccess(address);
-  }
-
-  if (phoneValue === "") {
-    setError(phone, "This is required");
-    isProcess = false;
-  } else if (!regexPhone.test(phoneValue)) {
-    setError(phone, "Not follow format of phone");
-    isProcess = false;
-  } else if (regexPhone.test(phoneValue)) {
-    setSuccess(phone);
-  }
+  console.log(form);
 
   if (isProcess) {
-    const updateSupplier = {
-      id: paramId,
-      supplierName: form.supplierName,
-      contactName: form.contactName,
-      address: form.address,
-      phone: form.phone,
+    const updateCategory = {
+      id: form.id,
+      type: form.type,
+      unit: form.unit,
     };
-
-    console.log(updateSupplier);
 
     try {
       const response = await axios.put(
-        "https://localhost:7112/api/toolmanage/update-supplier",
-        updateSupplier
+        "https://localhost:7112/api/toolmanage/update-category",
+        updateCategory
       );
 
-      router.push("/supplier/getpage");
+      router.push("/category/getpage");
     } catch (error) {
       console.log("Error Fetching jobs", error);
     }
   }
 };
 
-const supplierById = async (supplierId) => {
+const ItemById = async (itemId) => {
   try {
     const response = await axios.get(
-      `https://localhost:7112/api/toolmanage/supplier/find/${supplierId}`
+      `https://localhost:7112/api/toolmanage/category/find/${itemId}`
     );
 
     const datajson = response.data.data;
     form.id = datajson.id;
-    form.supplierName = datajson.supplierName;
-    form.contactName = datajson.contactName;
-    form.address = datajson.address;
-    form.phone = datajson.phone;
+    form.type = datajson.type;
+    form.unit = datajson.unit;
+
+    console.log(response);
   } catch (error) {
     console.log("Error Fetching SupplierInfo", error);
   }
@@ -162,64 +137,32 @@ const supplierById = async (supplierId) => {
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
             <h2 class="text-3xl text-center font-semibold mb-6">
-              Edit Supplier
+              Edit Category
             </h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Supplier Name</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Type</label>
               <input
-                v-model="form.supplierName"
+                v-model="form.type"
                 type="text"
-                id="supplier_name"
-                name="supplier_name"
+                id="type"
+                name="type"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. Công ty TNHH một trăm thành Viên"
+                placeholder="eg. everyday"
               />
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Contact Name</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">unit</label>
               <input
-                v-model="form.contactName"
+                v-model="form.unit"
                 type="text"
-                id="contact_name"
-                name="contact_name"
+                id="unit"
+                name="unit"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. Nguyễn Văn A"
-              />
-
-              <div class="error block text-gray-700 font-bold mb-2"></div>
-            </div>
-
-            <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2">Address</label>
-              <input
-                v-model="form.address"
-                type="text"
-                id="address"
-                name="address"
-                class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. 193 Điện Biên Phủ, ..."
-              />
-
-              <div class="error block text-gray-700 font-bold mb-2"></div>
-            </div>
-
-            <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2">Phone</label>
-              <input
-                v-model="form.phone"
-                type="text"
-                id="phone"
-                name="phone"
-                class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. 0123456789"
+                placeholder="eg. unit"
               />
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
@@ -230,7 +173,7 @@ const supplierById = async (supplierId) => {
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Add Job
+                Edit Category
               </button>
             </div>
           </form>

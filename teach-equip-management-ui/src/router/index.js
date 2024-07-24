@@ -9,6 +9,9 @@ import GetPage from '@/components/GetPage.vue'
 import Supplier from '@/views/Supplier.vue'
 import SupplierForm from '@/components/SupplierForm.vue'
 import SupplierEditForm from '@/components/SupplierEditForm.vue'
+import Category from '@/views/Category.vue'
+import CategoryForm from '@/components/CategoryForm.vue'
+import CategoryEditForm from '@/components/CategoryEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +72,28 @@ const router = createRouter({
         {
           path: "addpage",
           component: SupplierForm
+        }
+      ]
+    },
+    {
+      path: '/category',
+      component: Category,
+      children: [
+        {
+          path: "",
+          redirect: "getpage"
+        },
+        {
+          path: "getpage",
+          component: GetPage
+        },
+        {
+          path: "editpage/:id",
+          component: CategoryEditForm
+        },
+        {
+          path: "addpage",
+          component: CategoryForm
         }
       ]
     }

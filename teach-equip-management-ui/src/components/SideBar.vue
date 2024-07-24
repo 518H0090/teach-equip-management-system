@@ -64,6 +64,11 @@ onUnmounted(() => {
         <span class="material-icons">storefront</span>
         <span class="text">Supplier</span>
       </RouterLink>
+
+      <RouterLink class="button category" to="/category/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Category</span>
+      </RouterLink>
     </div>
 
     <!-- Settings -->

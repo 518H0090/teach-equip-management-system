@@ -30,6 +30,8 @@ onMounted(async () => {
     allSupplier();
   } else if (props.page_name === "about") {
     aboutFetchs();
+  } else if (props.page_name === "category") {
+    allCategory();
   }
 });
 
@@ -46,6 +48,25 @@ const allSupplier = async () => {
   try {
     const response = await axios.get(
       "https://localhost:7112/api/toolmanage/all-supplier"
+    );
+    items.value = response.data.data;
+
+    let allKeys = response.data.data.reduce((keys, obj) => {
+      return keys.concat(Object.keys(obj));
+    }, []);
+
+    let uniqueKeys = [...new Set(allKeys)];
+
+    keys.value = uniqueKeys;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const allCategory = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-categories"
     );
     items.value = response.data.data;
 
