@@ -25,7 +25,7 @@ namespace TeachEquipManagement.BLL.FluentValidator
 
             RuleFor(x => x.Phone)
             .NotEmpty().WithMessage("Phone is required.")
-            .Matches(@"^0?\d{8,14}$").WithMessage("Invalid phone number format.");
+           .Matches(@"^0?\d{8,14}$").WithMessage("Invalid phone number format.");
         }
     }
 }
