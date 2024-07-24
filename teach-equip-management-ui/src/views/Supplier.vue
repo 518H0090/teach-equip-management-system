@@ -14,9 +14,6 @@ import Navbar from "@/components/Navbar.vue";
       <li>
         <RouterLink to="/supplier/addpage" class="link">Add</RouterLink>
       </li>
-      <li>
-        <RouterLink to="/supplier/editpage/10" class="link">Edit</RouterLink>
-      </li>
     </Navbar>
     <RouterView page_name="supplier" />
   </div>

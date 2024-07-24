@@ -36,6 +36,14 @@ const filteredItems = computed(() => {
 const handleSearch = (search) => {
   searchFilter.value = search;
 };
+
+const removeItem = (id) => {
+  var confirm = window.confirm(
+    "Are you sure you want to remove this supplier?"
+  );
+
+  console.log(confirm);
+};
 </script>
 
 <template>
@@ -109,6 +117,19 @@ const handleSearch = (search) => {
                   class="px-4 py-3 font-medium text-gray-900"
                 >
                   {{ value }}
+                </td>
+                <td class="px-4 py-3 flex items-center justify-evenly">
+                  <RouterLink
+                    :to="`/supplier/editpage/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >Edit</RouterLink
+                  >
+                  <button
+                    @click="removeItem(item.id)"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Remove
+                  </button>
                 </td>
               </tr>
             </tbody>

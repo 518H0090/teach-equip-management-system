@@ -84,3 +84,5 @@ const aboutFetchs = async () => {
     <DataTable :keys="keys" :items="items" :page_name="page_name" />
   </MainCard>
 </template>
+
+<style lang="scss" scoped></style>
