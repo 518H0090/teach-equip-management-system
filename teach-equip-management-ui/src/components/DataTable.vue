@@ -3,6 +3,8 @@ import { computed, defineProps, ref } from "vue";
 import SearchForm from "@/components/SearchForm.vue";
 import FilterRadio from "@/components/FilterRadio.vue";
 import FilterDropdown from "@/components/FilterDropdown.vue";
+import router from "@/router";
+import axios from "axios";
 
 const props = defineProps({
   items: Array,
@@ -37,12 +39,21 @@ const handleSearch = (search) => {
   searchFilter.value = search;
 };
 
-const removeItem = (id) => {
+const removeItem = async (id) => {
   var confirm = window.confirm(
     "Are you sure you want to remove this supplier?"
   );
 
-  console.log(confirm);
+  if (confirm) {
+    try {
+      const response = await axios.delete(
+        `https://localhost:7112/api/toolmanage/remove-supplier/${id}`
+      );
+      router.go();
+    } catch (error) {
+      console.log("Error Fetching SupplierInfo", error);
+    }
+  }
 };
 </script>
 
