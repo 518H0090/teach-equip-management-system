@@ -31,12 +31,18 @@ const form = reactive({
   phone: "",
 });
 
+let paramId = route.params.id;
+
 onMounted(() => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
+  paramId = route.params.id;
+  if (paramId !== undefined || paramId !== null) {
+    supplierById(paramId);
+  }
 });
 
 onUnmounted(() => {
@@ -108,23 +114,45 @@ const validateInputs = async () => {
   }
 
   if (isProcess) {
-    const newSupplier = {
+    const updateSupplier = {
+      id: paramId,
       supplierName: form.supplierName,
       contactName: form.contactName,
       address: form.address,
       phone: form.phone,
     };
 
+    console.log(updateSupplier);
+
     try {
-      const response = await axios.post(
-        "https://localhost:7112/api/toolmanage/create-supplier",
-        newSupplier
+      const response = await axios.put(
+        "https://localhost:7112/api/toolmanage/update-supplier",
+        updateSupplier
       );
+
+      console.log(response);
 
       router.push("/supplier/getpage");
     } catch (error) {
       console.log("Error Fetching jobs", error);
     }
+  }
+};
+
+const supplierById = async (supplierId) => {
+  try {
+    const response = await axios.get(
+      `https://localhost:7112/api/toolmanage/supplier/find/${supplierId}`
+    );
+
+    const datajson = response.data.data;
+    form.id = datajson.id;
+    form.supplierName = datajson.supplierName;
+    form.contactName = datajson.contactName;
+    form.address = datajson.address;
+    form.phone = datajson.phone;
+  } catch (error) {
+    console.log("Error Fetching SupplierInfo", error);
   }
 };
 </script>
@@ -136,7 +164,7 @@ const validateInputs = async () => {
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
             <h2 class="text-3xl text-center font-semibold mb-6">
-              Add Supplier
+              Edit Supplier
             </h2>
 
             <div class="input-control mb-4">

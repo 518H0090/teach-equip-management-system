@@ -8,6 +8,7 @@ import EditPage from '@/components/EditPage.vue'
 import GetPage from '@/components/GetPage.vue'
 import Supplier from '@/views/Supplier.vue'
 import SupplierForm from '@/components/SupplierForm.vue'
+import SupplierEditForm from '@/components/SupplierEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,8 +63,8 @@ const router = createRouter({
           component: GetPage
         },
         {
-          path: "editpage",
-          component: EditPage
+          path: "editpage/:id",
+          component: SupplierEditForm
         },
         {
           path: "addpage",
