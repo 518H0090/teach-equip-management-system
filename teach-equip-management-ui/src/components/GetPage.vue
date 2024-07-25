@@ -95,7 +95,7 @@ const allTool = async () => {
     const datajson = response.data.data;
 
     const mappedData = datajson.map((item) => ({
-      toolId: item.id,
+      id: item.id,
       toolName: item.toolName,
       description: item.description,
       supplier: {

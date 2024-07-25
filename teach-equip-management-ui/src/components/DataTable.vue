@@ -60,6 +60,9 @@ const removeItem = async (id) => {
       const response = await axios.delete(
         `https://localhost:7112/api/toolmanage/remove-${props.page_name}/${id}`
       );
+
+      console.log(response);
+
       router.go();
     } catch (error) {
       console.log("Error Fetching SupplierInfo", error);
