@@ -27,7 +27,8 @@ const props = defineProps({
 const form = reactive({
   toolName: "",
   description: "",
-  supplierId: "Remote",
+  supplierId: -1,
+  categories: [],
 });
 
 onMounted(() => {
@@ -36,6 +37,9 @@ onMounted(() => {
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
+
+  allSupplier();
+  allCategory();
 });
 
 onUnmounted(() => {
@@ -63,51 +67,118 @@ const setSuccess = (element) => {
 };
 
 const validateInputs = async () => {
-  const type = document.querySelector("#type");
-  const unit = document.querySelector("#unit");
+  const toolName = document.querySelector("#tool_name");
+  const toolDescription = document.querySelector("#tool_description");
+  const supplier = document.querySelector("#supplier");
+  const toolNameValue = toolName.value.trim();
+  const toolDescriptionValue = toolDescription.value.trim();
+  const supplierValue = supplier.value.trim();
 
-  const typeValue = type.value.trim();
-  const unitValue = unit.value.trim();
   let isProcess = true;
-
-  if (typeValue === "") {
-    setError(type, "This is required");
+  if (toolNameValue === "") {
+    setError(toolName, "This is required");
     isProcess = false;
   } else {
-    setSuccess(type);
+    setSuccess(toolName);
   }
-
-  if (unitValue === "") {
-    setError(unit, "This is required");
+  if (toolDescriptionValue === "") {
+    setError(toolDescription, "This is required");
     isProcess = false;
   } else {
-    setSuccess(unit);
+    setSuccess(toolDescription);
   }
+
+  if (supplierValue === "") {
+    setError(supplier, "This is required");
+    isProcess = false;
+  } else if (supplierValue === String(-1)) {
+    setError(supplier, "Must select suppliear instead of default");
+    isProcess = false;
+  } else {
+    setSuccess(supplier);
+  }
+
+  console.log(form);
 
   if (isProcess) {
-    const newCategory = {
-      type: form.type,
-      unit: form.unit,
+    const newTool = {
+      toolName: form.toolName,
+      description: form.description,
+      supplierId: form.supplierId,
     };
 
-    try {
-      const response = await axios.post(
-        "https://localhost:7112/api/toolmanage/create-category",
-        newCategory
-      );
+    const responseTest = fetch(
+      "https://localhost:7112/api/toolmanage/create-tool",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTool),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.statusCode === 400) {
+          console.log(data.message);
+          setError(toolName, data.message);
+        }
 
-      router.push("/category/getpage");
-    } catch (error) {
-      console.log("Error Fetching jobs", error);
-    }
+        if (data.statusCode === 201) {
+          console.log(data);
+
+          if (form.categories.length > 0) {
+            form.categories.forEach((element) => {});
+          }
+
+          router.push("/tool/getpage");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }
 };
 
 const dropdownOpen = ref(false);
-const selectedOptions = ref(["heheh", "fsfsa", "aaaa"]);
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
+};
+
+const selectedOptions = ref([]);
+const suppliers = ref({});
+const categories = ref({});
+
+const allSupplier = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-supplier"
+    );
+    suppliers.value = response.data.data;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const allCategory = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-categories"
+    );
+    categories.value = response.data.data;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const allCategoryName = async () => {
+  let categoriesFilter = categories.value.filter((category) =>
+    form.categories.includes(String(category.id))
+  );
+  selectedOptions.value = categoriesFilter.map((category) => category.type);
 };
 </script>
 
@@ -116,7 +187,7 @@ const toggleDropdown = () => {
     <section class="bg-green-50">
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
-          <form @submit.prevent="validateInputs">
+          <form>
             <h2 class="text-3xl text-center font-semibold mb-6">Add Tool</h2>
 
             <div class="input-control mb-4">
@@ -135,14 +206,14 @@ const toggleDropdown = () => {
 
             <div class="input-control mb-4">
               <label
-                for="company_description"
+                for="tool_description"
                 class="block text-gray-700 font-bold mb-2"
-                >Company Description</label
+                >Tool Description</label
               >
               <textarea
                 v-model="form.description"
-                id="company_description"
-                name="company_description"
+                id="tool_description"
+                name="tool_description"
                 class="border rounded w-full py-2 px-3"
                 rows="4"
                 placeholder="What does your company do?"
@@ -156,16 +227,20 @@ const toggleDropdown = () => {
                 >Supplier</label
               >
               <select
-                id="type"
+                id="supplier"
                 v-model="form.supplierId"
-                name="type"
+                name="supplier"
                 class="border rounded w-full py-2 px-3"
                 required
               >
-                <option value="Full-Time">Full-Time</option>
-                <option value="Part-Time">Part-Time</option>
-                <option value="Remote">Remote</option>
-                <option value="Internship">Internship</option>
+                <option value="-1">Default</option>
+                <option
+                  v-for="supplier in suppliers"
+                  :key="supplier"
+                  :value="`${supplier.id}`"
+                >
+                  {{ supplier.supplierName }}
+                </option>
               </select>
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
@@ -173,35 +248,22 @@ const toggleDropdown = () => {
 
             <div class="input-control mb-4">
               <div class="border rounded w-full py-2 px-3 dropdown">
-                <button @click="toggleDropdown">
-                  {{ dropdownOpen ? "Close Dropdown" : "Open Dropdown" }}
+                <button @click.prevent="toggleDropdown">
+                  {{ dropdownOpen ? "Fetch Category" : "Show Category" }}
                 </button>
                 <div v-if="dropdownOpen" class="dropdown-content">
-                  <label for="type" class="block text-gray-700 font-bold mb-2">
+                  <label
+                    v-for="category in categories"
+                    :key="category.id"
+                    class="block text-gray-700 font-bold mb-2"
+                    @change="allCategoryName"
+                  >
                     <input
                       type="checkbox"
-                      value="heheh"
-                      v-model="selectedOptions"
+                      :value="`${category.id}`"
+                      v-model="form.categories"
                     />
-                    heheh
-                  </label>
-
-                  <label for="type" class="block text-gray-700 font-bold mb-2">
-                    <input
-                      type="checkbox"
-                      value="fsfsa"
-                      v-model="selectedOptions"
-                    />
-                    fsfsa
-                  </label>
-
-                  <label for="type" class="block text-gray-700 font-bold mb-2">
-                    <input
-                      type="checkbox"
-                      value="aaaa"
-                      v-model="selectedOptions"
-                    />
-                    aaaa
+                    {{ category.type }}
                   </label>
                 </div>
 
@@ -213,6 +275,7 @@ const toggleDropdown = () => {
 
             <div>
               <button
+                @click.prevent="validateInputs"
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >

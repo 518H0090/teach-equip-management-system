@@ -18,6 +18,8 @@ const props = defineProps({
 const searchFilter = ref("");
 
 const filteredItems = computed(() => {
+  console.log(props.items);
+
   if (searchFilter.value !== "") {
     if (props.page_name === "about") {
       return props.items.filter((item) =>
@@ -28,6 +30,19 @@ const filteredItems = computed(() => {
         (item) =>
           item.supplierName.includes(searchFilter.value) ||
           item.phone.includes(searchFilter.value)
+      );
+    } else if (props.page_name === "category") {
+      return props.items.filter(
+        (item) =>
+          item.type.includes(searchFilter.value) ||
+          item.unit.includes(searchFilter.value)
+      );
+    } else if (props.page_name === "tool") {
+      return props.items.filter(
+        (item) =>
+          item.toolName.includes(searchFilter.value) ||
+          item.description.includes(searchFilter.value) ||
+          item.supplier.supplierName === searchFilter.value
       );
     }
   }

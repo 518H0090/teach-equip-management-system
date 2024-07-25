@@ -105,7 +105,7 @@ const allTool = async () => {
       },
     }));
 
-    console.log(mappedData);
+    // console.log(mappedData);
 
     items.value = mappedData;
 
@@ -134,8 +134,8 @@ const aboutFetchs = async () => {
 
   keys.value = uniqueKeys;
 
-  console.log(keys.value);
-  console.log(items.value);
+  // console.log(keys.value);
+  // console.log(items.value);
 };
 </script>
 
