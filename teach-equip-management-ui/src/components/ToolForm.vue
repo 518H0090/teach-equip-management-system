@@ -107,7 +107,7 @@ const validateInputs = async () => {
       supplierId: form.supplierId,
     };
 
-    const responseTest = fetch(
+    const responseTest =  fetch(
       "https://localhost:7112/api/toolmanage/create-tool",
       {
         method: "POST",
@@ -120,7 +120,7 @@ const validateInputs = async () => {
       .then((response) => {
         return response.json();
       })
-      .then((data) => {
+      .then(async (data) => {
         if (data.statusCode === 400) {
           console.log(data.message);
           setError(toolName, data.message);
@@ -135,7 +135,8 @@ const validateInputs = async () => {
             });
           }
 
-          // router.push("/tool/getpage");
+          router.push("/tool/getpage");
+          await allToolCategories();
         }
       })
       .catch((error) => {
@@ -196,6 +197,20 @@ const relationToolCategory = async (toolId, categoryId) => {
     );
 
     console.log(response.data.data);
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const allToolCategories = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-tool-categories"
+    );
+
+    const datajson = response.data.data;
+
+    relationShip.value = datajson;
   } catch (error) {
     console.log("Error Fetching jobs", error);
   }

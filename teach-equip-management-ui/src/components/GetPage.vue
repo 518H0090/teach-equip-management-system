@@ -20,6 +20,19 @@ const props = defineProps({
   },
 });
 
+onActivated(async () => {
+  if (props.page_name === "supplier") {
+    allSupplier();
+  } else if (props.page_name === "about") {
+    aboutFetchs();
+  } else if (props.page_name === "category") {
+    allCategory();
+  } else if (props.page_name === "tool") {
+    await allToolCategories();
+    await allTool();
+  }
+})
+
 onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
