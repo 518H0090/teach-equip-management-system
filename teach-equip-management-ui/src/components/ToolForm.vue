@@ -127,13 +127,15 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 201) {
-          console.log(data);
+          const toolId = data.data;
 
-          if (form.categories.length > 0) {
-            form.categories.forEach((element) => {});
+          if (form.categories.length > 0 && toolId > 0) {
+            form.categories.forEach(async (categoryId) => {
+              await relationToolCategory(toolId, categoryId);
+            });
           }
 
-          router.push("/tool/getpage");
+          // router.push("/tool/getpage");
         }
       })
       .catch((error) => {
@@ -179,6 +181,24 @@ const allCategoryName = async () => {
     form.categories.includes(String(category.id))
   );
   selectedOptions.value = categoriesFilter.map((category) => category.type);
+};
+
+const relationToolCategory = async (toolId, categoryId) => {
+  try {
+    const newRelation = {
+      toolId,
+      categoryId,
+    };
+
+    const response = await axios.post(
+      "https://localhost:7112/api/toolmanage/create-tool-category",
+      newRelation
+    );
+
+    console.log(response.data.data);
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
 };
 </script>
 
