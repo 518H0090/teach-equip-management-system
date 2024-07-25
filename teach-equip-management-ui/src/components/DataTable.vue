@@ -18,8 +18,6 @@ const props = defineProps({
 const searchFilter = ref("");
 
 const filteredItems = computed(() => {
-  console.log(props.items);
-
   if (searchFilter.value !== "") {
     if (props.page_name === "about") {
       return props.items.filter((item) =>
@@ -145,6 +143,15 @@ const removeItem = async (id) => {
                     v-if="value.supplierId && value.supplierName"
                   >
                     {{ value.supplierName }}
+                  </span>
+                  <span v-else-if="Array.isArray(value)">
+                    {{
+                      value.length > 0
+                        ? `Category: ${value
+                            .map((category) => category.type)
+                            .join(" - ")}`
+                        : "Not contain Category"
+                    }}
                   </span>
                   <span v-else>
                     {{ value }}

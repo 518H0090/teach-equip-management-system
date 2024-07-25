@@ -9,6 +9,9 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageServic
 {
     public class ToolIncludeSupplierResponse
     {
+        [JsonProperty("tool_id")]
+        public int Id { get; set; }
+
         [JsonProperty("tool_name")]
         public string ToolName { get; set; } = string.Empty;
 

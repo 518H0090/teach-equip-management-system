@@ -11,6 +11,7 @@ const store = useStore();
 
 const items = ref({});
 const keys = ref([]);
+const relationShip = ref({});
 
 const props = defineProps({
   page_name: {
@@ -33,7 +34,8 @@ onMounted(async () => {
   } else if (props.page_name === "category") {
     allCategory();
   } else if (props.page_name === "tool") {
-    allTool();
+    await allToolCategories();
+    await allTool();
   }
 });
 
@@ -86,10 +88,6 @@ const allCategory = async () => {
 
 const allTool = async () => {
   try {
-    // const response = await axios.get(
-    //   "https://localhost:7112/api/toolmanage/all-tools"
-    // );
-
     const response = await axios.get(
       "https://localhost:7112/api/toolmanage/all-tools-include-supplier"
     );
@@ -97,19 +95,23 @@ const allTool = async () => {
     const datajson = response.data.data;
 
     const mappedData = datajson.map((item) => ({
+      toolId: item.id,
       toolName: item.toolName,
       description: item.description,
       supplier: {
         supplierId: item.supplier.id,
         supplierName: item.supplier.supplierName,
       },
+      category: relationShip.value
+        .filter((toolCategory) => toolCategory.tool.id === item.id)
+        .map((toolCategory) => toolCategory.category),
     }));
 
-    // console.log(mappedData);
+    console.log(mappedData);
 
     items.value = mappedData;
 
-    let allKeys = response.data.data.reduce((keys, obj) => {
+    let allKeys = mappedData.reduce((keys, obj) => {
       return keys.concat(Object.keys(obj));
     }, []);
 
@@ -133,9 +135,20 @@ const aboutFetchs = async () => {
   let uniqueKeys = [...new Set(allKeys)];
 
   keys.value = uniqueKeys;
+};
 
-  // console.log(keys.value);
-  // console.log(items.value);
+const allToolCategories = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-tool-categories"
+    );
+
+    const datajson = response.data.data;
+
+    relationShip.value = datajson;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
 };
 </script>
 
