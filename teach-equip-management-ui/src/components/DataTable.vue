@@ -42,10 +42,14 @@ const filteredItems = computed(() => {
         (item) =>
           item.toolName.includes(searchFilter.value) ||
           item.description.includes(searchFilter.value) ||
-          item.supplier.supplierName === searchFilter.value
+          item.supplier.supplierName.includes(searchFilter.value)
       );
     } else if (props.page_name === "account") {
-      return props.items;
+      return props.items.filter(
+        (item) =>
+          item.username.includes(searchFilter.value) ||
+          item.email.includes(searchFilter.value)
+      );
     }
   }
 

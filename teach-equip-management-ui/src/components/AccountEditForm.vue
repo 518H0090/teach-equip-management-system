@@ -31,6 +31,8 @@ const form = reactive({
   roleId: -1,
 });
 
+let paramId = route.params.id;
+
 onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
@@ -39,7 +41,11 @@ onMounted(async () => {
   aside_item.classList.add("router-link-exact-active");
 
   await allRoles();
-  await ItemById("7bc7768a-8004-4655-a414-ed3077e1deb2");
+
+  paramId = route.params.id;
+  if (paramId !== undefined || paramId !== null) {
+    await ItemById(paramId);
+  }
 });
 
 onUnmounted(() => {
