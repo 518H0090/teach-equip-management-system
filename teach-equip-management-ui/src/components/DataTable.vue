@@ -70,7 +70,9 @@ const removeItem = async (id) => {
         `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`
       );
       
-      router.go();
+      router.push(`/${props.page_name}/getpage`).then(() => {
+        router.go();
+      })
     } catch (error) {
       console.log("Error Fetching SupplierInfo", error);
     }
