@@ -34,6 +34,8 @@ const form = reactive({
 
 const relationShip = ref({});
 
+let paramId = route.params.id;
+
 onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
@@ -44,7 +46,11 @@ onMounted(async () => {
   await allSupplier();
   await allCategory();
   await allToolCategories();
-  await toolById(29);
+
+  paramId = route.params.id;
+  if (paramId !== undefined || paramId !== null) {
+    await toolById(paramId);
+  }
 });
 
 onUnmounted(() => {
@@ -132,7 +138,7 @@ const validateInputs = async () => {
       supplierId: form.supplierId,
     };
 
-    const responseTest = fetch(
+    const response = fetch(
       "https://localhost:7112/api/toolmanage/update-tool",
       {
         method: "PUT",
@@ -151,6 +157,8 @@ const validateInputs = async () => {
           setError(toolName, data.message);
         }
 
+        console.log(data.statusCode);
+
         if (data.statusCode === 202) {
           const toolId = form.id;
 
@@ -166,7 +174,16 @@ const validateInputs = async () => {
                 await removeToolCategory(toolId, categoryId);
               });
             }
+          } else if (
+            intersection.length === 0 &&
+            oldCategoryId.length === 0 &&
+            selectCategoryId.length > 0
+          ) {
+            selectCategoryId.forEach(async (categoryId) => {
+              await relationToolCategory(toolId, categoryId);
+            });
           }
+
           await allToolCategories();
           router.push("/tool/getpage");
           await allToolCategories();
