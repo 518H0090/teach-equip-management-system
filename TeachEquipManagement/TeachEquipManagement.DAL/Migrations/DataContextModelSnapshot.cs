@@ -65,8 +65,7 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.AccountDetail", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
@@ -99,12 +98,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<string>("SpoFileId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("UserId1");
+                    b.HasKey("AccountId");
 
                     b.ToTable("UserDetails");
                 });
@@ -136,7 +130,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(882));
+                        .HasDefaultValue(new DateTime(2024, 7, 23, 20, 55, 23, 543, DateTimeKind.Local).AddTicks(5128));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -212,7 +206,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(4357));
+                        .HasDefaultValue(new DateTime(2024, 7, 23, 20, 55, 23, 544, DateTimeKind.Local).AddTicks(4829));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -241,7 +235,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 842, DateTimeKind.Local).AddTicks(8375));
+                        .HasDefaultValue(new DateTime(2024, 7, 23, 20, 55, 23, 542, DateTimeKind.Local).AddTicks(7886));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
@@ -361,13 +355,13 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.AccountDetail", b =>
                 {
-                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
+                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "Account")
+                        .WithOne("AccountDetail")
+                        .HasForeignKey("TeachEquipManagement.DAL.Models.AccountDetail", "AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.ApprovalRequest", b =>
@@ -462,6 +456,9 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Account", b =>
                 {
+                    b.Navigation("AccountDetail")
+                        .IsRequired();
+
                     b.Navigation("ApprovalRequests");
 
                     b.Navigation("InventoryHistories");

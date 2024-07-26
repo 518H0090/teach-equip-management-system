@@ -9,16 +9,13 @@ import Navbar from "@/components/Navbar.vue";
   <div class="content">
     <Navbar>
       <li>
-        <RouterLink to="/about/getpage" class="link">View</RouterLink>
+        <RouterLink to="/tool/getpage" class="link">View</RouterLink>
       </li>
       <li>
-        <RouterLink to="/about/addpage" class="link">Add</RouterLink>
-      </li>
-      <li>
-        <RouterLink to="/about/editpage" class="link">Edit</RouterLink>
+        <RouterLink to="/tool/addpage" class="link">Add</RouterLink>
       </li>
     </Navbar>
-    <RouterView :keys="keys" :items="items" page_name="about" />
+    <RouterView page_name="tool" />
   </div>
 </template>
 

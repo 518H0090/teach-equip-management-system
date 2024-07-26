@@ -10,8 +10,8 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService
 {
     public class AccountDetailUpdateRequest
     {
-        [JsonProperty("user_id")]
-        public Guid UserId { get; set; }
+        [JsonProperty("account_id")]
+        public Guid AccountId { get; set; }
 
         [JsonProperty("full_name")]
         public string FullName { get; set; } = string.Empty;

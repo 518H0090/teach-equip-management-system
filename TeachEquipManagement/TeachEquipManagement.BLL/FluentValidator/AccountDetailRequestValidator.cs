@@ -24,9 +24,9 @@ namespace TeachEquipManagement.BLL.FluentValidator
            .NotEmpty().WithMessage("Phone is required.")
            .Matches(@"^\d{8,14}$").WithMessage("Phone number must be between 8 and 14 digits.");
 
-            RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("UserId is required.")
-            .Must(userId => userId is Guid)
+            RuleFor(x => x.AccountId)
+            .NotEmpty().WithMessage("AccountId is required.")
+            .Must(accountId => accountId is Guid)
             .WithMessage("Id must be Guid");
         }
     }

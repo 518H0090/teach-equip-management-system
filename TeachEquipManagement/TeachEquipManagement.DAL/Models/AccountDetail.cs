@@ -8,9 +8,9 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class AccountDetail
     {
-        public Account User { get; set; } = new();
+        public Account Account { get; set; }
             
-        public Guid UserId { get; set; }
+        public Guid AccountId { get; set; }
 
         public string FullName { get; set; } = string.Empty;    
 

@@ -9,6 +9,9 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageServic
 {
     public class CategoryResponse
     {
+        [JsonProperty("id")]
+        public int Id { get; set; } 
+
         [JsonProperty("category_type")]
         public string Type { get; set; } = string.Empty;
 
