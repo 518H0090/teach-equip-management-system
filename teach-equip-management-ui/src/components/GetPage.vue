@@ -20,6 +20,8 @@ const props = defineProps({
   },
 });
 
+console.log(props.page_name);
+
 onActivated(async () => {
   if (props.page_name === "supplier") {
     allSupplier();
@@ -30,8 +32,10 @@ onActivated(async () => {
   } else if (props.page_name === "tool") {
     await allToolCategories();
     await allTool();
+  } else if (props.page_name === "account") {
+    await allAccount();
   }
-})
+});
 
 onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
@@ -49,6 +53,8 @@ onMounted(async () => {
   } else if (props.page_name === "tool") {
     await allToolCategories();
     await allTool();
+  } else if (props.page_name === "account") {
+    await allAccount();
   }
 });
 
@@ -125,6 +131,33 @@ const allTool = async () => {
     items.value = mappedData;
 
     let allKeys = mappedData.reduce((keys, obj) => {
+      return keys.concat(Object.keys(obj));
+    }, []);
+
+    let uniqueKeys = [...new Set(allKeys)];
+
+    keys.value = uniqueKeys;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const allAccount = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/usermanage/all-users"
+    );
+    items.value = response.data.data.map(
+      ({
+        passwordHash,
+        passwordSalt,
+        refreshToken,
+        refreshTokenExpiryTime,
+        ...rest
+      }) => rest
+    );
+
+    let allKeys = items.value.reduce((keys, obj) => {
       return keys.concat(Object.keys(obj));
     }, []);
 

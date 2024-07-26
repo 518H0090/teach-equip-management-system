@@ -15,6 +15,8 @@ const props = defineProps({
   },
 });
 
+console.log(props.page_name);
+
 const searchFilter = ref("");
 
 const filteredItems = computed(() => {
@@ -42,6 +44,8 @@ const filteredItems = computed(() => {
           item.description.includes(searchFilter.value) ||
           item.supplier.supplierName === searchFilter.value
       );
+    } else if (props.page_name === "account") {
+      return props.items;
     }
   }
 
@@ -143,6 +147,31 @@ const removeItem = async (id) => {
                 >
                   <span
                     :id="`${value.supplierId}`"
+                    v-if="value && value.supplierId && value.supplierName"
+                  >
+                    {{ value.supplierName }}
+                  </span>
+                  <span v-else-if="value && Array.isArray(value)">
+                    {{
+                      value.length > 0
+                        ? `Category: ${value
+                            .map((category) => category.type)
+                            .join(" - ")}`
+                        : "Not contain Category"
+                    }}
+                  </span>
+                  <span v-else>
+                    {{ value }}
+                  </span>
+                </td>
+
+                <!-- <td
+                  v-for="value in item"
+                  :key="value"
+                  class="px-4 py-3 font-medium text-gray-900"
+                >
+                  <span
+                    :id="`${value.supplierId}`"
                     v-if="value.supplierId && value.supplierName"
                   >
                     {{ value.supplierName }}
@@ -159,7 +188,7 @@ const removeItem = async (id) => {
                   <span v-else>
                     {{ value }}
                   </span>
-                </td>
+                </td> -->
                 <td class="px-4 py-3 flex items-center justify-end">
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
