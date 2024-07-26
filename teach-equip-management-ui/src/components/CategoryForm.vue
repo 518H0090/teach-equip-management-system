@@ -89,16 +89,31 @@ const validateInputs = async () => {
       unit: form.unit,
     };
 
-    try {
-      const response = await axios.post(
-        "https://localhost:7112/api/toolmanage/create-category",
-        newCategory
-      );
+    const response = fetch(
+      "https://localhost:7112/api/toolmanage/create-category",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCategory),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then(async (data) => {
+        if (data.statusCode !== 201) {
+          setError(type, data.message);
+        }
 
-      router.push("/category/getpage");
-    } catch (error) {
-      console.log("Error Fetching jobs", error);
-    }
+        if (data.statusCode === 201) {
+          router.push("/category/getpage");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }
 };
 </script>

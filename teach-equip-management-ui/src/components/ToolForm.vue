@@ -107,7 +107,7 @@ const validateInputs = async () => {
       supplierId: form.supplierId,
     };
 
-    const responseTest =  fetch(
+    const response = fetch(
       "https://localhost:7112/api/toolmanage/create-tool",
       {
         method: "POST",

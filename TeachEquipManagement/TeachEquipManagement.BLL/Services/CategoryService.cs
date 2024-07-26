@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageService;
 using TeachEquipManagement.BLL.IServices;
 using TeachEquipManagement.DAL.Models;
 using TeachEquipManagement.DAL.UnitOfWorks;
+using TeachEquipManagement.Utilities.CommonModels;
 
 namespace TeachEquipManagement.BLL.Services
 {
@@ -38,6 +40,23 @@ namespace TeachEquipManagement.BLL.Services
                 if (validation.IsValid)
                 {
                     _unitOfWork.CreateTransaction();
+
+                    QueryModel<Category> query = new QueryModel<Category>
+                    {
+                        QueryCondition = category => category.Type == request.Type
+                    };
+
+                    var categoryExist = _unitOfWork.CategoryRepository.GetQueryable(query).ToList();
+
+                    if (categoryExist.Count > 0)
+                    {
+                        _logger.Warning("Category Type Must Unique");
+                        response.Data = false;
+                        response.Message = "Category Type Must Unique";
+                        response.StatusCode = StatusCodes.Status400BadRequest;
+
+                        return response;
+                    }
 
                     var category = _mapper.Map<Category>(request);
 
@@ -175,6 +194,19 @@ namespace TeachEquipManagement.BLL.Services
 
                     if (category != null)
                     {
+                        var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
+                        var categoriesType = categories.Select(categories => categories.Type).ToList();
+
+                        if (categoriesType.Contains(request.Type))
+                        {
+                            _logger.Warning("Your category type is exist, if you want to update please fill another type");
+                            response.Data = false;
+                            response.Message = "Your category type is exist, if you want to update please fill another type";
+                            response.StatusCode = StatusCodes.Status400BadRequest;
+
+                            return response;
+                        }
+
                         var updateItem = _mapper.Map(request, category);
                         await _unitOfWork.SaveChangesAsync();
 

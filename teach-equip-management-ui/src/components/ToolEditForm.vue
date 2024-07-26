@@ -30,7 +30,6 @@ const form = reactive({
   description: "",
   supplierId: -1,
   categories: [],
-  categoriesType: []
 });
 
 const relationShip = ref({});
@@ -45,7 +44,7 @@ onMounted(async () => {
   await allSupplier();
   await allCategory();
   await allToolCategories();
-  await toolById(2);
+  await toolById(29);
 });
 
 onUnmounted(() => {
@@ -72,84 +71,103 @@ const setSuccess = (element) => {
   inputControl.classList.remove("error");
 };
 
-// const validateInputs = async () => {
-//   const toolName = document.querySelector("#tool_name");
-//   const toolDescription = document.querySelector("#tool_description");
-//   const supplier = document.querySelector("#supplier");
-//   const toolNameValue = toolName.value.trim();
-//   const toolDescriptionValue = toolDescription.value.trim();
-//   const supplierValue = supplier.value.trim();
+const validateInputs = async () => {
+  const oldCategoryId = oldOptions.value.map((option) => option.id);
+  const selectCategoryId = selectedOptions.value.map((option) => option.id);
+  const intersection = selectCategoryId.filter((selected) =>
+    oldCategoryId.includes(selected)
+  );
+  const removeCategoriesId = oldCategoryId.filter(
+    (selected) => !intersection.includes(selected)
+  );
 
-//   let isProcess = true;
-//   if (toolNameValue === "") {
-//     setError(toolName, "This is required");
-//     isProcess = false;
-//   } else {
-//     setSuccess(toolName);
-//   }
-//   if (toolDescriptionValue === "") {
-//     setError(toolDescription, "This is required");
-//     isProcess = false;
-//   } else {
-//     setSuccess(toolDescription);
-//   }
+  const AddCategoriesId = selectCategoryId.filter(
+    (selected) => !intersection.includes(selected)
+  );
 
-//   if (supplierValue === "") {
-//     setError(supplier, "This is required");
-//     isProcess = false;
-//   } else if (supplierValue === String(-1)) {
-//     setError(supplier, "Must select suppliear instead of default");
-//     isProcess = false;
-//   } else {
-//     setSuccess(supplier);
-//   }
+  console.log(oldCategoryId);
+  console.log(selectCategoryId);
+  console.log(intersection);
+  console.log(removeCategoriesId);
+  console.log(AddCategoriesId);
 
-//   console.log(form);
+  const toolName = document.querySelector("#tool_name");
+  const toolDescription = document.querySelector("#tool_description");
+  const supplier = document.querySelector("#supplier");
+  const toolNameValue = toolName.value.trim();
+  const toolDescriptionValue = toolDescription.value.trim();
+  const supplierValue = supplier.value.trim();
 
-//   if (isProcess) {
-//     const newTool = {
-//       toolName: form.toolName,
-//       description: form.description,
-//       supplierId: form.supplierId,
-//     };
+  // let isProcess = true;
+  // if (toolNameValue === "") {
+  //   setError(toolName, "This is required");
+  //   isProcess = false;
+  // } else {
+  //   setSuccess(toolName);
+  // }
+  // if (toolDescriptionValue === "") {
+  //   setError(toolDescription, "This is required");
+  //   isProcess = false;
+  // } else {
+  //   setSuccess(toolDescription);
+  // }
 
-//     const responseTest =  fetch(
-//       "https://localhost:7112/api/toolmanage/create-tool",
-//       {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(newTool),
-//       }
-//     )
-//       .then((response) => {
-//         return response.json();
-//       })
-//       .then(async (data) => {
-//         if (data.statusCode === 400) {
-//           console.log(data.message);
-//           setError(toolName, data.message);
-//         }
+  // if (supplierValue === "") {
+  //   setError(supplier, "This is required");
+  //   isProcess = false;
+  // } else if (supplierValue === String(-1)) {
+  //   setError(supplier, "Must select suppliear instead of default");
+  //   isProcess = false;
+  // } else {
+  //   setSuccess(supplier);
+  // }
 
-//         if (data.statusCode === 201) {
-//           const toolId = data.data;
+  // console.log(form);
 
-//           if (form.categories.length > 0 && toolId > 0) {
-//             form.categories.forEach(async (categoryId) => {
-//               await relationToolCategory(toolId, categoryId);
-//             });
-//           }
+  // if (isProcess) {
+  //   const newTool = {
+  //     toolName: form.toolName,
+  //     description: form.description,
+  //     supplierId: form.supplierId,
+  //   };
 
-//           router.push("/tool/getpage");
-//           await allToolCategories();
-//         }
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching data:", error);
-//       });
-//   }
-// };
+  //   const responseTest =  fetch(
+  //     "https://localhost:7112/api/toolmanage/create-tool",
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(newTool),
+  //     }
+  //   )
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then(async (data) => {
+  //       if (data.statusCode === 400) {
+  //         console.log(data.message);
+  //         setError(toolName, data.message);
+  //       }
+
+  //       if (data.statusCode === 201) {
+  //         const toolId = data.data;
+
+  //         if (form.categories.length > 0 && toolId > 0) {
+  //           form.categories.forEach(async (categoryId) => {
+  //             await relationToolCategory(toolId, categoryId);
+  //           });
+  //         }
+
+  //         router.push("/tool/getpage");
+  //         await allToolCategories();
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }
+};
 
 const dropdownOpen = ref(false);
 
@@ -157,6 +175,7 @@ const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
 };
 
+const oldOptions = ref([]);
 const selectedOptions = ref([]);
 const suppliers = ref({});
 const categories = ref({});
@@ -183,12 +202,12 @@ const allCategory = async () => {
   }
 };
 
-const allCategoryName = async (event) => {
+const allCategoryName = async () => {
   let categoriesFilter = categories.value.filter((category) =>
-    form.categories.includes(String(category.id))
+    form.categories.includes(String(category.type))
   );
 
-  selectedOptions.value = categoriesFilter.map((category) => category.type);
+  selectedOptions.value = categoriesFilter;
 };
 
 const relationToolCategory = async (toolId, categoryId) => {
@@ -239,11 +258,10 @@ const toolById = async (itemId) => {
       .filter((toolCategory) => toolCategory.tool.id === form.id)
       .map((toolCategory) => toolCategory.category);
 
-      if (categoriesMapped.length > 0) {
-        form.categories = categoriesMapped.map(category => category.id);
-        selectedOptions.value = categoriesMapped.map(category => category.type);
-      }
-
+    if (categoriesMapped.length > 0) {
+      form.categories = categoriesMapped.map((category) => category.type);
+      oldOptions.value = categoriesMapped;
+    }
   } catch (error) {
     console.log("Error Fetching SupplierInfo", error);
   }
@@ -273,7 +291,9 @@ const toolById = async (itemId) => {
             </div>
 
             <div class="input-control mb-4">
-              <label for="tool_description" class="block text-gray-700 font-bold mb-2"
+              <label
+                for="tool_description"
+                class="block text-gray-700 font-bold mb-2"
                 >Tool Description</label
               >
               <textarea
@@ -326,15 +346,15 @@ const toolById = async (itemId) => {
                   >
                     <input
                       type="checkbox"
-                      :value="`${category.id}`"
+                      :value="`${category.type}`"
                       v-model="form.categories"
                     />
                     {{ category.type }}
                   </label>
                 </div>
-
                 <p class="border rounded w-full py-2 px-3 mb-2">
-                  Selected Options: {{ selectedOptions }}
+                  Selected Options:
+                  {{ form.categories }}
                 </p>
               </div>
             </div>

@@ -99,16 +99,42 @@ const validateInputs = async () => {
       unit: form.unit,
     };
 
-    try {
-      const response = await axios.put(
-        "https://localhost:7112/api/toolmanage/update-category",
-        updateCategory
-      );
+    // try {
+    //   const response = await axios.put(
+    //     "https://localhost:7112/api/toolmanage/update-category",
+    //     updateCategory
+    //   );
 
-      router.push("/category/getpage");
-    } catch (error) {
-      console.log("Error Fetching jobs", error);
-    }
+    //   router.push("/category/getpage");
+    // } catch (error) {
+    //   console.log("Error Fetching jobs", error);
+    // }
+
+    const response = fetch(
+      "https://localhost:7112/api/toolmanage/update-category",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateCategory),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then(async (data) => {
+        if (data.statusCode !== 202) {
+          setError(type, data.message);
+        }
+
+        if (data.statusCode === 202) {
+          router.push("/category/getpage");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }
 };
 
