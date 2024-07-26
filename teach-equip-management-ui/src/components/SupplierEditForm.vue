@@ -122,8 +122,6 @@ const validateInputs = async () => {
       phone: form.phone,
     };
 
-    console.log(updateSupplier);
-
     try {
       const response = await axios.put(
         "https://localhost:7112/api/toolmanage/update-supplier",
