@@ -13,9 +13,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  page_service: String
 });
 
-console.log(props.page_name);
+console.log(props)
 
 const searchFilter = ref("");
 
@@ -66,11 +67,9 @@ const removeItem = async (id) => {
   if (confirm) {
     try {
       const response = await axios.delete(
-        `https://localhost:7112/api/toolmanage/remove-${props.page_name}/${id}`
+        `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`
       );
-
-      console.log(response);
-
+      
       router.go();
     } catch (error) {
       console.log("Error Fetching SupplierInfo", error);

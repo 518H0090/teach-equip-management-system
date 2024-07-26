@@ -9,13 +9,13 @@ import Navbar from "@/components/Navbar.vue";
   <div class="content">
     <Navbar>
       <li>
-        <RouterLink to="/category/getpage" class="link">View</RouterLink>
+        <RouterLink to="/category/getpage"  class="link">View</RouterLink>
       </li>
       <li>
         <RouterLink to="/category/addpage" class="link">Add</RouterLink>
       </li>
     </Navbar>
-    <RouterView page_name="category" />
+    <RouterView page_name="category" page_service="toolmanage"/>
   </div>
 </template>
 

@@ -18,9 +18,11 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  page_service: {
+    type: String,
+    default: "",
+  },
 });
-
-console.log(props.page_name);
 
 onActivated(async () => {
   if (props.page_name === "supplier") {
@@ -33,6 +35,7 @@ onActivated(async () => {
     await allToolCategories();
     await allTool();
   } else if (props.page_name === "account") {
+    await allRoles();
     await allAccount();
   }
 });
@@ -223,7 +226,7 @@ const allRoles = async () => {
 
 <template>
   <MainCard>
-    <DataTable :keys="keys" :items="items" :page_name="page_name" />
+    <DataTable :keys="keys" :items="items" :page_name="props.page_name" :page_service="props.page_service" />
   </MainCard>
 </template>
 

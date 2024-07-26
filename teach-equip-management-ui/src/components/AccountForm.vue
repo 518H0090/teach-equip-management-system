@@ -207,7 +207,7 @@ const toggleDropdown = () => {
                 id="username"
                 name="username"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. everyday"
+                placeholder="eg. Username"
               />
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
@@ -221,7 +221,7 @@ const toggleDropdown = () => {
                 id="password"
                 name="password"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. unit"
+                placeholder="eg. Password"
               />
 
               <button @click.prevent="toggleDropdown">
@@ -239,7 +239,7 @@ const toggleDropdown = () => {
                 id="email"
                 name="email"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. unit"
+                placeholder="eg. Email"
               />
 
               <div class="error block text-gray-700 font-bold mb-2"></div>

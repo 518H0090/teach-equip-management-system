@@ -146,40 +146,39 @@ const validateInputs = async () => {
   }
 
   if (isProcess) {
-    const newAccount = {
+    const updateAccount = {
+      id: form.id,
       username: form.username,
       password: form.password,
       email: form.email,
       roleId: form.roleId,
     };
 
-    console.log(newAccount);
+    const response = fetch(
+      "https://localhost:7112/api/usermanage/update-user",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateAccount),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then(async (data) => {
+        if (data.statusCode !== 202) {
+          console.error("Error fetching data:", data.statusCode, data.message);
+        }
 
-    // const response = fetch(
-    //   "https://localhost:7112/api/usermanage/create-user",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(newAccount),
-    //   }
-    // )
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then(async (data) => {
-    //     if (data.statusCode !== 201) {
-    //       console.error("Error fetching data:", data.statusCode, data.message);
-    //     }
-
-    //     if (data.statusCode === 201) {
-    //       router.push("/account/getpage");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching data:", error);
-    //   });
+        if (data.statusCode === 202) {
+          router.push("/account/getpage");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }
 };
 
@@ -219,8 +218,6 @@ const ItemById = async (itemId) => {
     form.username = datajson.username;
     form.email = datajson.email;
     form.roleId = datajson.roleId;
-
-    console.log(response);
   } catch (error) {
     console.log("Error Fetching SupplierInfo", error);
   }
@@ -243,7 +240,7 @@ const ItemById = async (itemId) => {
                 id="username"
                 name="username"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. everyday"
+                placeholder="eg. username"
               />
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
@@ -258,7 +255,7 @@ const ItemById = async (itemId) => {
                 name="password"
                 @input="handlePressPassword"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. unit"
+                placeholder="eg. password"
               />
 
               <p class="block text-gray-700 font-bold mb-2 warning">
