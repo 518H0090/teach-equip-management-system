@@ -134,7 +134,7 @@ const validateInputs = async () => {
               await relationToolCategory(toolId, categoryId);
             });
           }
-
+          await allToolCategories();
           router.push("/tool/getpage");
           await allToolCategories();
         }

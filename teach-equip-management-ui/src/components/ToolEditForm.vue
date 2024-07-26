@@ -87,9 +87,9 @@ const validateInputs = async () => {
 
   console.log(oldCategoryId);
   console.log(selectCategoryId);
-  console.log(intersection);
-  console.log(removeCategoriesId);
-  console.log(AddCategoriesId);
+  console.log("intersect", intersection);
+  console.log("remove", removeCategoriesId);
+  console.log("add", AddCategoriesId);
 
   const toolName = document.querySelector("#tool_name");
   const toolDescription = document.querySelector("#tool_description");
@@ -98,75 +98,84 @@ const validateInputs = async () => {
   const toolDescriptionValue = toolDescription.value.trim();
   const supplierValue = supplier.value.trim();
 
-  // let isProcess = true;
-  // if (toolNameValue === "") {
-  //   setError(toolName, "This is required");
-  //   isProcess = false;
-  // } else {
-  //   setSuccess(toolName);
-  // }
-  // if (toolDescriptionValue === "") {
-  //   setError(toolDescription, "This is required");
-  //   isProcess = false;
-  // } else {
-  //   setSuccess(toolDescription);
-  // }
+  let isProcess = true;
+  if (toolNameValue === "") {
+    setError(toolName, "This is required");
+    isProcess = false;
+  } else {
+    setSuccess(toolName);
+  }
+  if (toolDescriptionValue === "") {
+    setError(toolDescription, "This is required");
+    isProcess = false;
+  } else {
+    setSuccess(toolDescription);
+  }
 
-  // if (supplierValue === "") {
-  //   setError(supplier, "This is required");
-  //   isProcess = false;
-  // } else if (supplierValue === String(-1)) {
-  //   setError(supplier, "Must select suppliear instead of default");
-  //   isProcess = false;
-  // } else {
-  //   setSuccess(supplier);
-  // }
+  if (supplierValue === "") {
+    setError(supplier, "This is required");
+    isProcess = false;
+  } else if (supplierValue === String(-1)) {
+    setError(supplier, "Must select suppliear instead of default");
+    isProcess = false;
+  } else {
+    setSuccess(supplier);
+  }
 
-  // console.log(form);
+  console.log(form);
 
-  // if (isProcess) {
-  //   const newTool = {
-  //     toolName: form.toolName,
-  //     description: form.description,
-  //     supplierId: form.supplierId,
-  //   };
+  if (isProcess) {
+    const updateTool = {
+      id: form.id,
+      toolName: form.toolName,
+      description: form.description,
+      supplierId: form.supplierId,
+    };
 
-  //   const responseTest =  fetch(
-  //     "https://localhost:7112/api/toolmanage/create-tool",
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(newTool),
-  //     }
-  //   )
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then(async (data) => {
-  //       if (data.statusCode === 400) {
-  //         console.log(data.message);
-  //         setError(toolName, data.message);
-  //       }
+    const responseTest = fetch(
+      "https://localhost:7112/api/toolmanage/update-tool",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateTool),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then(async (data) => {
+        if (data.statusCode !== 202) {
+          console.log(data.message);
+          setError(toolName, data.message);
+        }
 
-  //       if (data.statusCode === 201) {
-  //         const toolId = data.data;
+        if (data.statusCode === 202) {
+          const toolId = form.id;
 
-  //         if (form.categories.length > 0 && toolId > 0) {
-  //           form.categories.forEach(async (categoryId) => {
-  //             await relationToolCategory(toolId, categoryId);
-  //           });
-  //         }
+          if (toolId > 0 && intersection.length > 0) {
+            if (toolId > 0 && AddCategoriesId.length > 0) {
+              AddCategoriesId.forEach(async (categoryId) => {
+                await relationToolCategory(toolId, categoryId);
+              });
+            }
 
-  //         router.push("/tool/getpage");
-  //         await allToolCategories();
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching data:", error);
-  //     });
-  // }
+            if (toolId > 0 && removeCategoriesId.length > 0) {
+              removeCategoriesId.forEach(async (categoryId) => {
+                await removeToolCategory(toolId, categoryId);
+              });
+            }
+          }
+          await allToolCategories();
+          router.push("/tool/getpage");
+          await allToolCategories();
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
 };
 
 const dropdownOpen = ref(false);
@@ -223,6 +232,26 @@ const relationToolCategory = async (toolId, categoryId) => {
     );
 
     console.log(response.data.data);
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const removeToolCategory = async (toolId, categoryId) => {
+  try {
+    const newRelation = {
+      toolId,
+      categoryId,
+    };
+
+    const response = await axios.delete(
+      "https://localhost:7112/api/toolmanage/remove-tool-category",
+      {
+        data: newRelation,
+      }
+    );
+
+    console.log(response);
   } catch (error) {
     console.log("Error Fetching jobs", error);
   }
