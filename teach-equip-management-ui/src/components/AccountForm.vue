@@ -4,7 +4,7 @@ import MainCard from "@/components/MainCard.vue";
 import eventBus from "@/eventBus";
 
 import { useStore } from "vuex";
-import { defineProps, onMounted, onUnmounted, reactive } from "vue";
+import { defineProps, onMounted, onUnmounted, reactive, ref } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
@@ -25,8 +25,10 @@ const props = defineProps({
 });
 
 const form = reactive({
-  type: "",
-  unit: "",
+  username: "",
+  password: "",
+  email: "",
+  roleId: -1,
 });
 
 onMounted(() => {
@@ -35,6 +37,8 @@ onMounted(() => {
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
+
+  allRoles();
 });
 
 onUnmounted(() => {
@@ -44,6 +48,19 @@ onUnmounted(() => {
   aside_item.classList.remove("router-link-active");
   aside_item.classList.remove("router-link-exact-active");
 });
+
+const roles = ref({});
+
+const allRoles = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/usermanage/all-roles"
+    );
+    roles.value = response.data.data;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
 
 const setError = (element, message) => {
   const inputControl = element.parentElement;
@@ -62,41 +79,83 @@ const setSuccess = (element) => {
 };
 
 const validateInputs = async () => {
-  const type = document.querySelector("#type");
-  const unit = document.querySelector("#unit");
+  const username = document.querySelector("#username");
+  const password = document.querySelector("#password");
+  const email = document.querySelector("#email");
+  const roleId = document.querySelector("#roleId");
 
-  const typeValue = type.value.trim();
-  const unitValue = unit.value.trim();
+  const usernameValue = username.value.trim();
+  const passwordValue = password.value.trim();
+  const emailValue = email.value.trim();
+  const roleIdValue = roleId.value.trim();
+
+  const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   let isProcess = true;
 
-  if (typeValue === "") {
-    setError(type, "This is required");
+  if (usernameValue === "") {
+    setError(username, "This is required");
+    isProcess = false;
+  } else if (usernameValue.length < 8) {
+    setError(username, "Username must at least 8 character");
+    isProcess = false;
+  } else if (usernameValue.length > 20) {
+    setError(username, "Username must less than 20 character");
     isProcess = false;
   } else {
-    setSuccess(type);
+    setSuccess(username);
   }
 
-  if (unitValue === "") {
-    setError(unit, "This is required");
+  if (passwordValue === "") {
+    setError(password, "This is required");
+    isProcess = false;
+  } else if (passwordValue.length < 8) {
+    setError(password, "Password must at least 8 character");
+    isProcess = false;
+  } else if (passwordValue.length > 20) {
+    setError(password, "Password must less than 20 character");
     isProcess = false;
   } else {
-    setSuccess(unit);
+    setSuccess(password);
+  }
+
+  if (emailValue === "") {
+    setError(email, "This is required");
+    isProcess = false;
+  } else if (regexEmail.test(emailValue)) {
+    setSuccess(email);
+  } else if (!regexEmail.test(emailValue)) {
+    setError(email, "Not follow format of email");
+    isProcess = false;
+  }
+
+  if (roleIdValue === "") {
+    setError(roleId, "This is required");
+    isProcess = false;
+  } else if (roleIdValue === String(-1)) {
+    setError(roleId, "Must select Role instead of default");
+    isProcess = false;
+  } else {
+    setSuccess(roleId);
   }
 
   if (isProcess) {
-    const newCategory = {
-      type: form.type,
-      unit: form.unit,
+    const newAccount = {
+      username: form.username,
+      password: form.password,
+      email: form.email,
+      roleId: form.roleId,
     };
 
+    console.log(newAccount);
+
     const response = fetch(
-      "https://localhost:7112/api/toolmanage/create-category",
+      "https://localhost:7112/api/usermanage/create-user",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newCategory),
+        body: JSON.stringify(newAccount),
       }
     )
       .then((response) => {
@@ -104,16 +163,30 @@ const validateInputs = async () => {
       })
       .then(async (data) => {
         if (data.statusCode !== 201) {
-          setError(type, data.message);
+          console.error("Error fetching data:", data.statusCode, data.message);
         }
 
         if (data.statusCode === 201) {
-          router.push("/category/getpage");
+          router.push("/account/getpage");
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  }
+};
+
+const dropdownOpen = ref(false);
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+
+  const inputPassword = document.getElementById("password");
+
+  if (dropdownOpen.value) {
+    inputPassword.type = "text";
+  } else {
+    inputPassword.type = "password";
   }
 };
 </script>
@@ -124,17 +197,15 @@ const validateInputs = async () => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Add Category
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Add Account</h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2">Type</label>
+              <label class="block text-gray-700 font-bold mb-2">Username</label>
               <input
-                v-model="form.type"
+                v-model="form.username"
                 type="text"
-                id="type"
-                name="type"
+                id="username"
+                name="username"
                 class="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. everyday"
               />
@@ -143,15 +214,57 @@ const validateInputs = async () => {
             </div>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2">unit</label>
+              <label class="block text-gray-700 font-bold mb-2">Password</label>
               <input
-                v-model="form.unit"
-                type="text"
-                id="unit"
-                name="unit"
+                v-model="form.password"
+                type="password"
+                id="password"
+                name="password"
                 class="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. unit"
               />
+
+              <button @click.prevent="toggleDropdown">
+                {{ dropdownOpen ? "Hide Password" : "Show Password" }}
+              </button>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Email</label>
+              <input
+                v-model="form.email"
+                type="text"
+                id="email"
+                name="email"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. unit"
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label for="type" class="block text-gray-700 font-bold mb-2"
+                >Role</label
+              >
+              <select
+                v-model="form.roleId"
+                id="roleId"
+                name="roleId"
+                class="border rounded w-full py-2 px-3"
+                required
+              >
+                <option value="-1">Default</option>
+                <option
+                  v-for="role in roles"
+                  :key="role.id"
+                  :value="`${role.id}`"
+                >
+                  {{ role.roleName }}
+                </option>
+              </select>
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>

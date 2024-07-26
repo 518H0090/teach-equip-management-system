@@ -54,6 +54,7 @@ onMounted(async () => {
     await allToolCategories();
     await allTool();
   } else if (props.page_name === "account") {
+    await allRoles();
     await allAccount();
   }
 });
@@ -126,8 +127,6 @@ const allTool = async () => {
         .map((toolCategory) => toolCategory.category),
     }));
 
-    console.log(mappedData);
-
     items.value = mappedData;
 
     let allKeys = mappedData.reduce((keys, obj) => {
@@ -147,7 +146,7 @@ const allAccount = async () => {
     const response = await axios.get(
       "https://localhost:7112/api/usermanage/all-users"
     );
-    items.value = response.data.data.map(
+    const datajson = response.data.data.map(
       ({
         passwordHash,
         passwordSalt,
@@ -156,6 +155,17 @@ const allAccount = async () => {
         ...rest
       }) => rest
     );
+
+    const mappedData = datajson.map((item) => ({
+      id: item.id,
+      username: item.username,
+      email: item.email,
+      role: roles.value.filter(
+        (role) => Number(role.id) === Number(item.roleId)
+      ),
+    }));
+
+    items.value = mappedData;
 
     let allKeys = items.value.reduce((keys, obj) => {
       return keys.concat(Object.keys(obj));
@@ -192,6 +202,19 @@ const allToolCategories = async () => {
     const datajson = response.data.data;
 
     relationShip.value = datajson;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const roles = ref({});
+
+const allRoles = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/usermanage/all-roles"
+    );
+    roles.value = response.data.data;
   } catch (error) {
     console.log("Error Fetching jobs", error);
   }

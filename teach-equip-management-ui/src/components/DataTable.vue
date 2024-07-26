@@ -151,13 +151,32 @@ const removeItem = async (id) => {
                   >
                     {{ value.supplierName }}
                   </span>
-                  <span v-else-if="value && Array.isArray(value)">
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'tool'
+                    "
+                  >
                     {{
                       value.length > 0
                         ? `Category: ${value
                             .map((category) => category.type)
                             .join(" - ")}`
                         : "Not contain Category"
+                    }}
+                  </span>
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'account'
+                    "
+                  >
+                    {{
+                      value.length > 0
+                        ? `Role: ${value.map((role) => role.roleName)} `
+                        : "Not contain role"
                     }}
                   </span>
                   <span v-else>
