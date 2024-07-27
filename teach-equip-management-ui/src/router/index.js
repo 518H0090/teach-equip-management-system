@@ -19,6 +19,7 @@ import AccountView from '@/views/AccountView.vue'
 import AccountEditForm from '@/components/AccountEditForm.vue'
 import AccountForm from '@/components/AccountForm.vue'
 import InventoryView from '@/views/InventoryView.vue'
+import InventoryEditForm from '@/components/InventoryEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -162,7 +163,7 @@ const router = createRouter({
         },
         {
           path: "editpage/:id",
-          component: AccountEditForm
+          component: InventoryEditForm
         },
         {
           path: "addpage",

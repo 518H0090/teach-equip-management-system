@@ -17,11 +17,6 @@ namespace TeachEquipManagement.BLL.FluentValidator
             .Must(id => id is Guid)
             .WithName("InventoryId must be Guid");
 
-            RuleFor(x => x.ToolId)
-              .NotEmpty().WithMessage("ToolId is required.")
-              .Must(id => id is int)
-              .WithName("ToolId must be int");
-
             RuleFor(x => x.TotalQuantity)
             .GreaterThanOrEqualTo(0)
             .WithMessage("TotalQuantity must be greater than or equal to 0.")
