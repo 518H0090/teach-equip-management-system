@@ -221,11 +221,7 @@ const allInventories = async () => {
     );
 
     const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
-
-    console.log(inventories);
-
-    console.log(tools);
-
+    
     const mappedData = inventories.data.data.map((item) => ({
       id: item.id,
       tool: tools.data.data.filter((tool) => Number(tool.id) === Number(item.toolId)).map(tool => tool.toolName),

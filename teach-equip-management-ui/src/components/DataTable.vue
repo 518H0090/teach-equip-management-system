@@ -201,12 +201,25 @@ const removeItem = async (id) => {
                       : "Missing Tool - Something error please contact admin"
                   }}
                 </span>
+                <span
+                v-else-if="
+                  value &&
+                  Array.isArray(value) &&
+                  props.page_name === 'invoice'
+                "
+              >
+                {{
+                  value.length > 0
+                    ? `${value} `
+                    : "Missing Invoice"
+                }}
+              </span>
                   <span v-else>
                     {{ value }}
                   </span>
                 </td>
-              
-                <td class="px-4 py-3 flex items-center justify-end">
+
+                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name !== 'inventory' && props.page_name !== 'invoice'">
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -214,12 +227,32 @@ const removeItem = async (id) => {
                   >
                   <button
                     @click="removeItem(item.id)"
-                    v-show=" 
-                    props.page_name !== 'inventory'"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
                   >
                     Remove
                   </button>
+                </td>
+
+                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name === 'invoice'">
+                  <RouterLink
+                    :to="`/inventory/edit-invoice/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Edit</RouterLink
+                  >
+                  <button
+                    @click="removeItem(item.id)"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+                  >
+                    Remove
+                  </button>
+                </td>
+
+                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name === 'inventory'">
+                  <RouterLink
+                    :to="`/${props.page_name}/editpage/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Edit</RouterLink
+                  >
                 </td>
               </tr>
             </tbody>

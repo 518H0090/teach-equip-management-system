@@ -20,6 +20,9 @@ import AccountEditForm from '@/components/AccountEditForm.vue'
 import AccountForm from '@/components/AccountForm.vue'
 import InventoryView from '@/views/InventoryView.vue'
 import InventoryEditForm from '@/components/InventoryEditForm.vue'
+import InvoiceForm from '@/components/InvoiceForm.vue'
+import GetInvoice from '@/components/GetInvoice.vue'
+import InvoiceEditForm from '@/components/InvoiceEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -166,9 +169,17 @@ const router = createRouter({
           component: InventoryEditForm
         },
         {
-          path: "addpage",
-          component:  AccountForm
-        }
+          path: "add-invoice",
+          component:  InvoiceForm
+        },
+        {
+          path: "get-invoice",
+          component:  GetInvoice
+        },
+        {
+          path: "edit-invoice/:id",
+          component: InvoiceEditForm
+        },
       ]
     }
   ]
