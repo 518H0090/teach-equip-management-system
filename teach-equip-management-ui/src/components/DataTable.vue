@@ -74,9 +74,19 @@ const removeItem = async (id) => {
         `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`
       );
       
-      router.push(`/${props.page_name}/getpage`).then(() => {
+      if (props.page_name === 'invoice') {
+        router.push(`/inventory/get-invoice`).then(() => {
         router.go();
       })
+      }
+
+      else {
+        router.push(`/${props.page_name}/getpage`).then(() => {
+        router.go();
+      })
+      }
+
+     
     } catch (error) {
       console.log("Error Fetching SupplierInfo", error);
     }

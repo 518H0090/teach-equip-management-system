@@ -226,15 +226,28 @@ const allInventories = async () => {
 
     const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
 
-    const mappedData = inventories.data.data.map((item) => ({
-      id: item.id,
-      tool: tools.data.data.filter((tool) => Number(tool.id) === Number(item.toolId)).map(tool => tool.toolName),
-      total_quantity: item.totalQuantity,
-      amount_borrow: item.amountBorrow,
-      latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
-    }));
+    let mappedData;
 
-    console.log(invoices.value)
+    if (invoices.value.length > 0) {
+      mappedData = inventories.data.data.map((item) => ({
+        id: item.id,
+        tool: tools.data.data
+          .filter((tool) => Number(tool.id) === Number(item.toolId))
+          .map((tool) => tool.toolName),
+        total_quantity: item.totalQuantity,
+        amount_borrow: item.amountBorrow,
+        latest_prices: getLatestPriceByToolId(invoices.value, item.toolId),
+      }));
+    } else {
+      mappedData = inventories.data.data.map((item) => ({
+        id: item.id,
+        tool: tools.data.data
+          .filter((tool) => Number(tool.id) === Number(item.toolId))
+          .map((tool) => tool.toolName),
+        total_quantity: item.totalQuantity,
+        amount_borrow: item.amountBorrow,
+      }));
+    }
 
     items.value = mappedData;
 
@@ -253,29 +266,40 @@ const allInventories = async () => {
 const invoices = ref({});
 
 const allInvoicess = async () => {
-  try {
-    const response = await axios.get("https://localhost:7112/api/toolmanage/all-invoices");
-    invoices.value = response.data.data;
-  } catch (error) {
-    console.log("Error Fetching invoices", error);
-  }
+  const response = fetch("https://localhost:7112/api/toolmanage/all-invoices")
+    .then((response) => {
+      return response.json();
+    })
+    .then(async (data) => {
+      console.log(data)
+
+      if (data.statusCode === 200) {
+        invoices.value = data.data
+      }
+
+      else if (data.statusCode !== 200) {
+        console.error("Error fetching data:", data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
 };
 
 function getLatestPriceByToolId(data, toolId) {
-    const filteredData = data.filter(item => item.toolId === toolId);
+  const filteredData = data.filter((item) => item.toolId === toolId);
 
-    if (filteredData.length === 0) return null;
+  if (filteredData.length === 0) return null;
 
-    const latestDateItem = filteredData.reduce((latest, item) => {
-        const currentDate = new Date(item.invoiceDate);
-        const latestDate = new Date(latest.invoiceDate);
+  const latestDateItem = filteredData.reduce((latest, item) => {
+    const currentDate = new Date(item.invoiceDate);
+    const latestDate = new Date(latest.invoiceDate);
 
-        return currentDate > latestDate ? item : latest;
-    });
+    return currentDate > latestDate ? item : latest;
+  });
 
-    return latestDateItem.price;
+  return latestDateItem.price;
 }
-
 </script>
 
 <template>

@@ -24,20 +24,26 @@ const props = defineProps({
   },
 });
 
+let paramId = route.params.id;
+
 const form = reactive({
   toolId: -1,
   price: 0,
 });
 
-onMounted(() => {
+onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
 
-  allTools();
-  ItemById(1);
+  await allTools();
+
+  paramId = route.params.id;
+  if (paramId !== undefined || paramId !== null) {
+    await ItemById(paramId);
+  }
 });
 
 onUnmounted(() => {
@@ -76,10 +82,8 @@ const setSuccess = (element) => {
 };
 
 const validateInputs = async () => {
-  const toolId = document.querySelector("#toolId");
   const price = document.querySelector("#price");
 
-  const toolIdValue = toolId.value.trim();
   const priceValue = price.value.trim();
 
   let isProcess = true;
@@ -91,42 +95,32 @@ const validateInputs = async () => {
     setSuccess(price);
   }
 
-  if (toolIdValue === "") {
-    setError(toolId, "This is required");
-    isProcess = false;
-  } else if (toolIdValue === String(-1)) {
-    setError(toolId, "Must select Role instead of default");
-    isProcess = false;
-  } else {
-    setSuccess(toolId);
-  }
-
   if (isProcess) {
-    const newInvoice = {
+    const updateInvoice = {
+      id: form.id,
       price: form.price,
-      toolId: form.toolId,
     };
 
     const response = fetch(
-      "https://localhost:7112/api/toolmanage/create-invoice",
+      "https://localhost:7112/api/toolmanage/update-invoice",
       {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newInvoice),
+        body: JSON.stringify(updateInvoice),
       }
     )
       .then((response) => {
         return response.json();
       })
       .then(async (data) => {
-        if (data.statusCode !== 201) {
+        if (data.statusCode !== 202) {
           console.error("Error fetching data:", data.statusCode, data.message);
         }
 
-        if (data.statusCode === 201) {
-          router.push("/inventory/getpage");
+        if (data.statusCode === 202) {
+          router.push("/inventory/get-invoice");
         }
       })
       .catch((error) => {
@@ -143,10 +137,8 @@ const ItemById = async (itemId) => {
 
     const datajson = response.data.data;
     form.id = datajson.id;
-    form.type = datajson.type;
-    form.unit = datajson.unit;
-
-    console.log(response);
+    form.toolId = datajson.toolId;
+    form.price = datajson.price;
   } catch (error) {
     console.log("Error Fetching SupplierInfo", error);
   }
@@ -163,13 +155,14 @@ const ItemById = async (itemId) => {
             <h2 class="text-3xl text-center font-semibold mb-6">Edit Invoice</h2>
 
             <div class="input-control mb-4">
-              <label for="type" class="block text-gray-700 font-bold mb-2">Tool</label>
+              <label for="type" class="block text-gray-700 font-bold mb-2">Tool Edit:</label>
               <select
                 v-model="form.toolId"
                 id="toolId"
                 name="toolId"
                 class="border rounded w-full py-2 px-3"
                 required
+                disabled
               >
                 <option value="-1">Default</option>
                 <option v-for="tool in tools" :key="tool.id" :value="`${tool.id}`">
@@ -199,7 +192,7 @@ const ItemById = async (itemId) => {
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Add Category
+                Edit Category
               </button>
             </div>
           </form>

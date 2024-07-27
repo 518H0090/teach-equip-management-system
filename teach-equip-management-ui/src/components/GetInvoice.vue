@@ -86,9 +86,6 @@ function formatDate(timestamp) {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
 
-
-
-
 </script>
 
 <template>
