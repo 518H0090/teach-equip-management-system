@@ -59,6 +59,8 @@ onMounted(async () => {
   } else if (props.page_name === "account") {
     await allRoles();
     await allAccount();
+  } else if (props.page_name === "inventory") {
+    await allInventories();
   }
 });
 
@@ -146,26 +148,17 @@ const allTool = async () => {
 
 const allAccount = async () => {
   try {
-    const response = await axios.get(
-      "https://localhost:7112/api/usermanage/all-users"
-    );
+    const response = await axios.get("https://localhost:7112/api/usermanage/all-users");
     const datajson = response.data.data.map(
-      ({
-        passwordHash,
-        passwordSalt,
-        refreshToken,
-        refreshTokenExpiryTime,
-        ...rest
-      }) => rest
+      ({ passwordHash, passwordSalt, refreshToken, refreshTokenExpiryTime, ...rest }) =>
+        rest
     );
 
     const mappedData = datajson.map((item) => ({
       id: item.id,
       username: item.username,
       email: item.email,
-      role: roles.value.filter(
-        (role) => Number(role.id) === Number(item.roleId)
-      ),
+      role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
     }));
 
     items.value = mappedData;
@@ -214,10 +207,40 @@ const roles = ref({});
 
 const allRoles = async () => {
   try {
-    const response = await axios.get(
-      "https://localhost:7112/api/usermanage/all-roles"
-    );
+    const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
     roles.value = response.data.data;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+  }
+};
+
+const allInventories = async () => {
+  try {
+    const inventories = await axios.get(
+      "https://localhost:7112/api/inventorymanage/all-inventories"
+    );
+
+    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
+
+    console.log(inventories);
+
+    console.log(tools);
+
+    const mappedData = inventories.data.data.map((item) => ({
+      id: item.id,
+      tool: tools.data.data.filter((tool) => Number(tool.id) === Number(item.toolId)).map(tool => tool.toolName),
+      totalQuantity: item.totalQuantity,
+      amountBorrow: item.amountBorrow,
+    }));
+    items.value = mappedData;
+
+    let allKeys = mappedData.reduce((keys, obj) => {
+      return keys.concat(Object.keys(obj));
+    }, []);
+
+    let uniqueKeys = [...new Set(allKeys)];
+
+    keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
   }
@@ -226,7 +249,12 @@ const allRoles = async () => {
 
 <template>
   <MainCard>
-    <DataTable :keys="keys" :items="items" :page_name="props.page_name" :page_service="props.page_service" />
+    <DataTable
+      :keys="keys"
+      :items="items"
+      :page_name="props.page_name"
+      :page_service="props.page_service"
+    />
   </MainCard>
 </template>
 

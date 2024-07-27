@@ -52,6 +52,10 @@ const filteredItems = computed(() => {
           item.email.includes(searchFilter.value)
       );
     }
+
+    else if (props.page_name === "inventory") {
+      return props.items
+    }
   }
 
   return props.items;
@@ -180,39 +184,28 @@ const removeItem = async (id) => {
                   >
                     {{
                       value.length > 0
-                        ? `Role: ${value.map((role) => role.roleName)} `
+                        ? ` ${value.map((role) => role.roleName)} `
                         : "Not contain role"
                     }}
                   </span>
+                  <span
+                  v-else-if="
+                    value &&
+                    Array.isArray(value) &&
+                    props.page_name === 'inventory'
+                  "
+                >
+                  {{
+                    value.length > 0
+                      ? `${value} `
+                      : "Missing Tool - Something error please contact admin"
+                  }}
+                </span>
                   <span v-else>
                     {{ value }}
                   </span>
                 </td>
-
-                <!-- <td
-                  v-for="value in item"
-                  :key="value"
-                  class="px-4 py-3 font-medium text-gray-900"
-                >
-                  <span
-                    :id="`${value.supplierId}`"
-                    v-if="value.supplierId && value.supplierName"
-                  >
-                    {{ value.supplierName }}
-                  </span>
-                  <span v-else-if="Array.isArray(value)">
-                    {{
-                      value.length > 0
-                        ? `Category: ${value
-                            .map((category) => category.type)
-                            .join(" - ")}`
-                        : "Not contain Category"
-                    }}
-                  </span>
-                  <span v-else>
-                    {{ value }}
-                  </span>
-                </td> -->
+              
                 <td class="px-4 py-3 flex items-center justify-end">
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
@@ -221,6 +214,8 @@ const removeItem = async (id) => {
                   >
                   <button
                     @click="removeItem(item.id)"
+                    v-show=" 
+                    props.page_name !== 'inventory'"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
                   >
                     Remove
