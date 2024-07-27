@@ -1,6 +1,8 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
+import SupplierForm from "@/components/SupplierForm.vue";
+import CategoryForm from "@/components/CategoryForm.vue";
 
 import { useStore } from "vuex";
 import { defineProps } from "vue";
@@ -13,6 +15,7 @@ const props = defineProps({
     default: true,
   },
 });
+
 </script>
 
 <template>

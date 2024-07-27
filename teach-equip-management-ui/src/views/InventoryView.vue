@@ -17,9 +17,6 @@ import Navbar from "@/components/Navbar.vue";
       <li>
         <RouterLink to="/inventory/add-invoice" class="link">Add Invoice</RouterLink>
       </li>
-      <li>
-        <RouterLink to="/inventory/addpage" class="link">Latest Price</RouterLink>
-      </li>
     </Navbar>
     <RouterView page_name="inventory" page_service="toolmanage" />
   </div>

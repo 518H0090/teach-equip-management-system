@@ -117,7 +117,7 @@ const removeItem = async (id) => {
               </tr>
               <tr v-show="props.keys !== null">
                 <th v-for="key in keys" :key="key" class="px-4 py-3 uppercase">
-                  {{ key }}
+                  {{ key.split("_").length > 1 ? key.split("_").join(' ') : key }}
                 </th>
               </tr>
             </thead>

@@ -125,7 +125,7 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 201) {
-          router.push("/inventory/get-invoice");
+          router.push("/inventory/getpage");
         }
       })
       .catch((error) => {
