@@ -29,5 +29,8 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.AuthenService
 
         [JsonProperty("token-expiry")]
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+        [JsonProperty("role_id")]
+        public int RoleId { get; set; }
     }
 }

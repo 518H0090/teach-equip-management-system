@@ -74,6 +74,16 @@ onUnmounted(() => {
         <span class="material-icons">storefront</span>
         <span class="text">Tool</span>
       </RouterLink>
+
+      <RouterLink class="button account" to="/account/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Account</span>
+      </RouterLink>
+
+      <RouterLink class="button inventory" to="/inventory/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Inventory</span>
+      </RouterLink>
     </div>
 
     <!-- Settings -->

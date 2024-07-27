@@ -15,6 +15,14 @@ import CategoryEditForm from '@/components/CategoryEditForm.vue'
 import ToolView from '@/views/ToolView.vue'
 import ToolForm from '@/components/ToolForm.vue'
 import ToolEditForm from '@/components/ToolEditForm.vue'
+import AccountView from '@/views/AccountView.vue'
+import AccountEditForm from '@/components/AccountEditForm.vue'
+import AccountForm from '@/components/AccountForm.vue'
+import InventoryView from '@/views/InventoryView.vue'
+import InventoryEditForm from '@/components/InventoryEditForm.vue'
+import InvoiceForm from '@/components/InvoiceForm.vue'
+import GetInvoice from '@/components/GetInvoice.vue'
+import InvoiceEditForm from '@/components/InvoiceEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -120,6 +128,58 @@ const router = createRouter({
           path: "addpage",
           component:  ToolForm
         }
+      ]
+    },
+    {
+      path: '/account',
+      component: AccountView,
+      children: [
+        {
+          path: "",
+          redirect: "getpage"
+        },
+        {
+          path: "getpage",
+          component: GetPage
+        },
+        {
+          path: "editpage/:id",
+          component: AccountEditForm
+        },
+        {
+          path: "addpage",
+          component:  AccountForm
+        }
+      ]
+    },
+    {
+      path: '/inventory',
+      component: InventoryView,
+      children: [
+        {
+          path: "",
+          redirect: "getpage"
+        },
+        {
+          path: "getpage",
+          component: GetPage
+        },
+        {
+          path: "editpage/:id",
+          component: InventoryEditForm
+        },
+        {
+          path: "add-invoice",
+          component:  InvoiceForm
+        },
+        {
+          path: "get-invoice",
+          component:  GetInvoice
+        },
+        {
+          path: "edit-invoice/:id",
+          component: InvoiceEditForm
+        },
       ]
     }
   ]

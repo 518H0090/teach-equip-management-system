@@ -91,12 +91,6 @@ const validateInputs = async () => {
     (selected) => !intersection.includes(selected)
   );
 
-  console.log(oldCategoryId);
-  console.log(selectCategoryId);
-  console.log("intersect", intersection);
-  console.log("remove", removeCategoriesId);
-  console.log("add", AddCategoriesId);
-
   const toolName = document.querySelector("#tool_name");
   const toolDescription = document.querySelector("#tool_description");
   const supplier = document.querySelector("#supplier");

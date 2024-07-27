@@ -107,16 +107,13 @@ const validateInputs = async () => {
       supplierId: form.supplierId,
     };
 
-    const response = fetch(
-      "https://localhost:7112/api/toolmanage/create-tool",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newTool),
-      }
-    )
+    const response = fetch("https://localhost:7112/api/toolmanage/create-tool", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTool),
+    })
       .then((response) => {
         return response.json();
       })
@@ -134,6 +131,24 @@ const validateInputs = async () => {
               await relationToolCategory(toolId, categoryId);
             });
           }
+
+          try {
+            const newInventory = {
+              toolId,
+              totalQuantity: 0,
+              amountBorrow: 0,
+            };
+
+            const response = await axios.post(
+              "https://localhost:7112/api/inventorymanage/create-inventory",
+              newInventory
+            );
+
+            console.log(response.data.data);
+          } catch (error) {
+            console.log("Error Create Inventories", error);
+          }
+
           await allToolCategories();
           router.push("/tool/getpage");
           await allToolCategories();
@@ -240,9 +255,7 @@ const allToolCategories = async () => {
             </div>
 
             <div class="input-control mb-4">
-              <label
-                for="tool_description"
-                class="block text-gray-700 font-bold mb-2"
+              <label for="tool_description" class="block text-gray-700 font-bold mb-2"
                 >Tool Description</label
               >
               <textarea

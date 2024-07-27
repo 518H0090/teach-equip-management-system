@@ -17,8 +17,5 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage
 
         [JsonProperty("amount_borrow")]
         public int AmountBorrow { get; set; }
-
-        [JsonProperty("tool_id")]
-        public int ToolId { set; get; }
     }
 }

@@ -9,13 +9,19 @@ import Navbar from "@/components/Navbar.vue";
   <div class="content">
     <Navbar>
       <li>
-        <RouterLink to="/supplier/getpage"  class="link">View</RouterLink>
+        <RouterLink to="/inventory/getpage" class="link">Inventory</RouterLink>
       </li>
       <li>
-        <RouterLink to="/supplier/addpage" class="link">Add</RouterLink>
+        <RouterLink to="/inventory/get-invoice" class="link">Invoice</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/inventory/add-invoice" class="link">Add Invoice</RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/inventory/addpage" class="link">Latest Price</RouterLink>
       </li>
     </Navbar>
-    <RouterView page_name="supplier" page_service="toolmanage" />
+    <RouterView page_name="inventory" page_service="toolmanage" />
   </div>
 </template>
 

@@ -70,7 +70,7 @@ button {
   z-index: 1;
   overflow-y: scroll;
   border-radius: 10px;
-  height: 100%;
+  max-height: 8rem;
   padding: 1rem;
   scrollbar-width: thin;
 }

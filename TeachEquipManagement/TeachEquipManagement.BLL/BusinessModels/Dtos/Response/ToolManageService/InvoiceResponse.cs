@@ -9,6 +9,9 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageServic
 {
     public class InvoiceResponse
     {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
         [JsonProperty("invoice_price")]
         public double Price { get; set; }
 

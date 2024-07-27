@@ -66,7 +66,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("remove-user/{id}")]
+        [Route("remove-account/{id}")]
         public async Task<IActionResult> RemoveUser(Guid id)
         {
             var response = await _userManageService.AccountService.RemoveUser(id);
