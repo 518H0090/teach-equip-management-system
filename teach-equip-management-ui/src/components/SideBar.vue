@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
 import eventBus from "@/eventBus";
+import router from "@/router";
 
 const store = useStore();
 
@@ -20,17 +21,25 @@ const handleRouteSelected = (path) => {
   console.log(selectedRoute.value);
 };
 
-onMounted(() => {
+onMounted(async () => {
   eventBus.on("data-sent", handleRouteSelected);
+  await store.dispatch("setAuth", localStorage.getItem("is_authenticated"))
 });
 
-onUnmounted(() => {
+onUnmounted(async () => {
   eventBus.off("data-sent", handleRouteSelected);
+  localStorage.removeItem("is_authenticated")
 });
+
+const auth = ref(store.state.authenticated === "true");
+
+if (!auth.value) {
+  router.push("/login");
+}
 </script>
 
 <template>
-  <aside :class="`${is_expanded ? 'is-expanded' : ''}`">
+  <aside :class="`${is_expanded ? 'is-expanded' : ''}`" v-show="auth">
     <!-- Logo -->
     <div class="logo">
       <img src="../assets/logo.svg" alt="Vue" />

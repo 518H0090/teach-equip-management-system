@@ -1,8 +1,10 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import router from "@/router";
+import { useStore } from "vuex";
 
+const store = useStore();
 const aside = document.querySelector("aside");
 
 aside.style.display = "none";
@@ -11,6 +13,10 @@ const form = reactive({
   username: "",
   password: "",
 });
+
+onMounted(async () => {
+  await store.dispatch("setAuth", false);
+})
 
 const isProcess = ref(true);
 
@@ -54,9 +60,11 @@ const handleLogin = async () => {
         localStorage.setItem("refresh_token", response.data.data.refreshToken)
         aside.style.display = "block";
         router.replace("/");
+        await store.dispatch("setAuth", true)
       }
     } catch (error) {
       console.log("Error Fetching jobs", error);
+      await store.dispatch("setAuth", false)
     }
   }
 };
