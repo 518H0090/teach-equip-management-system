@@ -359,6 +359,17 @@ namespace TeachEquipManagement.BLL.Services
                 return response;
             }
 
+            var findRole = await _unitOfWork.RoleRepository.GetByIdAsync(findUser.RoleId);
+
+            if (findRole == null)
+            {
+                response.Data = null;
+                response.Message = "Role Isn't Found";
+                response.StatusCode = StatusCodes.Status404NotFound;
+
+                return response;
+            }
+
             var isValidPassword = FunctionHelper.VerifyPasswordHash(request.Password, 
                             findUser.PasswordHash, findUser.PasswordSalt);
 
@@ -371,7 +382,9 @@ namespace TeachEquipManagement.BLL.Services
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, request.Username)
+                new Claim(ClaimTypes.NameIdentifier, findUser.Id.ToString()),
+                new Claim(ClaimTypes.Name, request.Username),
+                new Claim(ClaimTypes.Role, findRole.RoleName)
             };
 
             var accessToken = GenerateAccessToken(claims);
