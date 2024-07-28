@@ -13,6 +13,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ToolManageController : ControllerBase
     {
         private readonly IToolManageService _toolService;

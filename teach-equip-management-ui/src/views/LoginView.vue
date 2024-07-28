@@ -53,8 +53,8 @@ const handleLogin = async () => {
         localStorage.setItem("access_token", response.data.data.accessToken)
         localStorage.setItem("refresh_token", response.data.data.refreshToken)
         aside.style.display = "block";
+        router.replace("/");
       }
-      router.replace("/");
     } catch (error) {
       console.log("Error Fetching jobs", error);
     }

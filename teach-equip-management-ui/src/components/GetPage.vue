@@ -80,7 +80,12 @@ onUnmounted(() => {
 const allSupplier = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-supplier"
+      "https://localhost:7112/api/toolmanage/all-supplier",
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      }
     );
     items.value = response.data.data;
 
@@ -99,7 +104,12 @@ const allSupplier = async () => {
 const allCategory = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-categories"
+      "https://localhost:7112/api/toolmanage/all-categories",
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      }
     );
     items.value = response.data.data;
 
@@ -118,7 +128,12 @@ const allCategory = async () => {
 const allTool = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tools-include-supplier"
+      "https://localhost:7112/api/toolmanage/all-tools-include-supplier",
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      }
     );
 
     const datajson = response.data.data;
@@ -196,7 +211,12 @@ const aboutFetchs = async () => {
 const allToolCategories = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tool-categories"
+      "https://localhost:7112/api/toolmanage/all-tool-categories",
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      }
     );
 
     const datajson = response.data.data;
@@ -221,10 +241,19 @@ const allRoles = async () => {
 const allInventories = async () => {
   try {
     const inventories = await axios.get(
-      "https://localhost:7112/api/inventorymanage/all-inventories"
+      "https://localhost:7112/api/inventorymanage/all-inventories",
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      }
     );
 
-    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
+    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools",{
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      });
 
     let mappedData;
 
@@ -266,7 +295,14 @@ const allInventories = async () => {
 const invoices = ref({});
 
 const allInvoicess = async () => {
-  const response = fetch("https://localhost:7112/api/toolmanage/all-invoices")
+
+  const response = fetch("https://localhost:7112/api/toolmanage/all-invoices",{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": 'Bearer ' + localStorage.getItem("access_token")
+      },
+    })
     .then((response) => {
       return response.json();
     })

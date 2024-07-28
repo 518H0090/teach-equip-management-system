@@ -45,10 +45,19 @@ onUnmounted(() => {
 const allInvoices = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-invoices"
+      "https://localhost:7112/api/toolmanage/all-invoices",
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      }
     );
 
-    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
+    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools",{
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      });
 
     const mappedData = response.data.data.map((item) => ({
       id: item.id,
