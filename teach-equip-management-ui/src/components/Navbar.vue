@@ -2,6 +2,7 @@
 import { computed, defineProps, onBeforeMount, onMounted, ref } from "vue";
 
 import { useStore } from "vuex";
+import {jwtDecode} from 'jwt-decode'
 
 const store = useStore();
 
@@ -44,12 +45,37 @@ onBeforeMount(async () => {
 onMounted(() => {
   window.addEventListener("resize", CheckScreen);
   CheckScreen();
+
+  decodeJwtToken(token.value, user)
+
+  console.log(user.value)
 });
+
+const token = ref(localStorage.getItem('access_token') || '');
+const user = ref({});
+
+function decodeJwtToken(token, userRef) {
+  try {
+    if (token) {
+      const decoded = jwtDecode(token);
+
+      userRef.value = {
+        exp: decoded.exp,
+        id: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+        name: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+      };
+    } 
+  } catch (error) {
+    console.error('Invalid token:', error);
+  }
+}
 </script>
 
 <template>
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
+      <p>Username: {{ user.name }}</p>
       <ul class="navigation" v-show="!mobile">
         <slot></slot>
       </ul>

@@ -51,6 +51,8 @@ if (!auth.value) {
         <span class="material-icons">keyboard_double_arrow_right</span>
       </button>
     </div>
+    <div class="flex"></div>
+
     <!-- Menu -->
     <h3>Menu</h3>
     <div class="menu">
