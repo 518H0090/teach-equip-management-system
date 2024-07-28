@@ -15,7 +15,10 @@ const form = reactive({
 });
 
 onMounted(async () => {
+  localStorage.removeItem("access_token")
+  localStorage.removeItem("refresh_token")
   await store.dispatch("setAuth", false);
+  await store.dispatch("setIsExpanded", false);
 })
 
 const isProcess = ref(true);
