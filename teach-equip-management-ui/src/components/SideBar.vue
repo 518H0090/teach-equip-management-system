@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
 import eventBus from "@/eventBus";
 import router from "@/router";
+import {jwtDecode} from 'jwt-decode'
 
 const store = useStore();
 
@@ -24,6 +25,7 @@ const handleRouteSelected = (path) => {
 onMounted(async () => {
   eventBus.on("data-sent", handleRouteSelected);
   await store.dispatch("setAuth", localStorage.getItem("is_authenticated"))
+  await handleToken()
 });
 
 onUnmounted(async () => {
@@ -35,6 +37,76 @@ const auth = ref(store.state.authenticated === "true");
 
 if (!auth.value) {
   router.push("/login");
+}
+
+const isTokenExpired = (accessToken) => {
+  if (!accessToken) return true; 
+
+  try {
+    const decoded = jwtDecode(accessToken);
+    return decoded.exp < Date.now() / 1000; 
+  } catch (e) {
+    console.error('Error decoding token:', e);
+    return true; 
+  }
+
+  return true;
+}
+
+const refreshAccessToken = async (accessToken, refreshToken) => {
+  try {
+
+    const freshToken = {
+      accessToken,
+      refreshToken
+    }
+
+    const response = await fetch('https://localhost:7112/api/usermanage/refresh-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(freshToken),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to refresh token');
+    }
+
+    return response.json(); 
+  } catch (error) {
+    console.error('Error refreshing access token:', error);
+    throw error;
+  }
+}
+
+const handleToken = async () => {
+  
+  try {
+    const accessToken = localStorage.getItem('access_token');
+    const refreshToken = localStorage.getItem('refresh_token');
+
+    if (isTokenExpired(accessToken)) {
+      if (refreshToken) {
+        try {
+          const tokens = await refreshAccessToken(accessToken, refreshToken);
+          localStorage.setItem('access_token', tokens.accessToken);
+          localStorage.setItem('refresh_Token', tokens.refreshToken);
+          await store.dispatch("setAuth", localStorage.getItem("is_authenticated"))
+        } catch (error) {
+          console.error('Unable to refresh tokens', error);
+          router.push('/login');
+          return;
+        }
+      } else {
+        router.push('/login');
+        return;
+      }
+    }
+  } catch (error) {
+    console.error('Error during token handling:', error);
+    throw new Error('An error occurred while handling the token.');
+  }
 }
 </script>
 

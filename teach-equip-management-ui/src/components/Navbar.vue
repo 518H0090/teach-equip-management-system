@@ -76,6 +76,7 @@ function decodeJwtToken(token, userRef) {
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
       <p>Username: {{ user.name }}</p>
+      
       <ul class="navigation" v-show="!mobile">
         <slot></slot>
       </ul>

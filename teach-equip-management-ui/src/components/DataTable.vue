@@ -66,7 +66,13 @@ const removeItem = async (id) => {
   if (confirm) {
     try {
       const response = await axios.delete(
-        `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`
+        `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`,
+        {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
       );
 
       if (props.page_name === "invoice") {
