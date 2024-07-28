@@ -6,6 +6,7 @@ import { useStore } from "vuex";
 import { defineProps, onMounted, onUnmounted, onActivated, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
+import router from "@/router";
 
 const store = useStore();
 
@@ -79,6 +80,9 @@ const allInvoices = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 

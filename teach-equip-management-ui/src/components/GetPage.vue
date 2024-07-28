@@ -6,6 +6,7 @@ import { useStore } from "vuex";
 import { defineProps, onMounted, onUnmounted, onActivated, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
+import router from "@/router";
 
 const store = useStore();
 
@@ -98,6 +99,9 @@ const allSupplier = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
@@ -122,6 +126,9 @@ const allCategory = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
@@ -162,6 +169,9 @@ const allTool = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
@@ -191,6 +201,9 @@ const allAccount = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
@@ -224,6 +237,9 @@ const allToolCategories = async () => {
     relationShip.value = datajson;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
@@ -235,6 +251,9 @@ const allRoles = async () => {
     roles.value = response.data.data;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
@@ -289,6 +308,9 @@ const allInventories = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
@@ -307,7 +329,6 @@ const allInvoicess = async () => {
       return response.json();
     })
     .then(async (data) => {
-      console.log(data)
 
       if (data.statusCode === 200) {
         invoices.value = data.data
@@ -319,6 +340,9 @@ const allInvoicess = async () => {
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
+      if(error.response.status === 401) {
+      router.push('/login')
+    }
     });
 };
 
