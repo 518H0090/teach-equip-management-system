@@ -13,19 +13,17 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  page_service: String
+  page_service: String,
 });
 
-console.log(props)
+console.log(props);
 
 const searchFilter = ref("");
 
 const filteredItems = computed(() => {
   if (searchFilter.value !== "") {
     if (props.page_name === "about") {
-      return props.items.filter((item) =>
-        item.title.includes(searchFilter.value)
-      );
+      return props.items.filter((item) => item.title.includes(searchFilter.value));
     } else if (props.page_name === "supplier") {
       return props.items.filter(
         (item) =>
@@ -35,8 +33,7 @@ const filteredItems = computed(() => {
     } else if (props.page_name === "category") {
       return props.items.filter(
         (item) =>
-          item.type.includes(searchFilter.value) ||
-          item.unit.includes(searchFilter.value)
+          item.type.includes(searchFilter.value) || item.unit.includes(searchFilter.value)
       );
     } else if (props.page_name === "tool") {
       return props.items.filter(
@@ -51,10 +48,8 @@ const filteredItems = computed(() => {
           item.username.includes(searchFilter.value) ||
           item.email.includes(searchFilter.value)
       );
-    }
-
-    else if (props.page_name === "inventory") {
-      return props.items
+    } else if (props.page_name === "inventory") {
+      return props.items;
     }
   }
 
@@ -73,20 +68,16 @@ const removeItem = async (id) => {
       const response = await axios.delete(
         `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`
       );
-      
-      if (props.page_name === 'invoice') {
+
+      if (props.page_name === "invoice") {
         router.push(`/inventory/get-invoice`).then(() => {
-        router.go();
-      })
-      }
-
-      else {
+          router.go();
+        });
+      } else {
         router.push(`/${props.page_name}/getpage`).then(() => {
-        router.go();
-      })
+          router.go();
+        });
       }
-
-     
     } catch (error) {
       console.log("Error Fetching SupplierInfo", error);
     }
@@ -113,9 +104,7 @@ const removeItem = async (id) => {
           <table
             class="min-w-full text-left text-sm font-light text-surface dark:text-white"
           >
-            <thead
-              class="border-b border-neutral-200 font-medium dark:border-white/10"
-            >
+            <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
               <tr v-show="props.keys === null">
                 <th class="px-4 py-3 uppercase">UserId</th>
                 <th class="px-4 py-3 uppercase">Id</th>
@@ -127,7 +116,12 @@ const removeItem = async (id) => {
               </tr>
               <tr v-show="props.keys !== null">
                 <th v-for="key in keys" :key="key" class="px-4 py-3 uppercase">
-                  {{ key.split("_").length > 1 ? key.split("_").join(' ') : key }}
+                  <span v-if="key !== 'id'">
+                    {{ key.split("_").length > 1 ? key.split("_").join(" ") : key }}
+                  </span>
+                  <span v-if="key === 'id'" hidden>
+                    {{ `Id: ${key} ` }}
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -172,9 +166,7 @@ const removeItem = async (id) => {
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      Array.isArray(value) &&
-                      props.page_name === 'tool'
+                      value && Array.isArray(value) && props.page_name === 'tool'
                     "
                   >
                     {{
@@ -187,9 +179,7 @@ const removeItem = async (id) => {
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      Array.isArray(value) &&
-                      props.page_name === 'account'
+                      value && Array.isArray(value) && props.page_name === 'account'
                     "
                   >
                     {{
@@ -199,37 +189,37 @@ const removeItem = async (id) => {
                     }}
                   </span>
                   <span
-                  v-else-if="
-                    value &&
-                    Array.isArray(value) &&
-                    props.page_name === 'inventory'
-                  "
-                >
-                  {{
-                    value.length > 0
-                      ? `${value} `
-                      : "Missing Tool - Something error please contact admin"
-                  }}
-                </span>
-                <span
-                v-else-if="
-                  value &&
-                  Array.isArray(value) &&
-                  props.page_name === 'invoice'
-                "
-              >
-                {{
-                  value.length > 0
-                    ? `${value} `
-                    : "Missing Invoice"
-                }}
-              </span>
+                    v-else-if="
+                      value && Array.isArray(value) && props.page_name === 'inventory'
+                    "
+                  >
+                    {{
+                      value.length > 0
+                        ? `${value} `
+                        : "Missing Tool - Something error please contact admin"
+                    }}
+                  </span>
+                  <span
+                    v-else-if="
+                      value && Array.isArray(value) && props.page_name === 'invoice'
+                    "
+                  >
+                    {{ value.length > 0 ? `${value} ` : "Missing Invoice" }}
+                  </span>
+                  <span v-else-if="value === item.id" hidden>
+                    {{ `Id: ${value} ` }}
+                  </span>
                   <span v-else>
                     {{ value }}
                   </span>
                 </td>
 
-                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name !== 'inventory' && props.page_name !== 'invoice'">
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="
+                    props.page_name !== 'inventory' && props.page_name !== 'invoice'
+                  "
+                >
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -243,7 +233,10 @@ const removeItem = async (id) => {
                   </button>
                 </td>
 
-                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name === 'invoice'">
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="props.page_name === 'invoice'"
+                >
                   <RouterLink
                     :to="`/inventory/edit-invoice/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -257,7 +250,10 @@ const removeItem = async (id) => {
                   </button>
                 </td>
 
-                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name === 'inventory'">
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="props.page_name === 'inventory'"
+                >
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
