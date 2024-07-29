@@ -52,6 +52,8 @@ const isTokenExpired = (accessToken) => {
     console.error("Error decoding token:", e);
     return true;
   }
+
+  return true;
 };
 
 const refreshAccessToken = async (accessToken, refreshToken) => {
@@ -76,10 +78,8 @@ const refreshAccessToken = async (accessToken, refreshToken) => {
         if (response.statusCode === 200) {
           localStorage.setItem("access_token", response.data.accessToken);
           localStorage.setItem("refresh_token", response.data.refreshToken);
-          await store.dispatch(
-            "setAuth",
-            localStorage.getItem("is_authenticated")
-          );
+
+          await store.dispatch("setAuth", true);
         }
       });
   } catch (error) {
