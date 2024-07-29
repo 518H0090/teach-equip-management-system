@@ -28,9 +28,6 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.InventoryManage
         [JsonProperty("status")]
         public string Status { get; set; } = string.Empty;
 
-        [JsonProperty("manager_approve")]
-        public string? ManagerApprove { get; set; } = string.Empty;
-
         [JsonProperty("approve_date")]
         public DateTime? ApproveDate { get; set; }
 

@@ -403,7 +403,6 @@ const allApprovalRequest = async () => {
       quantity: item.quantity,
       requestType: item.requestType,
       status: item.status,
-      isApproved: item.isApproved,
     }));
 
     items.value = mappedFilter;
