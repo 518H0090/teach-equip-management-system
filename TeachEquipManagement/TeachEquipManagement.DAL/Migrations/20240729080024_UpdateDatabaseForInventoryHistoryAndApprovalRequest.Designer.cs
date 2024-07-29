@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachEquipManagement.DAL.EFContext;
 
@@ -11,9 +12,11 @@ using TeachEquipManagement.DAL.EFContext;
 namespace TeachEquipManagement.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240729080024_UpdateDatabaseForInventoryHistoryAndApprovalRequest")]
+    partial class UpdateDatabaseForInventoryHistoryAndApprovalRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,6 +128,9 @@ namespace TeachEquipManagement.DAL.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("ManagerApprove")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Quantity")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -133,7 +139,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 29, 16, 40, 46, 795, DateTimeKind.Local).AddTicks(1857));
+                        .HasDefaultValue(new DateTime(2024, 7, 29, 15, 0, 24, 13, DateTimeKind.Local).AddTicks(8658));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -211,7 +217,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 29, 16, 40, 46, 795, DateTimeKind.Local).AddTicks(4046));
+                        .HasDefaultValue(new DateTime(2024, 7, 29, 15, 0, 24, 14, DateTimeKind.Local).AddTicks(798));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -248,7 +254,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 29, 16, 40, 46, 795, DateTimeKind.Local).AddTicks(604));
+                        .HasDefaultValue(new DateTime(2024, 7, 29, 15, 0, 24, 13, DateTimeKind.Local).AddTicks(7428));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()

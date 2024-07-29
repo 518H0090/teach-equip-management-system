@@ -8,6 +8,8 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class ApprovalRequest
     {
+        public int Id { get; set; }
+
         public Guid AccountId { get; set; }
 
         public Guid InventoryId { get; set; }   
@@ -19,8 +21,6 @@ namespace TeachEquipManagement.DAL.Models
         public DateTime RequestDate { get; set; }
 
         public string Status { get; set; } = string.Empty;
-
-        public string? ManagerApprove { get; set; } = string.Empty;
 
         public DateTime? ApproveDate { get; set; }   
 

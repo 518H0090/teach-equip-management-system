@@ -138,6 +138,7 @@ const validateInputs = async () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
         body: JSON.stringify(updateTool),
       }
@@ -203,7 +204,12 @@ const categories = ref({});
 const allSupplier = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-supplier"
+      "https://localhost:7112/api/toolmanage/all-supplier",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
     suppliers.value = response.data.data;
   } catch (error) {
@@ -214,7 +220,12 @@ const allSupplier = async () => {
 const allCategory = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-categories"
+      "https://localhost:7112/api/toolmanage/all-categories",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
     categories.value = response.data.data;
   } catch (error) {
@@ -239,7 +250,12 @@ const relationToolCategory = async (toolId, categoryId) => {
 
     const response = await axios.post(
       "https://localhost:7112/api/toolmanage/create-tool-category",
-      newRelation
+      newRelation,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     console.log(response.data.data);
@@ -258,6 +274,9 @@ const removeToolCategory = async (toolId, categoryId) => {
     const response = await axios.delete(
       "https://localhost:7112/api/toolmanage/remove-tool-category",
       {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
         data: newRelation,
       }
     );
@@ -271,7 +290,12 @@ const removeToolCategory = async (toolId, categoryId) => {
 const allToolCategories = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tool-categories"
+      "https://localhost:7112/api/toolmanage/all-tool-categories",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     const datajson = response.data.data;
@@ -285,7 +309,12 @@ const allToolCategories = async () => {
 const toolById = async (itemId) => {
   try {
     const response = await axios.get(
-      `https://localhost:7112/api/toolmanage/tool/find/${itemId}`
+      `https://localhost:7112/api/toolmanage/tool/find/${itemId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     const datajson = response.data.data;

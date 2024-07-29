@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineProps, ref } from "vue";
+import { computed, defineProps, onMounted, onUnmounted, ref } from "vue";
 import SearchForm from "@/components/SearchForm.vue";
 import FilterRadio from "@/components/FilterRadio.vue";
 import FilterDropdown from "@/components/FilterDropdown.vue";
@@ -13,10 +13,8 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  page_service: String
+  page_service: String,
 });
-
-console.log(props)
 
 const searchFilter = ref("");
 
@@ -51,10 +49,8 @@ const filteredItems = computed(() => {
           item.username.includes(searchFilter.value) ||
           item.email.includes(searchFilter.value)
       );
-    }
-
-    else if (props.page_name === "inventory") {
-      return props.items
+    } else if (props.page_name === "inventory") {
+      return props.items;
     }
   }
 
@@ -71,12 +67,25 @@ const removeItem = async (id) => {
   if (confirm) {
     try {
       const response = await axios.delete(
-        `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`
+        `https://localhost:7112/api/${props.page_service}/remove-${props.page_name}/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
       );
-      
-      router.push(`/${props.page_name}/getpage`).then(() => {
-        router.go();
-      })
+
+      if (props.page_name === "invoice") {
+        router.push(`/inventory/get-invoice`).then(() => {
+          router.go();
+        });
+      } else {
+        router.push(`/${props.page_name}/getpage`).then(() => {
+          router.go();
+        });
+      }
     } catch (error) {
       console.log("Error Fetching SupplierInfo", error);
     }
@@ -117,7 +126,14 @@ const removeItem = async (id) => {
               </tr>
               <tr v-show="props.keys !== null">
                 <th v-for="key in keys" :key="key" class="px-4 py-3 uppercase">
-                  {{ key }}
+                  <span v-if="key !== 'id'">
+                    {{
+                      key.split("_").length > 1 ? key.split("_").join(" ") : key
+                    }}
+                  </span>
+                  <span v-if="key === 'id'" hidden>
+                    {{ `Id: ${key} ` }}
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -154,9 +170,12 @@ const removeItem = async (id) => {
                   :key="value"
                   class="px-4 py-3 font-medium text-gray-900"
                 >
+                  <span v-if="value === item.id" hidden>
+                    {{ `Id: ${value} ` }}
+                  </span>
                   <span
                     :id="`${value.supplierId}`"
-                    v-if="value && value.supplierId && value.supplierName"
+                    v-else-if="value && value.supplierId && value.supplierName"
                   >
                     {{ value.supplierName }}
                   </span>
@@ -189,37 +208,60 @@ const removeItem = async (id) => {
                     }}
                   </span>
                   <span
-                  v-else-if="
-                    value &&
-                    Array.isArray(value) &&
-                    props.page_name === 'inventory'
-                  "
-                >
-                  {{
-                    value.length > 0
-                      ? `${value} `
-                      : "Missing Tool - Something error please contact admin"
-                  }}
-                </span>
-                <span
-                v-else-if="
-                  value &&
-                  Array.isArray(value) &&
-                  props.page_name === 'invoice'
-                "
-              >
-                {{
-                  value.length > 0
-                    ? `${value} `
-                    : "Missing Invoice"
-                }}
-              </span>
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'inventory'
+                    "
+                  >
+                    {{
+                      value.length > 0
+                        ? `${value} `
+                        : "Missing Tool - Something error please contact admin"
+                    }}
+                  </span>
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'invoice'
+                    "
+                  >
+                    {{ value.length > 0 ? `${value} ` : "Missing Invoice" }}
+                  </span>
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'request' &&
+                      value === item.account
+                    "
+                  >
+                    {{ `${value.map((value) => value.username)}` }}
+                  </span>
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'request' &&
+                      value === item.inventory
+                    "
+                  >
+                    {{ `${value.map((value) => value.toolName)}` }}
+                  </span>
                   <span v-else>
                     {{ value }}
                   </span>
                 </td>
 
-                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name !== 'inventory' && props.page_name !== 'invoice'">
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="
+                    props.page_name !== 'inventory' &&
+                    props.page_name !== 'invoice' &&
+                    props.page_name !== 'request'
+                  "
+                >
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -233,7 +275,10 @@ const removeItem = async (id) => {
                   </button>
                 </td>
 
-                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name === 'invoice'">
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="props.page_name === 'invoice'"
+                >
                   <RouterLink
                     :to="`/inventory/edit-invoice/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -247,11 +292,35 @@ const removeItem = async (id) => {
                   </button>
                 </td>
 
-                <td class="px-4 py-3 flex items-center justify-end" v-show="props.page_name === 'inventory'">
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="props.page_name === 'inventory'"
+                >
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                     >Edit</RouterLink
+                  >
+                  <RouterLink
+                    :to="`/${props.page_name}/request-form/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Request</RouterLink
+                  >
+                </td>
+
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="props.page_name === 'request'"
+                >
+                  <RouterLink
+                    :to="`/${props.page_name}/editpage/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Approve</RouterLink
+                  >
+                  <RouterLink
+                    :to="`/${props.page_name}/request-form/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Delete</RouterLink
                   >
                 </td>
               </tr>

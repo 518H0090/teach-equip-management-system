@@ -1,7 +1,9 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
 import eventBus from "@/eventBus";
+import router from "@/router";
+import { jwtDecode } from "jwt-decode";
 
 const store = useStore();
 
@@ -20,13 +22,91 @@ const handleRouteSelected = (path) => {
   console.log(selectedRoute.value);
 };
 
-onMounted(() => {
+onMounted(async () => {
   eventBus.on("data-sent", handleRouteSelected);
+  await store.dispatch("setAuth", true);
+
+  await handleToken();
 });
 
-onUnmounted(() => {
+onUnmounted(async () => {
   eventBus.off("data-sent", handleRouteSelected);
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  await store.dispatch("setAuth", false);
 });
+
+const auth = ref(store.state.authenticated === "true");
+
+if (!auth.value) {
+  router.push("/login");
+}
+
+const isTokenExpired = (accessToken) => {
+  if (!accessToken) return true;
+
+  try {
+    const decoded = jwtDecode(accessToken);
+    return decoded.exp < Date.now() / 1000;
+  } catch (e) {
+    console.error("Error decoding token:", e);
+    return true;
+  }
+};
+
+const refreshAccessToken = async (accessToken, refreshToken) => {
+  try {
+    const freshToken = {
+      accessToken,
+      refreshToken,
+    };
+
+    const response = await fetch("https://localhost:7112/api/usermanage/refresh-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(freshToken),
+    })
+      .then((response) => response.json())
+      .then(async (response) => {
+        if (response.statusCode === 200) {
+          localStorage.setItem("access_token", response.data.accessToken);
+          localStorage.setItem("refresh_token", response.data.refreshToken);
+
+          await store.dispatch("setAuth", true);
+        }
+      });
+  } catch (error) {
+    console.error("Error refreshing access token:", error);
+    throw error;
+  }
+};
+
+const handleToken = async () => {
+  try {
+    const accessToken = localStorage.getItem("access_token");
+    const refreshToken = localStorage.getItem("refresh_token");
+
+    if (isTokenExpired(accessToken)) {
+      if (refreshToken) {
+        try {
+          await refreshAccessToken(accessToken, refreshToken);
+        } catch (error) {
+          console.error("Unable to refresh tokens", error);
+          router.push("/login");
+          return;
+        }
+      } else {
+        router.push("/login");
+        return;
+      }
+    }
+  } catch (error) {
+    console.error("Error during token handling:", error);
+    throw new Error("An error occurred while handling the token.");
+  }
+};
 </script>
 
 <template>
@@ -42,6 +122,7 @@ onUnmounted(() => {
         <span class="material-icons">keyboard_double_arrow_right</span>
       </button>
     </div>
+
     <!-- Menu -->
     <h3>Menu</h3>
     <div class="menu">
@@ -50,7 +131,7 @@ onUnmounted(() => {
         <span class="text">Home</span>
       </RouterLink>
 
-      <RouterLink class="button" to="/dashboard">
+      <!-- <RouterLink class="button" to="/dashboard">
         <span class="material-icons">group</span>
         <span class="text">Team</span>
       </RouterLink>
@@ -58,7 +139,7 @@ onUnmounted(() => {
       <RouterLink class="button about" to="/about/getpage">
         <span class="material-icons">group</span>
         <span class="text">About</span>
-      </RouterLink>
+      </RouterLink> -->
 
       <RouterLink class="button supplier" to="/supplier/getpage">
         <span class="material-icons">storefront</span>
@@ -84,9 +165,13 @@ onUnmounted(() => {
         <span class="material-icons">storefront</span>
         <span class="text">Inventory</span>
       </RouterLink>
+
+      <RouterLink class="button request" to="/request/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Request</span>
+      </RouterLink>
     </div>
 
-    <!-- Settings -->
     <div class="flex"></div>
     <div class="menu">
       <RouterLink class="button" to="/settings">

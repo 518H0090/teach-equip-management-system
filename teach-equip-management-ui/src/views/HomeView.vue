@@ -1,8 +1,9 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
-import { onMounted, ref, defineProps } from "vue";
+import { onMounted, ref, defineProps, onUnmounted } from "vue";
 import Dashboard from "@/components/Dashboard.vue";
+import router from "@/router";
 
 const props = defineProps({
   isShow: {
@@ -16,7 +17,16 @@ const items = ref([]);
 onMounted(async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
   items.value = await response.json();
+  if (localStorage.getItem('access_token') === null) {
+    router.push("/login")
+  }
 });
+
+onUnmounted(async () => {
+  if (localStorage.getItem('access_token') === null) {
+    router.push("/login")
+  }
+})
 </script>
 
 <template>

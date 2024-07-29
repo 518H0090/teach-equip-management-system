@@ -1,7 +1,16 @@
 <script setup>
-import { computed, defineProps, onBeforeMount, onMounted, ref } from "vue";
+import {
+  computed,
+  defineProps,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from "vue";
 
 import { useStore } from "vuex";
+import { jwtDecode } from "jwt-decode";
+import UserProfile from "./UserProfile.vue";
 
 const store = useStore();
 
@@ -44,12 +53,47 @@ onBeforeMount(async () => {
 onMounted(() => {
   window.addEventListener("resize", CheckScreen);
   CheckScreen();
+
+  decodeJwtToken(token.value, user);
 });
+
+onUnmounted(() => {
+  user.value = {};
+});
+
+const token = ref(localStorage.getItem("access_token") || "");
+const user = ref({});
+
+function decodeJwtToken(token, userRef) {
+  try {
+    if (token) {
+      const decoded = jwtDecode(token);
+
+      userRef.value = {
+        exp: decoded.exp,
+        id: decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ],
+        name: decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        ],
+        role: decoded[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ],
+      };
+
+      console.log(userRef.value)
+    }
+  } catch (error) {
+    console.error("Invalid token:", error);
+  }
+}
 </script>
 
 <template>
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
+      <UserProfile :username="user.name" />
       <ul class="navigation" v-show="!mobile">
         <slot></slot>
       </ul>
@@ -77,7 +121,7 @@ header {
 
   * {
     max-width: 99%;
-    overflow: hidden;
+    // overflow: hidden;
   }
 
   &.is-expanded {

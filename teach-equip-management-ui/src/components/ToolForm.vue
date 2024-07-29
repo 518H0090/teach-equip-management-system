@@ -107,13 +107,17 @@ const validateInputs = async () => {
       supplierId: form.supplierId,
     };
 
-    const response = fetch("https://localhost:7112/api/toolmanage/create-tool", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newTool),
-    })
+    const response = fetch(
+      "https://localhost:7112/api/toolmanage/create-tool",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+        body: JSON.stringify(newTool),
+      }
+    )
       .then((response) => {
         return response.json();
       })
@@ -141,7 +145,13 @@ const validateInputs = async () => {
 
             const response = await axios.post(
               "https://localhost:7112/api/inventorymanage/create-inventory",
-              newInventory
+              newInventory,
+              {
+                headers: {
+                  Authorization:
+                    "Bearer " + localStorage.getItem("access_token"),
+                },
+              }
             );
 
             console.log(response.data.data);
@@ -173,7 +183,12 @@ const categories = ref({});
 const allSupplier = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-supplier"
+      "https://localhost:7112/api/toolmanage/all-supplier",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
     suppliers.value = response.data.data;
   } catch (error) {
@@ -184,7 +199,12 @@ const allSupplier = async () => {
 const allCategory = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-categories"
+      "https://localhost:7112/api/toolmanage/all-categories",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
     categories.value = response.data.data;
   } catch (error) {
@@ -208,7 +228,12 @@ const relationToolCategory = async (toolId, categoryId) => {
 
     const response = await axios.post(
       "https://localhost:7112/api/toolmanage/create-tool-category",
-      newRelation
+      newRelation,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     console.log(response.data.data);
@@ -217,10 +242,17 @@ const relationToolCategory = async (toolId, categoryId) => {
   }
 };
 
+const relationShip = ref({});
+
 const allToolCategories = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tool-categories"
+      "https://localhost:7112/api/toolmanage/all-tool-categories",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     const datajson = response.data.data;
@@ -255,7 +287,9 @@ const allToolCategories = async () => {
             </div>
 
             <div class="input-control mb-4">
-              <label for="tool_description" class="block text-gray-700 font-bold mb-2"
+              <label
+                for="tool_description"
+                class="block text-gray-700 font-bold mb-2"
                 >Tool Description</label
               >
               <textarea
@@ -341,6 +375,7 @@ const allToolCategories = async () => {
 .container {
   max-width: 786px;
   margin-top: 4rem;
+  
 
   form {
     padding: 2rem 2rem;

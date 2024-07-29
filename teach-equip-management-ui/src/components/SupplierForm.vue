@@ -118,7 +118,12 @@ const validateInputs = async () => {
     try {
       const response = await axios.post(
         "https://localhost:7112/api/toolmanage/create-supplier",
-        newSupplier
+        newSupplier,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
       );
 
       router.push("/supplier/getpage");

@@ -6,6 +6,7 @@ import { useStore } from "vuex";
 import { defineProps, onMounted, onUnmounted, onActivated, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
+import router from "@/router";
 
 const store = useStore();
 
@@ -45,17 +46,27 @@ onUnmounted(() => {
 const allInvoices = async () => {
   try {
     const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-invoices"
+      "https://localhost:7112/api/toolmanage/all-invoices",
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      }
     );
 
-    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
+    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools",{
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem("access_token")
+        }
+      });
 
     const mappedData = response.data.data.map((item) => ({
+      id: item.id,
       tool: tools.data.data
         .filter((tool) => Number(tool.id) === Number(item.toolId))
         .map((tool) => tool.toolName),
       price: item.price,
-      invoiceDate: formatDateToDDMMYYYY(item.invoiceDate),
+      invoiceDate: formatDate(item.invoiceDate),
     }));
 
     items.value = mappedData;
@@ -69,18 +80,25 @@ const allInvoices = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
+    if(error.response.status === 401) {
+      router.push('/login')
+    }
   }
 };
 
-function formatDateToDDMMYYYY(dateString) {
-    const date = new Date(dateString);
-    
+function formatDate(timestamp) {
+    const date = new Date(timestamp);
+
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); 
     const year = date.getFullYear();
-    
-    return `${day}/${month}/${year}`;
+    const hours = String(date.getHours() % 12 || 12).padStart(2, '0'); 
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
+
 </script>
 
 <template>

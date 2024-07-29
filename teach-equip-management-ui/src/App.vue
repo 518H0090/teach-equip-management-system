@@ -43,6 +43,11 @@ button {
   display: flex;
 }
 
+main section {
+  margin-top: -2rem;
+  padding: 2rem;
+}
+
 @media (max-width: 768px) {
   .app main {
     padding-left: 6rem;
