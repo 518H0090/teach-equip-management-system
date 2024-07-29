@@ -10,6 +10,7 @@ import {
 
 import { useStore } from "vuex";
 import { jwtDecode } from "jwt-decode";
+import UserProfile from "./UserProfile.vue";
 
 const store = useStore();
 
@@ -90,8 +91,7 @@ function decodeJwtToken(token, userRef) {
 <template>
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
-      <p>Username: {{ user.name }}</p>
-
+      <UserProfile :username="user.name" />
       <ul class="navigation" v-show="!mobile">
         <slot></slot>
       </ul>
@@ -119,7 +119,7 @@ header {
 
   * {
     max-width: 99%;
-    overflow: hidden;
+    // overflow: hidden;
   }
 
   &.is-expanded {

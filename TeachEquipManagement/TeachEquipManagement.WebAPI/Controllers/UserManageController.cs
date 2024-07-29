@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -79,6 +80,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         #region Token
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] AuthenticatedRequest request)
         {
