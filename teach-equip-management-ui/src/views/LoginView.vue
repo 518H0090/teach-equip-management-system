@@ -63,8 +63,8 @@ const handleLogin = async () => {
         localStorage.setItem("refresh_token", response.data.data.refreshToken);
         await store.dispatch("setAuth", true);
         await store.dispatch("setIsExpanded", false);
-        aside.style.display = "block";
-        router.push("/");
+        aside.style.display = "flex";
+        router.push("/").then(() => router.go());
       }
     } catch (error) {
       console.log("Error Fetching jobs", error);

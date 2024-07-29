@@ -172,7 +172,7 @@ const handleToken = async () => {
       </RouterLink>
     </div>
 
-    <!-- <div class="flex"></div> -->
+    <div class="flex"></div>
     <div class="menu">
       <RouterLink class="button" to="/settings">
         <span class="material-icons">settings</span>
