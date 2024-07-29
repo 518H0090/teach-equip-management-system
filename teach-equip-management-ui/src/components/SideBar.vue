@@ -61,19 +61,25 @@ const refreshAccessToken = async (accessToken, refreshToken) => {
       refreshToken,
     };
 
-    const response = await fetch("https://localhost:7112/api/usermanage/refresh-token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(freshToken),
-    })
+    const response = await fetch(
+      "https://localhost:7112/api/usermanage/refresh-token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(freshToken),
+      }
+    )
       .then((response) => response.json())
       .then(async (response) => {
         if (response.statusCode === 200) {
           localStorage.setItem("access_token", response.data.accessToken);
           localStorage.setItem("refresh_token", response.data.refreshToken);
-          await store.dispatch("setAuth", localStorage.getItem("is_authenticated"));
+          await store.dispatch(
+            "setAuth",
+            localStorage.getItem("is_authenticated")
+          );
         }
       });
   } catch (error) {
@@ -121,7 +127,6 @@ const handleToken = async () => {
         <span class="material-icons">keyboard_double_arrow_right</span>
       </button>
     </div>
-    <div class="flex"></div>
 
     <!-- Menu -->
     <h3>Menu</h3>

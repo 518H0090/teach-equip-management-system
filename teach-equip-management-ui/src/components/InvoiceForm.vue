@@ -51,7 +51,14 @@ const tools = ref({});
 
 const allTools = async () => {
   try {
-    const response = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-tools",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
     tools.value = response.data.data;
   } catch (error) {
     console.log("Error Fetching jobs", error);
@@ -112,6 +119,7 @@ const validateInputs = async () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
         body: JSON.stringify(newInvoice),
       }
@@ -133,7 +141,6 @@ const validateInputs = async () => {
       });
   }
 };
-
 </script>
 
 <template>
@@ -145,7 +152,9 @@ const validateInputs = async () => {
             <h2 class="text-3xl text-center font-semibold mb-6">Add Invoice</h2>
 
             <div class="input-control mb-4">
-              <label for="type" class="block text-gray-700 font-bold mb-2">Tool</label>
+              <label for="type" class="block text-gray-700 font-bold mb-2"
+                >Tool</label
+              >
               <select
                 v-model="form.toolId"
                 id="toolId"
@@ -154,7 +163,11 @@ const validateInputs = async () => {
                 required
               >
                 <option value="-1">Default</option>
-                <option v-for="tool in tools" :key="tool.id" :value="`${tool.id}`">
+                <option
+                  v-for="tool in tools"
+                  :key="tool.id"
+                  :value="`${tool.id}`"
+                >
                   {{ tool.toolName }}
                 </option>
               </select>

@@ -58,7 +58,14 @@ const tools = ref({});
 
 const allTools = async () => {
   try {
-    const response = await axios.get("https://localhost:7112/api/toolmanage/all-tools");
+    const response = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-tools",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
     tools.value = response.data.data;
   } catch (error) {
     console.log("Error Fetching jobs", error);
@@ -107,6 +114,7 @@ const validateInputs = async () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
         body: JSON.stringify(updateInvoice),
       }
@@ -132,7 +140,12 @@ const validateInputs = async () => {
 const ItemById = async (itemId) => {
   try {
     const response = await axios.get(
-      `https://localhost:7112/api/toolmanage/invoice/find/${itemId}`
+      `https://localhost:7112/api/toolmanage/invoice/find/${itemId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     const datajson = response.data.data;
@@ -143,7 +156,6 @@ const ItemById = async (itemId) => {
     console.log("Error Fetching SupplierInfo", error);
   }
 };
-
 </script>
 
 <template>
@@ -152,10 +164,14 @@ const ItemById = async (itemId) => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">Edit Invoice</h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">
+              Edit Invoice
+            </h2>
 
             <div class="input-control mb-4">
-              <label for="type" class="block text-gray-700 font-bold mb-2">Tool Edit:</label>
+              <label for="type" class="block text-gray-700 font-bold mb-2"
+                >Tool Edit:</label
+              >
               <select
                 v-model="form.toolId"
                 id="toolId"
@@ -165,7 +181,11 @@ const ItemById = async (itemId) => {
                 disabled
               >
                 <option value="-1">Default</option>
-                <option v-for="tool in tools" :key="tool.id" :value="`${tool.id}`">
+                <option
+                  v-for="tool in tools"
+                  :key="tool.id"
+                  :value="`${tool.id}`"
+                >
                   {{ tool.toolName }}
                 </option>
               </select>

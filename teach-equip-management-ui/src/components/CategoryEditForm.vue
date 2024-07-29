@@ -99,23 +99,13 @@ const validateInputs = async () => {
       unit: form.unit,
     };
 
-    // try {
-    //   const response = await axios.put(
-    //     "https://localhost:7112/api/toolmanage/update-category",
-    //     updateCategory
-    //   );
-
-    //   router.push("/category/getpage");
-    // } catch (error) {
-    //   console.log("Error Fetching jobs", error);
-    // }
-
     const response = fetch(
       "https://localhost:7112/api/toolmanage/update-category",
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
         body: JSON.stringify(updateCategory),
       }
@@ -141,7 +131,12 @@ const validateInputs = async () => {
 const ItemById = async (itemId) => {
   try {
     const response = await axios.get(
-      `https://localhost:7112/api/toolmanage/category/find/${itemId}`
+      `https://localhost:7112/api/toolmanage/category/find/${itemId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     const datajson = response.data.data;

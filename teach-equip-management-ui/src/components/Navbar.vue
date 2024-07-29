@@ -1,8 +1,15 @@
 <script setup>
-import { computed, defineProps, onBeforeMount, onMounted, ref } from "vue";
+import {
+  computed,
+  defineProps,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from "vue";
 
 import { useStore } from "vuex";
-import {jwtDecode} from 'jwt-decode'
+import { jwtDecode } from "jwt-decode";
 
 const store = useStore();
 
@@ -46,12 +53,14 @@ onMounted(() => {
   window.addEventListener("resize", CheckScreen);
   CheckScreen();
 
-  decodeJwtToken(token.value, user)
-
-  console.log(user.value)
+  decodeJwtToken(token.value, user);
 });
 
-const token = ref(localStorage.getItem('access_token') || '');
+onUnmounted(() => {
+  user.value = {};
+});
+
+const token = ref(localStorage.getItem("access_token") || "");
 const user = ref({});
 
 function decodeJwtToken(token, userRef) {
@@ -61,13 +70,19 @@ function decodeJwtToken(token, userRef) {
 
       userRef.value = {
         exp: decoded.exp,
-        id: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
-        name: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
-        role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        id: decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ],
+        name: decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        ],
+        role: decoded[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ],
       };
-    } 
+    }
   } catch (error) {
-    console.error('Invalid token:', error);
+    console.error("Invalid token:", error);
   }
 }
 </script>
@@ -76,7 +91,7 @@ function decodeJwtToken(token, userRef) {
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
       <p>Username: {{ user.name }}</p>
-      
+
       <ul class="navigation" v-show="!mobile">
         <slot></slot>
       </ul>

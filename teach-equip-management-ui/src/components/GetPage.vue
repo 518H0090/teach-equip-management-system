@@ -84,8 +84,8 @@ const allSupplier = async () => {
       "https://localhost:7112/api/toolmanage/all-supplier",
       {
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem("access_token")
-        }
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
       }
     );
     items.value = response.data.data;
@@ -99,8 +99,8 @@ const allSupplier = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if(error.response.status === 401) {
-      router.push('/login')
+    if (error.response.status === 401) {
+      router.push("/login");
     }
   }
 };
@@ -111,8 +111,8 @@ const allCategory = async () => {
       "https://localhost:7112/api/toolmanage/all-categories",
       {
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem("access_token")
-        }
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
       }
     );
     items.value = response.data.data;
@@ -126,8 +126,8 @@ const allCategory = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if(error.response.status === 401) {
-      router.push('/login')
+    if (error.response.status === 401) {
+      router.push("/login");
     }
   }
 };
@@ -138,8 +138,8 @@ const allTool = async () => {
       "https://localhost:7112/api/toolmanage/all-tools-include-supplier",
       {
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem("access_token")
-        }
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
       }
     );
 
@@ -169,25 +169,34 @@ const allTool = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if(error.response.status === 401) {
-      router.push('/login')
+    if (error.response.status === 401) {
+      router.push("/login");
     }
   }
 };
 
 const allAccount = async () => {
   try {
-    const response = await axios.get("https://localhost:7112/api/usermanage/all-users");
+    const response = await axios.get(
+      "https://localhost:7112/api/usermanage/all-users"
+    );
     const datajson = response.data.data.map(
-      ({ passwordHash, passwordSalt, refreshToken, refreshTokenExpiryTime, ...rest }) =>
-        rest
+      ({
+        passwordHash,
+        passwordSalt,
+        refreshToken,
+        refreshTokenExpiryTime,
+        ...rest
+      }) => rest
     );
 
     const mappedData = datajson.map((item) => ({
       id: item.id,
       username: item.username,
       email: item.email,
-      role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
+      role: roles.value.filter(
+        (role) => Number(role.id) === Number(item.roleId)
+      ),
     }));
 
     items.value = mappedData;
@@ -201,8 +210,8 @@ const allAccount = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if(error.response.status === 401) {
-      router.push('/login')
+    if (error.response.status === 401) {
+      router.push("/login");
     }
   }
 };
@@ -227,8 +236,8 @@ const allToolCategories = async () => {
       "https://localhost:7112/api/toolmanage/all-tool-categories",
       {
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem("access_token")
-        }
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
       }
     );
 
@@ -237,8 +246,8 @@ const allToolCategories = async () => {
     relationShip.value = datajson;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if(error.response.status === 401) {
-      router.push('/login')
+    if (error.response.status === 401) {
+      router.push("/login");
     }
   }
 };
@@ -247,12 +256,14 @@ const roles = ref({});
 
 const allRoles = async () => {
   try {
-    const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
+    const response = await axios.get(
+      "https://localhost:7112/api/usermanage/all-roles"
+    );
     roles.value = response.data.data;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if(error.response.status === 401) {
-      router.push('/login')
+    if (error.response.status === 401) {
+      router.push("/login");
     }
   }
 };
@@ -263,16 +274,19 @@ const allInventories = async () => {
       "https://localhost:7112/api/inventorymanage/all-inventories",
       {
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem("access_token")
-        }
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
       }
     );
 
-    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools",{
+    const tools = await axios.get(
+      "https://localhost:7112/api/toolmanage/all-tools",
+      {
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem("access_token")
-        }
-      });
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
 
     let mappedData;
 
@@ -284,7 +298,9 @@ const allInventories = async () => {
           .map((tool) => tool.toolName),
         total_quantity: item.totalQuantity,
         amount_borrow: item.amountBorrow,
-        latest_prices: getLatestPriceByToolId(invoices.value, item.toolId),
+        latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
+          ? getLatestPriceByToolId(invoices.value, item.toolId)
+          : 0,
       }));
     } else {
       mappedData = inventories.data.data.map((item) => ({
@@ -308,8 +324,8 @@ const allInventories = async () => {
     keys.value = uniqueKeys;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if(error.response.status === 401) {
-      router.push('/login')
+    if (error.response.status === 401) {
+      router.push("/login");
     }
   }
 };
@@ -317,32 +333,28 @@ const allInventories = async () => {
 const invoices = ref({});
 
 const allInvoicess = async () => {
-
-  const response = fetch("https://localhost:7112/api/toolmanage/all-invoices",{
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": 'Bearer ' + localStorage.getItem("access_token")
-      },
-    })
+  const response = fetch("https://localhost:7112/api/toolmanage/all-invoices", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+    },
+  })
     .then((response) => {
       return response.json();
     })
     .then(async (data) => {
-
       if (data.statusCode === 200) {
-        invoices.value = data.data
-      }
-
-      else if (data.statusCode !== 200) {
+        invoices.value = data.data;
+      } else if (data.statusCode !== 200) {
         console.error("Error fetching data:", data.message);
       }
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
-      if(error.response.status === 401) {
-      router.push('/login')
-    }
+      if (error.response.status === 401) {
+        router.push("/login");
+      }
     });
 };
 

@@ -125,7 +125,12 @@ const validateInputs = async () => {
     try {
       const response = await axios.put(
         "https://localhost:7112/api/toolmanage/update-supplier",
-        updateSupplier
+        updateSupplier,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
       );
 
       router.push("/supplier/getpage");
@@ -138,7 +143,12 @@ const validateInputs = async () => {
 const supplierById = async (supplierId) => {
   try {
     const response = await axios.get(
-      `https://localhost:7112/api/toolmanage/supplier/find/${supplierId}`
+      `https://localhost:7112/api/toolmanage/supplier/find/${supplierId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
     );
 
     const datajson = response.data.data;
