@@ -287,7 +287,6 @@ const toggleDropdown = () => {
 <style lang="scss" scoped>
 .container {
   max-width: 786px;
-  margin-top: 4rem;
 
   form {
     padding: 2rem 2rem;

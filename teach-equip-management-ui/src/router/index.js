@@ -199,14 +199,6 @@ const router = createRouter({
         {
           path: "getpage",
           component: GetPage
-        },
-        {
-          path: "editpage/:id",
-          component: AccountEditForm
-        },
-        {
-          path: "addpage",
-          component:  AccountForm
         }
       ]
     },

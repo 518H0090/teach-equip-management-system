@@ -9,7 +9,7 @@ const store = useStore();
 const props = defineProps({
   username: {
     type: String,
-    default: "Not Contain User",
+    default: "_",
   },
 });
 
@@ -93,10 +93,10 @@ function isNullOrUndefined(value) {
   display: flex;
   justify-content: space-between;
   max-width: 280px;
-  background-color: var(--dark);
   text-transform: uppercase;
   font-weight: 700;
   margin-top: 0.4rem;
+  border: 1px solid var(--light);
 
   span.username {
     flex: 1;
