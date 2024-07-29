@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.AuthenService;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService;
 using TeachEquipManagement.BLL.FluentValidator;
@@ -103,16 +104,20 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("revoke-token")]
-        public async Task<IActionResult> Revoke([FromBody] string accessToken)
+        public async Task<IActionResult> Revoke()
         {
+            var nameIdentifier = User.Claims.FirstOrDefault(user => user.Type == ClaimTypes.NameIdentifier).Value;
 
-            if (string.IsNullOrEmpty(accessToken))
+            if (string.IsNullOrEmpty(nameIdentifier))
             {
                 return BadRequest();
             }
 
-            var response = await _userManageService.TokenService.Revoke(accessToken);
+            Guid.TryParse(nameIdentifier, out Guid userId);
+
+            var response = await _userManageService.TokenService.Revoke(userId);
 
             return StatusCode(response.StatusCode, response);
         }

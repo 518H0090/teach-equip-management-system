@@ -115,7 +115,7 @@ const handleToken = async () => {
 </script>
 
 <template>
-  <aside :class="`${is_expanded ? 'is-expanded' : ''}`" v-show="auth">
+  <aside :class="`${is_expanded ? 'is-expanded' : ''}`">
     <!-- Logo -->
     <div class="logo">
       <img src="../assets/logo.svg" alt="Vue" />
@@ -172,8 +172,7 @@ const handleToken = async () => {
       </RouterLink>
     </div>
 
-    <!-- Settings -->
-    <div class="flex"></div>
+    <!-- <div class="flex"></div> -->
     <div class="menu">
       <RouterLink class="button" to="/settings">
         <span class="material-icons">settings</span>

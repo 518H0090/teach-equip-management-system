@@ -15,11 +15,11 @@ const form = reactive({
 });
 
 onMounted(async () => {
-  localStorage.removeItem("access_token")
-  localStorage.removeItem("refresh_token")
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
   await store.dispatch("setAuth", false);
   await store.dispatch("setIsExpanded", false);
-})
+});
 
 const isProcess = ref(true);
 
@@ -59,15 +59,16 @@ const handleLogin = async () => {
       );
 
       if (response.data.statusCode === 200) {
-        localStorage.setItem("access_token", response.data.data.accessToken)
-        localStorage.setItem("refresh_token", response.data.data.refreshToken)
+        localStorage.setItem("access_token", response.data.data.accessToken);
+        localStorage.setItem("refresh_token", response.data.data.refreshToken);
+        await store.dispatch("setAuth", true);
+        await store.dispatch("setIsExpanded", false);
         aside.style.display = "block";
-        router.replace("/");
-        await store.dispatch("setAuth", true)
+        router.push("/");
       }
     } catch (error) {
       console.log("Error Fetching jobs", error);
-      await store.dispatch("setAuth", false)
+      await store.dispatch("setAuth", false);
     }
   }
 };
@@ -100,10 +101,14 @@ const setSuccess = (element) => {
       <div class="max-w-80 mx-auto grid gap-5">
         <h1 class="text-5xl font-bold text-white">Login</h1>
         <p class="text-dull-white">
-          Welcome to access to my system, if you don't have any account please contact
-          admin
+          Welcome to access to my system, if you don't have any account please
+          contact admin
         </p>
-        <form action="" @submit.prevent="handleLogin" class="space-y-6 text-white">
+        <form
+          action=""
+          @submit.prevent="handleLogin"
+          class="space-y-6 text-white"
+        >
           <div class="relative input-control mb-4">
             <div
               class="move-icon absolute top-1 left-1 bg-white-medium rounded-full p-2 flex items-center justify-center text-blue-300"
@@ -118,7 +123,9 @@ const setSuccess = (element) => {
               placeholder="Username"
               class="w-80 bg-white-light py-2 px-12 rounded-full focus:bg-black-dark focus:outline-none focus:ring-1 focus:ring-neon-blue focus:drop-shadow-lg"
             />
-            <div class="error absolute block text-gray-700 font-bold mb-2"></div>
+            <div
+              class="error absolute block text-gray-700 font-bold mb-2"
+            ></div>
           </div>
           <div class="relative input-control mb-4">
             <div
@@ -134,7 +141,9 @@ const setSuccess = (element) => {
               placeholder="Password"
               class="w-80 bg-white-light py-2 px-12 rounded-full focus:bg-black-dark focus:outline-none focus:ring-1 focus:ring-neon-blue focus:drop-shadow-lg"
             />
-            <div class="error absolute block text-gray-700 font-bold mb-2"></div>
+            <div
+              class="error absolute block text-gray-700 font-bold mb-2"
+            ></div>
           </div>
           <button
             class="bg-gradient-to-r from-blue-400 to-cyan-200 w-80 font-semibold rounded-full py-2"
@@ -142,7 +151,9 @@ const setSuccess = (element) => {
             Sign in
           </button>
         </form>
-        <div class="text-dull-white border-t border-white-light pt-4 space-y-4 text-sm">
+        <div
+          class="text-dull-white border-t border-white-light pt-4 space-y-4 text-sm"
+        >
           <!-- <p>
             Don't have an account
             <a class="text-neon-blue font-semibold cursor-pointer">Sign up</a>

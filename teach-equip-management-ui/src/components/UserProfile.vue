@@ -1,5 +1,10 @@
 <script setup>
 import { defineProps, ref } from "vue";
+import router from "@/router";
+import axios from "axios";
+import { useStore } from "vuex";
+
+const store = useStore();
 
 const props = defineProps({
   username: {
@@ -13,6 +18,44 @@ const dropdownOpen = ref(false);
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
 };
+
+const logOut = async () => {
+  const accessToken = localStorage.getItem("access_token");
+
+  if (isNullOrUndefined(accessToken)) {
+    router.push("/login");
+  } else {
+    const response = fetch(
+      "https://localhost:7112/api/usermanage/revoke-token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then(async (data) => {
+        if (data.statusCode === 200) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          await store.dispatch("setAuth", false);
+          await store.dispatch("setIsExpanded", false);
+          await router.push("/login");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
+};
+
+function isNullOrUndefined(value) {
+  return value === null || value === undefined;
+}
 </script>
 
 <template>
@@ -27,7 +70,7 @@ const toggleDropdown = () => {
       </span>
     </div>
     <div class="options-wrapper" v-if="dropdownOpen">
-      <div class="option">Logout</div>
+      <div class="option" @click="logOut">Logout</div>
     </div>
   </div>
 </template>

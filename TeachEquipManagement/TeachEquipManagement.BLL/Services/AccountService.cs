@@ -471,19 +471,19 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public async Task<ApiResponse<bool>> Revoke(string accessToken)
+        public async Task<ApiResponse<bool>> Revoke(Guid userId)
         {
             ApiResponse<bool> response = new();
 
             try
             {
-                var principal = GetPrincipalFromExpiredToken(accessToken);
+                //var principal = GetPrincipalFromExpiredToken(accessToken);
 
-                string username = principal.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.Name).Value.ToString();
+                //string username = principal.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.Name).Value.ToString();
 
                 QueryModel<Account> query = new QueryModel<Account>
                 {
-                    QueryCondition = x => x.Username == username
+                    QueryCondition = x => x.Id == userId
                 };
 
                 var user = _unitOfWork.AccountRepository.GetQueryable(query).FirstOrDefault();
@@ -498,6 +498,7 @@ namespace TeachEquipManagement.BLL.Services
                 }
 
                 user.RefreshToken = null;
+                user.RefreshTokenExpiryTime = null;
                 var isSuccess = await _unitOfWork.SaveChangesAsync();
 
                 response.Data = isSuccess;
