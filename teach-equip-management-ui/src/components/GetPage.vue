@@ -66,6 +66,9 @@ onMounted(async () => {
   } else if (props.page_name === "inventory") {
     await allInvoicess();
     await allInventories();
+  } else if (props.page_name === "request") {
+    await fetchValueForRequest();
+    await allApprovalRequest();
   }
 });
 
@@ -372,6 +375,109 @@ function getLatestPriceByToolId(data, toolId) {
 
   return latestDateItem.price;
 }
+
+const allApprovalRequest = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/inventorymanage/all-approval-requests",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
+
+    const dataMapped = response.data.data.map(
+      ({ approveDate, managerApprove, requestDate, ...rest }) => rest
+    );
+
+    const mappedFilter = dataMapped.map((item) => ({
+      id: item.id,
+      account: fetchAccount.value.filter(
+        (account) => account.id === item.accountId
+      ),
+      inventory: fetchInventory.value
+        .filter((inventory) => inventory.id === item.inventoryId)
+        .map((inventory) => inventory.tool)
+        .flat(),
+      quantity: item.quantity,
+      requestType: item.requestType,
+      status: item.status,
+      isApproved: item.isApproved,
+    }));
+
+    items.value = mappedFilter;
+
+    let allKeys = mappedFilter.reduce((keys, obj) => {
+      return keys.concat(Object.keys(obj));
+    }, []);
+
+    let uniqueKeys = [...new Set(allKeys)];
+
+    keys.value = uniqueKeys;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+    if (error.response.status === 401) {
+      router.push("/login");
+    }
+  }
+};
+
+const fetchAccount = ref({});
+const fetchInventory = ref({});
+
+const fetchValueForRequest = async () => {
+  try {
+    const accounts = await axios.get(
+      `https://localhost:7112/api/usermanage/all-users`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
+
+    const inventories = await axios.get(
+      `https://localhost:7112/api/inventorymanage/all-inventories`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
+
+    const tools = await axios.get(
+      `https://localhost:7112/api/toolmanage/all-tools`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
+
+    const toolJson = tools.data.data;
+    const inventoryJson = inventories.data.data;
+    const accountJson = accounts.data.data;
+
+    const mappedInventory = inventoryJson.map((item) => ({
+      id: item.id,
+      tool: toolJson.filter((tool) => tool.id === item.toolId),
+    }));
+
+    const mappedUser = accountJson.map((user) => ({
+      id: user.id,
+      username: user.username,
+    }));
+
+    fetchAccount.value = mappedUser;
+    fetchInventory.value = mappedInventory;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+    if (error.response.status === 401) {
+      router.push("/login");
+    }
+  }
+};
 </script>
 
 <template>

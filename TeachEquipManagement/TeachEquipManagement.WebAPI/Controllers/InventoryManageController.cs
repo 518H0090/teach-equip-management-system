@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage;
@@ -11,6 +12,7 @@ using TeachEquipManagement.BLL.Services;
 namespace TeachEquipManagement.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class InventoryManageController : ControllerBase
     {
@@ -110,6 +112,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("all-approval-requests")]
         public async Task<IActionResult> GetAllApprovalRequests()
         {

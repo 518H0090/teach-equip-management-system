@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineProps, ref } from "vue";
+import { computed, defineProps, onMounted, onUnmounted, ref } from "vue";
 import SearchForm from "@/components/SearchForm.vue";
 import FilterRadio from "@/components/FilterRadio.vue";
 import FilterDropdown from "@/components/FilterDropdown.vue";
@@ -15,8 +15,6 @@ const props = defineProps({
   },
   page_service: String,
 });
-
-console.log(props);
 
 const searchFilter = ref("");
 
@@ -172,9 +170,12 @@ const removeItem = async (id) => {
                   :key="value"
                   class="px-4 py-3 font-medium text-gray-900"
                 >
+                  <span v-if="value === item.id" hidden>
+                    {{ `Id: ${value} ` }}
+                  </span>
                   <span
                     :id="`${value.supplierId}`"
-                    v-if="value && value.supplierId && value.supplierName"
+                    v-else-if="value && value.supplierId && value.supplierName"
                   >
                     {{ value.supplierName }}
                   </span>
@@ -228,8 +229,25 @@ const removeItem = async (id) => {
                   >
                     {{ value.length > 0 ? `${value} ` : "Missing Invoice" }}
                   </span>
-                  <span v-else-if="value === item.id" hidden>
-                    {{ `Id: ${value} ` }}
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'request' &&
+                      value === item.account
+                    "
+                  >
+                    {{ `${value.map((value) => value.username)}` }}
+                  </span>
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      props.page_name === 'request' &&
+                      value === item.inventory
+                    "
+                  >
+                    {{ `${value.map((value) => value.toolName)}` }}
                   </span>
                   <span v-else>
                     {{ value }}
@@ -240,7 +258,8 @@ const removeItem = async (id) => {
                   class="px-4 py-3 flex items-center justify-end"
                   v-show="
                     props.page_name !== 'inventory' &&
-                    props.page_name !== 'invoice'
+                    props.page_name !== 'invoice' &&
+                    props.page_name !== 'request'
                   "
                 >
                   <RouterLink
@@ -281,6 +300,27 @@ const removeItem = async (id) => {
                     :to="`/${props.page_name}/editpage/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                     >Edit</RouterLink
+                  >
+                  <RouterLink
+                    :to="`/${props.page_name}/request-form/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Request</RouterLink
+                  >
+                </td>
+
+                <td
+                  class="px-4 py-3 flex items-center justify-end"
+                  v-show="props.page_name === 'request'"
+                >
+                  <RouterLink
+                    :to="`/${props.page_name}/editpage/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Approve</RouterLink
+                  >
+                  <RouterLink
+                    :to="`/${props.page_name}/request-form/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Delete</RouterLink
                   >
                 </td>
               </tr>

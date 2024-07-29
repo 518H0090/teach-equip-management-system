@@ -10,6 +10,9 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.InventoryManage
 {
     public class InventoryHistoryResponse
     {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
         [JsonProperty("user_id")]
         public Guid UserId { get; set; }
 

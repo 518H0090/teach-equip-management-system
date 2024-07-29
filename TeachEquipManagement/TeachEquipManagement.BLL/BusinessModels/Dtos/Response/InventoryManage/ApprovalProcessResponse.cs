@@ -36,5 +36,8 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.InventoryManage
 
         [JsonProperty("is_approved")]
         public bool IsApproved { get; set; }
+
+        [JsonProperty("id")]
+        public int Id { get; set; }
     }
 }

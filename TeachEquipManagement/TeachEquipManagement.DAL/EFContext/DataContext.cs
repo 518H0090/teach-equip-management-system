@@ -182,7 +182,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<ApprovalRequest>(approval_request =>
             {
-                approval_request.HasKey(approval_request => new { approval_request.AccountId, approval_request.InventoryId });
+                approval_request.HasKey(approval_request => approval_request.Id);
+
+                approval_request.Property(approval_request => approval_request.Id).UseIdentityColumn(1, 1);
 
                 approval_request.Property(approval_request => approval_request.Quantity).HasDefaultValue(0).IsRequired();
 
@@ -207,7 +209,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<InventoryHistory>(inventory_history =>
             {
-                inventory_history.HasKey(inventory_history => new { inventory_history.UserId, inventory_history.InventoryId });
+                inventory_history.HasKey(inventory_history => inventory_history.Id);
+
+                inventory_history.Property(inventory_history => inventory_history.Id).UseIdentityColumn(1, 1);
 
                 inventory_history.Property(inventory_history => inventory_history.Quantity).HasDefaultValue(0).IsRequired();
 

@@ -8,6 +8,8 @@ namespace TeachEquipManagement.DAL.Models
 {
     public class ApprovalRequest
     {
+        public int Id { get; set; }
+
         public Guid AccountId { get; set; }
 
         public Guid InventoryId { get; set; }   

@@ -168,6 +168,11 @@ const handleToken = async () => {
         <span class="material-icons">storefront</span>
         <span class="text">Inventory</span>
       </RouterLink>
+
+      <RouterLink class="button request" to="/request/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Request</span>
+      </RouterLink>
     </div>
 
     <div class="flex"></div>
