@@ -52,8 +52,6 @@ const isTokenExpired = (accessToken) => {
     console.error("Error decoding token:", e);
     return true;
   }
-
-  return true;
 };
 
 const refreshAccessToken = async (accessToken, refreshToken) => {
