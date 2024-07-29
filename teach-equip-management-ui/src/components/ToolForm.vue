@@ -375,6 +375,7 @@ const allToolCategories = async () => {
 .container {
   max-width: 786px;
   margin-top: 4rem;
+  
 
   form {
     padding: 2rem 2rem;

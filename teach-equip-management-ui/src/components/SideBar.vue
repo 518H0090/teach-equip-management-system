@@ -61,16 +61,13 @@ const refreshAccessToken = async (accessToken, refreshToken) => {
       refreshToken,
     };
 
-    const response = await fetch(
-      "https://localhost:7112/api/usermanage/refresh-token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(freshToken),
-      }
-    )
+    const response = await fetch("https://localhost:7112/api/usermanage/refresh-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(freshToken),
+    })
       .then((response) => response.json())
       .then(async (response) => {
         if (response.statusCode === 200) {
@@ -134,7 +131,7 @@ const handleToken = async () => {
         <span class="text">Home</span>
       </RouterLink>
 
-      <RouterLink class="button" to="/dashboard">
+      <!-- <RouterLink class="button" to="/dashboard">
         <span class="material-icons">group</span>
         <span class="text">Team</span>
       </RouterLink>
@@ -142,7 +139,7 @@ const handleToken = async () => {
       <RouterLink class="button about" to="/about/getpage">
         <span class="material-icons">group</span>
         <span class="text">About</span>
-      </RouterLink>
+      </RouterLink> -->
 
       <RouterLink class="button supplier" to="/supplier/getpage">
         <span class="material-icons">storefront</span>

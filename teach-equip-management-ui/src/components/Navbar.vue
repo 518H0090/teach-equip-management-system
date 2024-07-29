@@ -81,6 +81,8 @@ function decodeJwtToken(token, userRef) {
           "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ],
       };
+
+      console.log(userRef.value)
     }
   } catch (error) {
     console.error("Invalid token:", error);

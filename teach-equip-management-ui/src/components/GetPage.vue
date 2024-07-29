@@ -103,7 +103,7 @@ const allSupplier = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -130,7 +130,7 @@ const allCategory = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -173,7 +173,7 @@ const allTool = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -214,7 +214,7 @@ const allAccount = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -250,7 +250,7 @@ const allToolCategories = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -266,7 +266,7 @@ const allRoles = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -328,7 +328,7 @@ const allInventories = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -356,7 +356,7 @@ const allInvoicess = async () => {
     .catch((error) => {
       console.error("Error fetching data:", error);
       if (error.response.status === 401) {
-        router.push("/login");
+        console.log("Error Fetching jobs", error);
       }
     });
 };
@@ -417,7 +417,7 @@ const allApprovalRequest = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };
@@ -473,7 +473,7 @@ const fetchValueForRequest = async () => {
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
-      router.push("/login");
+      console.log("Error Fetching jobs", error);
     }
   }
 };

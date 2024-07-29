@@ -18,7 +18,7 @@ onMounted(async () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   await store.dispatch("setAuth", false);
-  await store.dispatch("setIsExpanded", false);
+  // await store.dispatch("setIsExpanded", false);
 });
 
 const isProcess = ref(true);
@@ -62,9 +62,10 @@ const handleLogin = async () => {
         localStorage.setItem("access_token", response.data.data.accessToken);
         localStorage.setItem("refresh_token", response.data.data.refreshToken);
         await store.dispatch("setAuth", true);
-        await store.dispatch("setIsExpanded", false);
+        // await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
         aside.style.display = "flex";
-        router.push("/").then(() => router.go());
+        // router.push("/").then(() => router.go());
+        router.push("/");
       }
     } catch (error) {
       console.log("Error Fetching jobs", error);

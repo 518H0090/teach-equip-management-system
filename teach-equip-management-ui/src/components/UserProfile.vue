@@ -43,7 +43,7 @@ const logOut = async () => {
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           await store.dispatch("setAuth", false);
-          await store.dispatch("setIsExpanded", false);
+          // await store.dispatch("setIsExpanded", false);
           await router.push("/login");
         }
       })
