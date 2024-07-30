@@ -11,6 +11,9 @@ import Navbar from "@/components/Navbar.vue";
       <li>
         <RouterLink to="/request/getpage" class="link">Request</RouterLink>
       </li>
+      <li>
+        <RouterLink to="/request/history" class="link">History</RouterLink>
+      </li>
     </Navbar>
     <RouterView page_name="request" page_service="inventorymanage" />
   </div>

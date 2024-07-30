@@ -82,7 +82,7 @@ function decodeJwtToken(token, userRef) {
         ],
       };
 
-      console.log(userRef.value)
+      console.log(userRef.value);
     }
   } catch (error) {
     console.error("Invalid token:", error);
@@ -93,13 +93,13 @@ function decodeJwtToken(token, userRef) {
 <template>
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
-      <UserProfile :username="user.name" />
       <ul class="navigation" v-show="!mobile">
         <slot></slot>
       </ul>
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
+      <UserProfile :username="user.name" />
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
           <slot></slot>

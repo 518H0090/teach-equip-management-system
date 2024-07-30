@@ -45,10 +45,13 @@ const logOut = async () => {
           await store.dispatch("setAuth", false);
           // await store.dispatch("setIsExpanded", false);
           await router.push("/login");
+        } else if (data.statusCode === 400) {
+          await router.push("/login");
         }
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.error("Error fetching data:", error);
+        await router.push("/login");
       });
   }
 };
@@ -91,23 +94,20 @@ function isNullOrUndefined(value) {
   border-radius: 8px;
   box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
-  max-width: 280px;
+  justify-content: flex-end;
+  align-items: center;
   text-transform: uppercase;
   font-weight: 700;
-  margin-top: 0.4rem;
-  border: 1px solid var(--light);
-
-  span.username {
-    flex: 1;
-    text-align: center;
-  }
+  margin-top: 0.5rem;
 }
 
 .options-wrapper {
   background-color: var(--dark);
   border-radius: 8px;
   margin-top: 0.4rem;
+  position: absolute;
+  left: 3.4rem;
+  width: 100%;
 }
 
 .option:hover {

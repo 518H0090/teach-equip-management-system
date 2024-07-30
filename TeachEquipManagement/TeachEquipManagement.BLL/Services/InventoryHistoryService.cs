@@ -64,7 +64,7 @@ namespace TeachEquipManagement.BLL.Services
             {
                 QueryModel<InventoryHistory> query = new QueryModel<InventoryHistory>
                 {
-                    QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.UserId == request.AccountId
+                    QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
                 };
 
                 var approvalRequest = _unitOfWork.InventoryHistoryRepository.GetQueryable(query).FirstOrDefault();

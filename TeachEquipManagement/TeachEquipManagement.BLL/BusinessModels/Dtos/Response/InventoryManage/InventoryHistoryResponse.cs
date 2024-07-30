@@ -13,8 +13,8 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.InventoryManage
         [JsonProperty("id")]
         public int Id { get; set; }
 
-        [JsonProperty("user_id")]
-        public Guid UserId { get; set; }
+        [JsonProperty("account_id")]
+        public Guid AccountId { get; set; }
 
         [JsonProperty("inventory_id")]
         public Guid InventoryId { get; set; }
