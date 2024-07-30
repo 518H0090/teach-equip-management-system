@@ -58,42 +58,225 @@ const configPie = {
 };
 
 onMounted(() => {
-  const myChart = new Chart(document.getElementById("myChart"), config);
-  const hehe = new Chart(document.getElementById("hehe"), configPie);
+  const myChart = new Chart(document.getElementById("myChart"), configPie);
+  const myBarChart = new Chart(document.getElementById("myBarChart"), config);
 });
 </script>
 
 <template>
+  <!-- Card -->
+  <div class="grid grid-cols-4 flex justify-between">
+    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+      <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
+        <p class="text-gray-700 text-base">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </div>
+      <div class="px-6 pt-4 pb-2">
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#photography</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#travel</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#winter</span
+        >
+      </div>
+    </div>
+    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+      <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
+        <p class="text-gray-700 text-base">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </div>
+      <div class="px-6 pt-4 pb-2">
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#photography</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#travel</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#winter</span
+        >
+      </div>
+    </div>
+    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+      <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
+        <p class="text-gray-700 text-base">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </div>
+      <div class="px-6 pt-4 pb-2">
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#photography</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#travel</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#winter</span
+        >
+      </div>
+    </div>
+    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+      <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
+        <p class="text-gray-700 text-base">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </div>
+      <div class="px-6 pt-4 pb-2">
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#photography</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#travel</span
+        >
+        <span
+          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          >#winter</span
+        >
+      </div>
+    </div>
+  </div>
+  <!-- Card -->
   <div class="dashboard">
-    <div class="info bar">
+    <div class="info pie">
       <h1>Chart</h1>
       <canvas id="myChart"></canvas>
     </div>
-    <div class="info">
+    <table class="text-left text-sm font-light text-surface dark:text-white">
+      <thead
+        class="border-b border-neutral-200 font-medium dark:border-white/10"
+      >
+        <tr>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="dashboard">
+    <div class="info bar">
       <h1>Chart</h1>
-      <canvas id="hehe"></canvas>
+      <canvas id="myBarChart"></canvas>
     </div>
+    <table class="text-left text-sm font-light text-surface dark:text-white">
+      <thead
+        class="border-b border-neutral-200 font-medium dark:border-white/10"
+      >
+        <tr>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+          <th class="px-4 py-3 uppercase">hehehehe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+        <tr class="border-b">
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+          <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .dashboard {
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
+  justify-content: space-around;
 }
 
 .info {
-  padding-left: 6rem;
-  width: 80%;
-  height: 80%;
+  h1 {
+    margin-left: 1rem;
+  }
+
+  &.bar {
+    flex: 2;
+  }
+
+  &.pie {
+    flex: 1;
+  }
 }
 
-@media (min-width: 1280px) {
-  .info {
-    width: 40%;
-    height: 40%;
-  }
+table {
+  flex: 4;
 }
 
 @media (max-width: 800px) {

@@ -103,12 +103,12 @@ function isNullOrUndefined(value) {
   text-transform: uppercase;
   font-weight: 700;
   border: 1px solid #f5eded;
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
 
   span.avatar {
     img {
       border-radius: 100%;
-      width: 2.2rem;
+      width: 2.4rem;
       margin-left: -0.6rem;
     }
   }
@@ -131,7 +131,6 @@ function isNullOrUndefined(value) {
   text-transform: capitalize;
   font-size: 1.1rem;
   font-weight: 600;
-  padding-left: 1.4rem;
 }
 
 .option:last-of-type {
