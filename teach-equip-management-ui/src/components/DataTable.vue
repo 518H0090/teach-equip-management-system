@@ -151,15 +151,6 @@ const handleApproveRequest = async (item) => {
             <thead
               class="border-b border-neutral-200 font-medium dark:border-white/10"
             >
-              <tr v-show="props.keys === null">
-                <th class="px-4 py-3 uppercase">UserId</th>
-                <th class="px-4 py-3 uppercase">Id</th>
-                <th class="px-4 py-3 uppercase">Title</th>
-                <th class="px-4 py-3 uppercase">Completed</th>
-                <th class="px-4 py-3 uppercase">
-                  <span class="sr-only">Actions</span>
-                </th>
-              </tr>
               <tr v-show="props.keys !== null">
                 <th v-for="key in keys" :key="key" class="px-4 py-3 uppercase">
                   <span v-if="key !== 'id'">
@@ -174,27 +165,6 @@ const handleApproveRequest = async (item) => {
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-show="props.keys === null"
-                v-for="item in filteredItems"
-                :key="item.id"
-                class="border-b"
-              >
-                <td class="px-4 py-3 font-medium text-gray-900">
-                  {{ item.id }}
-                </td>
-                <td class="px-4 py-3 font-medium text-gray-900">
-                  {{ item.userId }}
-                </td>
-                <td class="px-4 py-3">{{ item.title }}</td>
-                <td class="px-4 py-3">{{ item.completed }}</td>
-                <td class="px-4 py-3 flex items-center">
-                  <RouterLink to="/" class="text-indigo-500 hover:underline"
-                    >Details</RouterLink
-                  >
-                </td>
-              </tr>
-
               <tr
                 v-show="props.keys !== null"
                 v-for="item in filteredItems"
