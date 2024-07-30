@@ -8,18 +8,14 @@ import { defineProps, onMounted, onUnmounted } from "vue";
 const store = useStore();
 
 const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
-  },
   page_name: {
     type: String,
-    default: ''
-  }
+    default: "",
+  },
 });
 
 onMounted(() => {
-  const itemSelector = `aside .menu .${props.page_name}`
+  const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
@@ -27,7 +23,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  const itemSelector = `aside .menu .${props.page_name}`
+  const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.remove("router-link-active");

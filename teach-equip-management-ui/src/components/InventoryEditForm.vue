@@ -14,10 +14,6 @@ const route = useRoute();
 const store = useStore();
 
 const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
-  },
   page_name: {
     type: String,
     default: "",

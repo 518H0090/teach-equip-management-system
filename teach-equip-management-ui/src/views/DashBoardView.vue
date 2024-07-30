@@ -8,14 +8,6 @@ import { useStore } from "vuex";
 import { defineProps } from "vue";
 
 const store = useStore();
-
-const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
-  },
-});
-
 </script>
 
 <template>
