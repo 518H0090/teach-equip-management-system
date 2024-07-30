@@ -64,6 +64,10 @@ function isNullOrUndefined(value) {
 <template>
   <div class="dropdown-wrapper">
     <div class="dropdown-selected-option" @click="toggleDropdown">
+      <span class="avatar">
+        <img src="../assets/avatarcapybara.jpg" alt="" />
+      </span>
+
       <span class="username">
         {{ props.username }}
       </span>
@@ -98,8 +102,16 @@ function isNullOrUndefined(value) {
   align-items: center;
   text-transform: uppercase;
   font-weight: 700;
-  margin-top: 0.5rem;
   border: 1px solid #f5eded;
+  margin-top: 0.2rem;
+
+  span.avatar {
+    img {
+      border-radius: 100%;
+      width: 2.2rem;
+      margin-left: -0.6rem;
+    }
+  }
 }
 
 .options-wrapper {
