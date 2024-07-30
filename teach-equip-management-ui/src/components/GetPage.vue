@@ -386,11 +386,7 @@ const allApprovalRequest = async () => {
       }
     );
 
-    const dataMapped = response.data.data.map(
-      ({ approveDate, managerApprove, requestDate, ...rest }) => rest
-    );
-
-    const mappedFilter = dataMapped.map(async (item) => ({
+    const mappedFilter = response.data.data.map(async (item) => ({
       id: item.id,
       account: await accountById(item.accountId),
       inventory: await inventoryById(item.inventoryId),

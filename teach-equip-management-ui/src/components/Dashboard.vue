@@ -112,14 +112,14 @@ const allHistories = async () => {
       latest5Items: dataJson
         .sort((a, b) => new Date(b.actionDate) - new Date(a.actionDate))
         .slice(0, 5)
-        .map((item) => ({
-          id: item.id,
+        .map( (item, index) => ({
+          index: (index + 1),
           actionType: item.actionType,
           actionDate: formatDate(item.actionDate),
         })),
     };
 
-    histories.value = mappedData;
+    histories.value =  mappedData;
   } catch (error) {
     console.log("Error Fetching jobs", error);
     // if (error.response.status === 401) {
@@ -246,7 +246,7 @@ const toolById = async (toolId) => {
             <table class="text-left text-sm font-light text-surface dark:text-white">
               <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
                 <tr>
-                  <th class="px-4 py-3 uppercase">Quantity</th>
+                  <th class="px-4 py-3 uppercase">Index</th>
                   <th class="px-4 py-3 uppercase">ACTIONTYPE</th>
                   <th class="px-4 py-3 uppercase">ACTIONDATE</th>
                 </tr>
