@@ -99,27 +99,27 @@ function isNullOrUndefined(value) {
   text-transform: uppercase;
   font-weight: 700;
   margin-top: 0.5rem;
+  border: 1px solid #f5eded;
 }
 
 .options-wrapper {
-  background-color: var(--dark);
+  background-color: #2a629a;
   border-radius: 8px;
   margin-top: 0.4rem;
-  position: absolute;
-  left: 3.4rem;
-  width: 100%;
 }
 
 .option:hover {
-  border-right: 5px solid var(--primary);
-  background: var(--dark-alt);
+  background: #a0deff;
 }
 
 .option {
-  padding: 16px;
-  border: solid 1px #313131;
+  padding: 1rem;
   box-sizing: border-box;
   border-radius: 8px;
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-left: 1.4rem;
 }
 
 .option:last-of-type {

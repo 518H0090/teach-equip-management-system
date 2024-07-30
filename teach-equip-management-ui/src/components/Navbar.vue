@@ -112,7 +112,7 @@ function decodeJwtToken(token, userRef) {
 <style lang="scss">
 header {
   width: calc(100vw - (2rem + 32px));
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(127, 161, 195, 0.8);
   z-index: 20;
   position: fixed;
   transition: 0.4s ease-out all;
