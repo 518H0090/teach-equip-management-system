@@ -81,101 +81,127 @@ onUnmounted(() => {
       <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
         <div class="overflow-hidden">
           <!-- Card -->
-          <div class="grid grid-cols-4 flex justify-between">
-            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+          <div class="grid grid-cols-3 flex">
+            <div
+              class="max-w-sm rounded overflow-hidden shadow-lg bg-gradient-to-r from-red-50 to-blue-100 ml-4"
+            >
               <div class="px-6 py-4">
-                <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
-                <p class="text-gray-700 text-base">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                  exercitationem praesentium nihil.
+                <div class="font-bold text-xl mb-2 uppercase">Account</div>
+
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
+                >
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Admin</span
+                  >
+                  : 10
                 </p>
-              </div>
-              <div class="px-6 pt-4 pb-2">
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#photography</span
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#travel</span
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Manager</span
+                  >
+                  : 10
+                </p>
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#winter</span
-                >
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >User</span
+                  >
+                  : 10
+                </p>
               </div>
             </div>
-            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+            <div
+              class="max-w-sm rounded overflow-hidden shadow-lg bg-gradient-to-r from-red-50 to-blue-100 ml-4"
+            >
               <div class="px-6 py-4">
-                <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
-                <p class="text-gray-700 text-base">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                  exercitationem praesentium nihil.
+                <div class="font-bold text-xl mb-2 uppercase">Tool</div>
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
+                >
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Total</span
+                  >
+                  : 10
                 </p>
-              </div>
-              <div class="px-6 pt-4 pb-2">
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#photography</span
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#travel</span
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Category</span
+                  >
+                  : 10
+                </p>
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#winter</span
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Supplier</span
+                  >
+                  : 10
+                </p>
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Request</span
+                  >
+                  : 10
+                </p>
               </div>
             </div>
-            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+            <div
+              class="max-w-sm rounded overflow-hidden shadow-lg bg-gradient-to-r from-red-50 to-blue-100 ml-4"
+            >
               <div class="px-6 py-4">
-                <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
-                <p class="text-gray-700 text-base">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                  exercitationem praesentium nihil.
+                <div class="font-bold text-xl mb-2 uppercase">History</div>
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
+                >
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Borrow</span
+                  >
+                  : 10
                 </p>
-              </div>
-              <div class="px-6 pt-4 pb-2">
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#photography</span
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#travel</span
-                >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#winter</span
-                >
-              </div>
-            </div>
-            <div class="max-w-sm rounded overflow-hidden shadow-lg">
-              <div class="px-6 py-4">
-                <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
-                <p class="text-gray-700 text-base">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                  exercitationem praesentium nihil.
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Return</span
+                  >
+                  : 10
                 </p>
-              </div>
-              <div class="px-6 pt-4 pb-2">
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#photography</span
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#travel</span
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Buy</span
+                  >
+                  : 10
+                </p>
+
+                <p
+                  class="text-gray-700 text-base border rounded w-full py-2 px-3 text-xl font-bold"
                 >
-                <span
-                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  >#winter</span
-                >
+                  <span
+                    class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >Sell</span
+                  >
+                  : 10
+                </p>
               </div>
             </div>
           </div>

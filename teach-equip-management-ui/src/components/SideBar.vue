@@ -134,15 +134,15 @@ const handleToken = async () => {
         <span class="text">Home</span>
       </RouterLink>
 
-      <RouterLink class="button" to="/dashboard">
+      <!-- <RouterLink class="button" to="/dashboard">
         <span class="material-icons">group</span>
         <span class="text">Team</span>
-      </RouterLink>
+      </RouterLink> -->
 
-      <RouterLink class="button about" to="/about/getpage">
+      <!-- <RouterLink class="button about" to="/about/getpage">
         <span class="material-icons">group</span>
         <span class="text">About</span>
-      </RouterLink>
+      </RouterLink> -->
 
       <RouterLink class="button account" to="/account/getpage">
         <span class="material-icons">storefront</span>
