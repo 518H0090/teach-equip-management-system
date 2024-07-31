@@ -47,7 +47,10 @@ onMounted(async () => {
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
 
-  if (items.value.account === undefined) {
+  if (
+    items.value.account === undefined ||
+    items.value.inventory === undefined
+  ) {
     router.push("/request/borrow");
   }
 
@@ -82,8 +85,6 @@ const setSuccess = (element) => {
 };
 
 const validateInputs = async () => {
-  console.log(form);
-
   const quantity = document.querySelector("#quantity");
   const quantityValue = quantity.value.trim();
 
@@ -91,8 +92,7 @@ const validateInputs = async () => {
   if (quantityValue > form.totalBorrow) {
     setError(quantity, "You can return greater than total borrow");
     isProcess = false;
-  }
-  if (quantityValue <= 0) {
+  } else if (quantityValue <= 0) {
     setError(quantity, "Quantity return must be greater than 0");
     isProcess = false;
   } else {
@@ -125,7 +125,7 @@ const validateInputs = async () => {
         if (data.statusCode !== 201) {
         }
         if (data.statusCode === 201) {
-          router.push("/inventory/getpage");
+          router.push("/request/getpage");
         }
       })
       .catch((error) => {
