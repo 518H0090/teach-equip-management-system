@@ -150,6 +150,7 @@ function transformDataForChart(groupedData) {
     const [year, month, day] = date.split("-");
     return (
       new Date(year, month - 1, day).toLocaleString("default", {
+        day: "2-digit",
         month: "long",
       }) +
       " " +
@@ -350,7 +351,7 @@ const toolById = async (toolId) => {
 
   &.bar {
     flex: 1;
-    margin-top: 0.6rem;
+    margin-top: 0.4rem;
   }
 
   &.pie {
