@@ -29,9 +29,9 @@ namespace TeachEquipManagement.BLL.Services
             _logger = logger;
         }
 
-        public async Task<ApiResponse<bool>> Create(ToolRequest request, ValidationResult validation)
+        public async Task<ApiResponse<int>> Create(ToolRequest request, ValidationResult validation)
         {
-            ApiResponse<bool> response = new ApiResponse<bool>();
+            ApiResponse<int> response = new ApiResponse<int>();
 
             try
             {
@@ -43,7 +43,7 @@ namespace TeachEquipManagement.BLL.Services
 
                     if (existSupplier == null)
                     {
-                        response.Data = false;
+                        response.Data = -1;
                         response.StatusCode = StatusCodes.Status400BadRequest;
                         response.Message = "Not Found Supplier";
 
@@ -62,14 +62,14 @@ namespace TeachEquipManagement.BLL.Services
 
                     _unitOfWork.Commit();
 
-                    response.Data = true;
+                    response.Data = entity.Id;
                     response.StatusCode = StatusCodes.Status201Created;
                     response.Message = "Create new Tool successfully";
                 }
 
                 else
                 {
-                    response.Data = false;
+                    response.Data = -1;
                     response.StatusCode = StatusCodes.Status400BadRequest;
                     response.Message = validation.ToString();
                 }

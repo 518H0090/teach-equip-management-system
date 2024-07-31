@@ -12,6 +12,11 @@ namespace TeachEquipManagement.BLL.FluentValidator
     {
         public ApprovalProcessUpdateRequestValidator()
         {
+            RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id is required.")
+            .Must(id => id is int)
+            .WithMessage("Id Should Be Int");
+
             RuleFor(x => x.AccountId)
            .NotEmpty().WithMessage("AccountId is required.")
            .Must(id => id is Guid)

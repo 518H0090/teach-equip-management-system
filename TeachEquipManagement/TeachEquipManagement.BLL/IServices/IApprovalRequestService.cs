@@ -18,9 +18,9 @@ namespace TeachEquipManagement.BLL.IServices
     {
         Task<ApiResponse<bool>> Create(ApprovalProcessRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> Update(ApprovalProcessUpdateRequest request, ValidationResult validation);
-        Task<ApiResponse<bool>> Remove(ProcessRequest request, ValidationResult validation);
+        Task<ApiResponse<bool>> Remove(int id);
         Task<ApiResponse<List<ApprovalProcessResponse>>> GetAll();
-        ApiResponse<ApprovalProcessResponse> GetApprovalProcess(ProcessRequest request, ValidationResult validation);
+        Task<ApiResponse<ApprovalProcessResponse>> GetApprovalProcess(int id);
 
         IEnumerable<string> GetListApprovalStatusEnum();
 

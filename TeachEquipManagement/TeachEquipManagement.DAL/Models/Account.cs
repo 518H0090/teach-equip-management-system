@@ -28,5 +28,7 @@ namespace TeachEquipManagement.DAL.Models
 
         public Role? Role { get; set; }
         public int? RoleId { get; set; }
+
+        public AccountDetail AccountDetail { set; get; }
     }
 }

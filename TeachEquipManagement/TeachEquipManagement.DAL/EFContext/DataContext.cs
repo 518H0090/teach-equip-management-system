@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
 using TeachEquipManagement.DAL.Models;
 
 namespace TeachEquipManagement.DAL.EFContext
@@ -48,6 +49,11 @@ namespace TeachEquipManagement.DAL.EFContext
                 account.Property(u => u.PasswordSalt).IsRequired();
 
                 account.Property(u => u.Email).IsRequired();
+
+                account.HasOne<AccountDetail>(account => account.AccountDetail)
+                   .WithOne(account => account.Account)
+                   .HasForeignKey<AccountDetail>(account => account.AccountId)
+                   .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Role>(role =>
@@ -68,7 +74,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<AccountDetail>(user_detail =>
             {
-                user_detail.HasKey(user_detail => user_detail.UserId);
+                user_detail.HasKey(user_detail => user_detail.AccountId);
 
                 user_detail.Property(user_detail => user_detail.FullName).HasDefaultValue(string.Empty).HasMaxLength(255);
 
@@ -176,7 +182,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<ApprovalRequest>(approval_request =>
             {
-                approval_request.HasKey(approval_request => new { approval_request.AccountId, approval_request.InventoryId });
+                approval_request.HasKey(approval_request => approval_request.Id);
+
+                approval_request.Property(approval_request => approval_request.Id).UseIdentityColumn(1, 1);
 
                 approval_request.Property(approval_request => approval_request.Quantity).HasDefaultValue(0).IsRequired();
 
@@ -201,7 +209,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
             modelBuilder.Entity<InventoryHistory>(inventory_history =>
             {
-                inventory_history.HasKey(inventory_history => new { inventory_history.UserId, inventory_history.InventoryId });
+                inventory_history.HasKey(inventory_history => inventory_history.Id);
+
+                inventory_history.Property(inventory_history => inventory_history.Id).UseIdentityColumn(1, 1);
 
                 inventory_history.Property(inventory_history => inventory_history.Quantity).HasDefaultValue(0).IsRequired();
 
@@ -209,9 +219,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 inventory_history.Property(inventory_history => inventory_history.ActionType).IsRequired();
 
-                inventory_history.HasOne<Account>(approval_request => approval_request.User)
+                inventory_history.HasOne<Account>(approval_request => approval_request.Account)
                       .WithMany(user => user.InventoryHistories)
-                      .HasForeignKey(approval_request => approval_request.UserId)
+                      .HasForeignKey(approval_request => approval_request.AccountId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 inventory_history.HasOne<Inventory>(approval_request => approval_request.Inventory)

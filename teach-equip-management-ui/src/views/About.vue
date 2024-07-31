@@ -3,15 +3,6 @@ import { RouterLink, RouterView } from "vue-router";
 import { useRoute } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import Navbar from "@/components/Navbar.vue";
-
-const route = useRoute();
-
-const items = ref([]);
-
-onMounted(async () => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-  items.value = await response.json();
-});
 </script>
 
 <template>
@@ -27,7 +18,7 @@ onMounted(async () => {
         <RouterLink to="/about/editpage" class="link">Edit</RouterLink>
       </li>
     </Navbar>
-    <RouterView :items="items" />
+    <RouterView :keys="keys" :items="items" page_name="about" />
   </div>
 </template>
 

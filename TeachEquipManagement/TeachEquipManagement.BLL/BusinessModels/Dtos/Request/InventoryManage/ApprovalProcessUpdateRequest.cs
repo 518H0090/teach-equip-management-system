@@ -10,6 +10,9 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage
 {
     public class ApprovalProcessUpdateRequest
     {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
         [JsonProperty("account_id")]
         public Guid AccountId { get; set; }
 
@@ -22,7 +25,5 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.InventoryManage
         [JsonProperty("status")]
         public string Status { get; set; } = string.Empty;
 
-        [JsonProperty("manager_approve")]
-        public string? ManagerApprove { get; set; } = string.Empty;
     }
 }

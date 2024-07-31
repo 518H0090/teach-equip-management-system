@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeachEquipManagement.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangeApprovalDateAndManagerOptionDefaultNull : Migration
+    public partial class StructureSprint3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -104,8 +104,7 @@ namespace TeachEquipManagement.DAL.Migrations
                 name: "UserDetails",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, defaultValue: ""),
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, defaultValue: ""),
                     Phone = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, defaultValue: ""),
@@ -114,10 +113,10 @@ namespace TeachEquipManagement.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDetails", x => x.UserId);
+                    table.PrimaryKey("PK_UserDetails", x => x.AccountId);
                     table.ForeignKey(
-                        name: "FK_UserDetails_Accounts_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_UserDetails_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -150,7 +149,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
-                    InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 15, 14, 15, 38, 842, DateTimeKind.Local).AddTicks(8375)),
+                    InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 23, 20, 55, 23, 542, DateTimeKind.Local).AddTicks(7886)),
                     ToolId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -196,7 +195,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     InventoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     RequestType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(882)),
+                    RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 23, 20, 55, 23, 543, DateTimeKind.Local).AddTicks(5128)),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ManagerApprove = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApproveDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -226,7 +225,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InventoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    ActionDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(4357)),
+                    ActionDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 23, 20, 55, 23, 544, DateTimeKind.Local).AddTicks(4829)),
                     ActionType = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -287,11 +286,6 @@ namespace TeachEquipManagement.DAL.Migrations
                 name: "IX_Tools_SupplierId",
                 table: "Tools",
                 column: "SupplierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserDetails_UserId1",
-                table: "UserDetails",
-                column: "UserId1");
         }
 
         /// <inheritdoc />

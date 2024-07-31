@@ -43,7 +43,7 @@ namespace TeachEquipManagement.BLL.Services
                 {
                     _unitOfWork.CreateTransaction();
 
-                    var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(request.UserId);
+                    var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(request.AccountId);
 
                     if (existUser == null) {
 
@@ -56,7 +56,7 @@ namespace TeachEquipManagement.BLL.Services
 
                     }
 
-                    var existUserDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(request.UserId);
+                    var existUserDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(request.AccountId);
 
                     if (existUserDetail != null)
                     {
@@ -205,7 +205,7 @@ namespace TeachEquipManagement.BLL.Services
                 {
                     _unitOfWork.CreateTransaction();
 
-                    var accountDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(request.UserId);
+                    var accountDetail = await _unitOfWork.AccountDetailRepository.GetByIdAsync(request.AccountId);
 
                     if (accountDetail != null)
                     {
