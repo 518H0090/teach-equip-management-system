@@ -130,7 +130,7 @@ const handleToken = async () => {
     <h3>Menu</h3>
     <div class="menu">
       <RouterLink class="button" to="/">
-        <span class="material-icons">home</span>
+        <span class="material-icons">dashboard</span>
         <span class="text">Home</span>
       </RouterLink>
 
@@ -145,22 +145,22 @@ const handleToken = async () => {
       </RouterLink> -->
 
       <RouterLink class="button account" to="/account/getpage">
-        <span class="material-icons">storefront</span>
+        <span class="material-icons">group</span>
         <span class="text">Account</span>
       </RouterLink>
 
       <RouterLink class="button inventory" to="/inventory/getpage">
-        <span class="material-icons">storefront</span>
+        <span class="material-icons">inventory</span>
         <span class="text">Inventory</span>
       </RouterLink>
 
       <RouterLink class="button request" to="/request/getpage">
-        <span class="material-icons">storefront</span>
+        <span class="material-icons">post_add</span>
         <span class="text">Request</span>
       </RouterLink>
 
       <RouterLink class="button tool" to="/tool/getpage">
-        <span class="material-icons">storefront</span>
+        <span class="material-icons">construction</span>
         <span class="text">Tool</span>
       </RouterLink>
 
@@ -170,7 +170,7 @@ const handleToken = async () => {
       </RouterLink>
 
       <RouterLink class="button category" to="/category/getpage">
-        <span class="material-icons">storefront</span>
+        <span class="material-icons">category</span>
         <span class="text">Category</span>
       </RouterLink>
     </div>
