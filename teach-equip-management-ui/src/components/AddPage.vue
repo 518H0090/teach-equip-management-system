@@ -3,26 +3,28 @@ import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
 
 import { useStore } from "vuex";
-import { defineProps, onMounted, onUnmounted } from "vue";
+import { defineProps, onMounted, onUnmounted, ref } from "vue";
 
 const store = useStore();
 
 const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
+  page_name: {
+    type: String,
+    default: "",
   },
 });
 
 onMounted(() => {
-  const aside_item = document.querySelector("aside .menu .about");
+  const itemSelector = `aside .menu .${props.page_name}`;
+  const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
 });
 
 onUnmounted(() => {
-  const aside_item = document.querySelector("aside .menu .about");
+  const itemSelector = `aside .menu .${props.page_name}`;
+  const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.remove("router-link-active");
   aside_item.classList.remove("router-link-exact-active");
@@ -55,6 +57,16 @@ const validateInputs = () => {
     setSuccess(test);
   }
 };
+
+// Dropdown checkbox options
+const dropdownOpen = ref(false);
+const selectedOptions = ref(["heheh", "fsfsa", "aaaa"]);
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+
+// Dropdown checkbox options
 </script>
 
 <template>
@@ -84,6 +96,47 @@ const validateInputs = () => {
               <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
 
+            <!-- // Dropdown checkbox options -->
+            <div class="input-control mb-4">
+              <div class="border rounded w-full py-2 px-3 dropdown">
+                <button @click="toggleDropdown">
+                  {{ dropdownOpen ? "Close Dropdown" : "Open Dropdown" }}
+                </button>
+                <div v-if="dropdownOpen" class="dropdown-content">
+                  <label for="type" class="block text-gray-700 font-bold mb-2">
+                    <input
+                      type="checkbox"
+                      value="heheh"
+                      v-model="selectedOptions"
+                    />
+                    heheh
+                  </label>
+
+                  <label for="type" class="block text-gray-700 font-bold mb-2">
+                    <input
+                      type="checkbox"
+                      value="fsfsa"
+                      v-model="selectedOptions"
+                    />
+                    fsfsa
+                  </label>
+
+                  <label for="type" class="block text-gray-700 font-bold mb-2">
+                    <input
+                      type="checkbox"
+                      value="aaaa"
+                      v-model="selectedOptions"
+                    />
+                    aaaa
+                  </label>
+                </div>
+
+                <p class="border rounded w-full py-2 px-3 mb-2">
+                  Selected Options: {{ selectedOptions }}
+                </p>
+              </div>
+            </div>
+            <!-- // Dropdown checkbox options -->
             <div class="input-control mb-4">
               <label class="block text-gray-700 font-bold mb-2"
                 >Job Listing Name</label
@@ -193,7 +246,7 @@ const validateInputs = () => {
   max-width: 980px;
 
   form {
-    padding: 1rem 0;
+    padding: 2rem 2rem;
     button {
       padding: 1rem;
     }
@@ -228,5 +281,39 @@ const validateInputs = () => {
 .error {
   color: #ff3860;
   padding: 1rem 0.4rem;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown button {
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.checkbox-label {
+  display: block;
+  padding: 8px 12px;
+}
+
+.checkbox-label:hover {
+  background-color: #ddd;
+}
+
+p {
+  margin-top: 10px;
 }
 </style>

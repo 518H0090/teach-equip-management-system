@@ -12,8 +12,8 @@ using TeachEquipManagement.DAL.EFContext;
 namespace TeachEquipManagement.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240715071539_ChangeApprovalDateAndManagerOptionDefaultNull")]
-    partial class ChangeApprovalDateAndManagerOptionDefaultNull
+    [Migration("20240730024740_ChangeToAccountIdForInventoryHistory")]
+    partial class ChangeToAccountIdForInventoryHistory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,8 +68,7 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.AccountDetail", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
@@ -102,34 +101,32 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<string>("SpoFileId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("UserId1");
+                    b.HasKey("AccountId");
 
                     b.ToTable("UserDetails");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.ApprovalRequest", b =>
                 {
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("InventoryId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ApproveDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("InventoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<string>("ManagerApprove")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .ValueGeneratedOnAdd()
@@ -139,7 +136,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(882));
+                        .HasDefaultValue(new DateTime(2024, 7, 30, 9, 47, 40, 638, DateTimeKind.Local).AddTicks(7176));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -149,7 +146,9 @@ namespace TeachEquipManagement.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AccountId", "InventoryId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("InventoryId");
 
@@ -206,27 +205,35 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.InventoryHistory", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("InventoryId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 843, DateTimeKind.Local).AddTicks(4357));
+                        .HasDefaultValue(new DateTime(2024, 7, 30, 9, 47, 40, 638, DateTimeKind.Local).AddTicks(9118));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("InventoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.HasKey("UserId", "InventoryId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("InventoryId");
 
@@ -244,7 +251,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 15, 14, 15, 38, 842, DateTimeKind.Local).AddTicks(8375));
+                        .HasDefaultValue(new DateTime(2024, 7, 30, 9, 47, 40, 638, DateTimeKind.Local).AddTicks(6077));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
@@ -364,13 +371,13 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.AccountDetail", b =>
                 {
-                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
+                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "Account")
+                        .WithOne("AccountDetail")
+                        .HasForeignKey("TeachEquipManagement.DAL.Models.AccountDetail", "AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.ApprovalRequest", b =>
@@ -405,21 +412,21 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.InventoryHistory", b =>
                 {
+                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "Account")
+                        .WithMany("InventoryHistories")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TeachEquipManagement.DAL.Models.Inventory", "Inventory")
                         .WithMany("InventoryHistories")
                         .HasForeignKey("InventoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TeachEquipManagement.DAL.Models.Account", "User")
-                        .WithMany("InventoryHistories")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Account");
 
                     b.Navigation("Inventory");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Invoice", b =>
@@ -465,6 +472,9 @@ namespace TeachEquipManagement.DAL.Migrations
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.Account", b =>
                 {
+                    b.Navigation("AccountDetail")
+                        .IsRequired();
+
                     b.Navigation("ApprovalRequests");
 
                     b.Navigation("InventoryHistories");

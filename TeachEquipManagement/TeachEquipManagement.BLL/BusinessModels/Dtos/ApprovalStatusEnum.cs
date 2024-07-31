@@ -13,9 +13,6 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos
         ApprovalPending,
 
         [Description("Accept")]
-        ApprovalAccept,
-
-        [Description("Reject")]
-        ApprovalReject,
+        ApprovalAccept
     }
 }

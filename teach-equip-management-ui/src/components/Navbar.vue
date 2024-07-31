@@ -1,7 +1,16 @@
 <script setup>
-import { computed, defineProps, onBeforeMount, onMounted, ref } from "vue";
+import {
+  computed,
+  defineProps,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from "vue";
 
 import { useStore } from "vuex";
+import { jwtDecode } from "jwt-decode";
+import UserProfile from "./UserProfile.vue";
 
 const store = useStore();
 
@@ -44,7 +53,39 @@ onBeforeMount(async () => {
 onMounted(() => {
   window.addEventListener("resize", CheckScreen);
   CheckScreen();
+
+  decodeJwtToken(token.value, user);
 });
+
+onUnmounted(() => {
+  user.value = {};
+});
+
+const token = ref(localStorage.getItem("access_token") || "");
+const user = ref({});
+
+function decodeJwtToken(token, userRef) {
+  try {
+    if (token) {
+      const decoded = jwtDecode(token);
+
+      userRef.value = {
+        exp: decoded.exp,
+        id: decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ],
+        name: decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        ],
+        role: decoded[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ],
+      };
+    }
+  } catch (error) {
+    console.error("Invalid token:", error);
+  }
+}
 </script>
 
 <template>
@@ -56,6 +97,7 @@ onMounted(() => {
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
+      <UserProfile :username="user.name" />
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
           <slot></slot>
@@ -68,7 +110,7 @@ onMounted(() => {
 <style lang="scss">
 header {
   width: calc(100vw - (2rem + 32px));
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(127, 161, 195, 0.8);
   z-index: 20;
   position: fixed;
   transition: 0.4s ease-out all;
@@ -77,7 +119,7 @@ header {
 
   * {
     max-width: 99%;
-    overflow: hidden;
+    // overflow: hidden;
   }
 
   &.is-expanded {

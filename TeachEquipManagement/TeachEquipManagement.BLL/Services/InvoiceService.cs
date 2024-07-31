@@ -52,6 +52,7 @@ namespace TeachEquipManagement.BLL.Services
                     }
 
                     var invoice = _mapper.Map<Invoice>(request);
+                    invoice.InvoiceDate = DateTime.Now;
 
                     var entity = await _unitOfWork.InvoiceRepository.InsertAsync(invoice);
                     await _unitOfWork.SaveChangesAsync();

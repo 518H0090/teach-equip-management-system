@@ -7,7 +7,7 @@ namespace TeachEquipManagement.BLL.IServices
 {
     public interface IToolService
     {
-        Task<ApiResponse<bool>> Create(ToolRequest request, ValidationResult validation);
+        Task<ApiResponse<int>> Create(ToolRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> Update(ToolUpdateRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> Remove(int id);
         Task<ApiResponse<List<ToolResponse>>> GetAll();
