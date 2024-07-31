@@ -3,16 +3,19 @@ import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
 
 import { useStore } from "vuex";
-import { defineProps, onMounted, onUnmounted, onActivated, ref } from "vue";
+import { defineProps, onMounted, onUnmounted, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
 import router from "@/router";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue"
 
 const store = useStore();
 
 const items = ref({});
 const keys = ref([]);
 const relationShip = ref({});
+
+const isLoading = ref(true);
 
 const props = defineProps({
   page_name: {
@@ -25,49 +28,35 @@ const props = defineProps({
   },
 });
 
-onActivated(async () => {
-  if (props.page_name === "supplier") {
-    allSupplier();
-  } else if (props.page_name === "about") {
-    aboutFetchs();
-  } else if (props.page_name === "category") {
-    allCategory();
-  } else if (props.page_name === "tool") {
-    await allToolCategories();
-    await allTool();
-  } else if (props.page_name === "account") {
-    await allRoles();
-    await allAccount();
-  } else if (props.page_name === "inventory") {
-    await allInvoicess();
-    await allInventories();
-  }
-});
-
 onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
-
-  if (props.page_name === "supplier") {
-    allSupplier();
-  } else if (props.page_name === "about") {
-    aboutFetchs();
-  } else if (props.page_name === "category") {
-    allCategory();
-  } else if (props.page_name === "tool") {
-    await allToolCategories();
-    await allTool();
-  } else if (props.page_name === "account") {
-    await allRoles();
-    await allAccount();
-  } else if (props.page_name === "inventory") {
-    await allInvoicess();
-    await allInventories();
-  } else if (props.page_name === "request") {
-    await allApprovalRequest();
+  try {
+    if (props.page_name === "supplier") {
+      await allSupplier();
+    } else if (props.page_name === "about") {
+      await aboutFetchs();
+    } else if (props.page_name === "category") {
+      await allCategory();
+    } else if (props.page_name === "tool") {
+      await allToolCategories();
+      await allTool();
+    } else if (props.page_name === "account") {
+      await allRoles();
+      await allAccount();
+    } else if (props.page_name === "inventory") {
+      await allInvoicess();
+      await allInventories();
+    } else if (props.page_name === "request") {
+      await allApprovalRequest();
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoading.value = false;
   }
 });
 
@@ -81,7 +70,6 @@ onUnmounted(() => {
 });
 
 const allSupplier = async () => {
-  try {
     const response = await axios.get(
       "https://localhost:7112/api/toolmanage/all-supplier",
       {
@@ -99,16 +87,9 @@ const allSupplier = async () => {
     let uniqueKeys = [...new Set(allKeys)];
 
     keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const allCategory = async () => {
-  try {
     const response = await axios.get(
       "https://localhost:7112/api/toolmanage/all-categories",
       {
@@ -126,16 +107,9 @@ const allCategory = async () => {
     let uniqueKeys = [...new Set(allKeys)];
 
     keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const allTool = async () => {
-  try {
     const response = await axios.get(
       "https://localhost:7112/api/toolmanage/all-tools-include-supplier",
       {
@@ -169,36 +143,20 @@ const allTool = async () => {
     let uniqueKeys = [...new Set(allKeys)];
 
     keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const allAccount = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/usermanage/all-users"
-    );
+    const response = await axios.get("https://localhost:7112/api/usermanage/all-users");
     const datajson = response.data.data.map(
-      ({
-        passwordHash,
-        passwordSalt,
-        refreshToken,
-        refreshTokenExpiryTime,
-        ...rest
-      }) => rest
+      ({ passwordHash, passwordSalt, refreshToken, refreshTokenExpiryTime, ...rest }) =>
+        rest
     );
 
     const mappedData = datajson.map((item) => ({
       id: item.id,
       username: item.username,
       email: item.email,
-      role: roles.value.filter(
-        (role) => Number(role.id) === Number(item.roleId)
-      ),
+      role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
     }));
 
     items.value = mappedData;
@@ -210,12 +168,6 @@ const allAccount = async () => {
     let uniqueKeys = [...new Set(allKeys)];
 
     keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const aboutFetchs = async () => {
@@ -233,7 +185,6 @@ const aboutFetchs = async () => {
 };
 
 const allToolCategories = async () => {
-  try {
     const response = await axios.get(
       "https://localhost:7112/api/toolmanage/all-tool-categories",
       {
@@ -246,32 +197,16 @@ const allToolCategories = async () => {
     const datajson = response.data.data;
 
     relationShip.value = datajson;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const roles = ref({});
 
 const allRoles = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/usermanage/all-roles"
-    );
+    const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
     roles.value = response.data.data;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const allInventories = async () => {
-  try {
     const inventories = await axios.get(
       "https://localhost:7112/api/inventorymanage/all-inventories",
       {
@@ -281,14 +216,11 @@ const allInventories = async () => {
       }
     );
 
-    const tools = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tools",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
+    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    });
 
     let mappedData;
 
@@ -324,12 +256,6 @@ const allInventories = async () => {
     let uniqueKeys = [...new Set(allKeys)];
 
     keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const invoices = ref({});
@@ -492,7 +418,11 @@ const toolById = async (toolId) => {
 
 <template>
   <MainCard>
+    <div v-if="isLoading" class="text-center text-gray-500 py-6">
+      <ClipLoader size="8rem" />
+    </div>
     <DataTable
+    v-else
       :keys="keys"
       :items="items"
       :page_name="props.page_name"
