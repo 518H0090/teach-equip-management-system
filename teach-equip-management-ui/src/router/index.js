@@ -209,7 +209,7 @@ const router = createRouter({
         {
           path: 'borrow',
           component: GetBorrow
-        }
+        },
       ]
     },
   ]

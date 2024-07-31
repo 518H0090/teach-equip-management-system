@@ -125,6 +125,10 @@ const handleApproveRequest = async (item) => {
     }
   }
 };
+
+const TurnBackTool = async (item) => {
+  console.log(item);
+};
 </script>
 
 <template>
@@ -262,6 +266,17 @@ const handleApproveRequest = async (item) => {
                   >
                     {{ value.toolName }}
                   </span>
+
+                  <span
+                    v-else-if="
+                      value &&
+                      props.page_name === 'borrow' &&
+                      value === item.account
+                    "
+                  >
+                    {{ value.username }}
+                  </span>
+
                   <span v-else>
                     {{ value }}
                   </span>
@@ -326,11 +341,12 @@ const handleApproveRequest = async (item) => {
                   class="px-4 py-3 flex items-center"
                   v-show="props.page_name === 'borrow'"
                 >
-                  <RouterLink
-                    :to="`/${props.page_name}/request-form/${item.id}`"
+                  <button
+                    @click="TurnBackTool(item)"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    >Return</RouterLink
                   >
+                    Return
+                  </button>
                 </td>
 
                 <td

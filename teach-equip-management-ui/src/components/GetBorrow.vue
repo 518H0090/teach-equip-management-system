@@ -109,7 +109,7 @@ const accountById = async (userId) => {
 
     const { data } = response.data;
 
-    return data.username;
+    return { username: data.username, accountId: data.id };
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
@@ -135,7 +135,7 @@ const inventoryById = async (inventoryId) => {
 
     const tool = await toolById(toolId);
 
-    return tool;
+    return { inventoryId: rest.id, toolName: tool };
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
@@ -157,7 +157,7 @@ const toolById = async (toolId) => {
 
     const { data } = tool.data;
 
-    return { toolId: data.id, toolName: data.toolName };
+    return data.toolName;
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error) {
