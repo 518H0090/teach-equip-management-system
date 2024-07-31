@@ -55,9 +55,9 @@ const allInventoryHistories = async () => {
     );
     const { data } = response.data;
 
-    const resultArray = calculateQuantitiesForEachItem(data);
-
-    console.log(resultArray);
+    const resultArray = calculateQuantitiesForEachItem(data).filter(
+      (item) => item.NetQuantity > 0
+    );
 
     const mappedFilter = resultArray.map(async (item) => ({
       account: await accountById(item.accountId),
@@ -66,8 +66,6 @@ const allInventoryHistories = async () => {
     }));
 
     const promisesMappedData = await Promise.all(mappedFilter);
-
-    console.log(promisesMappedData);
 
     items.value = promisesMappedData;
 

@@ -28,6 +28,7 @@ import RequestView from '@/views/RequestView.vue'
 import GetHistory from '@/components/GetHistory.vue'
 import GetBorrow from '@/components/GetBorrow.vue'
 import RequestReturnForm from '@/components/RequestReturnForm.vue'
+import RequestApproveForm from '@/components/RequestApproveForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -214,6 +215,11 @@ const router = createRouter({
         {
           path: 'request-return',
           component: RequestReturnForm,
+          props: true
+        },
+        {
+          path: 'request-approve',
+          component: RequestApproveForm,
           props: true
         },
       ]

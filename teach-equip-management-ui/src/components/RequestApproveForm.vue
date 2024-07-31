@@ -33,9 +33,10 @@ const form = reactive({
   accountId: "",
   inventoryId: "",
   quantity: 0,
-  requestType: "Return",
+  requestType: "",
   toolName: "",
-  totalBorrow: "",
+  totalAvailabel: "",
+  status: "",
 });
 
 const items = computed(() => store.state.request_return_item);
@@ -48,13 +49,17 @@ onMounted(async () => {
   aside_item.classList.add("router-link-exact-active");
 
   if (Object.keys(items.value).length === 0) {
-    router.push("/request/borrow");
+    router.push("/request/getpage");
   }
 
-  form.accountId = items.value.account.accountId;
-  form.totalBorrow = items.value.Borrow;
-  form.toolName = items.value.inventory.toolName;
-  form.inventoryId = items.value.inventory.inventoryId;
+  form.accountId = items.value.accountId;
+  form.id = items.value.id;
+  form.inventoryId = items.value.inventoryId;
+  form.totalAvailabel = items.value.totalQuantity;
+  form.toolName = items.value.toolName;
+  form.quantity = items.value.quantity;
+  form.requestType = items.value.requestType;
+  form.status = items.value.status;
 });
 
 onUnmounted(() => {
@@ -83,52 +88,59 @@ const setSuccess = (element) => {
 
 const validateInputs = async () => {
   const quantity = document.querySelector("#quantity");
+  const totalAvailable = document.querySelector("#total_available");
   const quantityValue = quantity.value.trim();
+  const totalAvailableValue = totalAvailable.value.trim();
 
   let isProcess = true;
-  if (quantityValue > form.totalBorrow) {
-    setError(quantity, "You can't return greater than total borrow");
-    isProcess = false;
-  } else if (quantityValue <= 0) {
-    setError(quantity, "Quantity return must be greater than 0");
-    isProcess = false;
+
+  if (form.requestType === "Borrow" || form.requestType === "Sell") {
+    if (quantityValue > totalAvailableValue) {
+      setError(quantity, "You can't get greater than total available");
+      isProcess = false;
+    } else if (quantityValue <= 0) {
+      setError(quantity, "Quantity return must be greater than 0");
+      isProcess = false;
+    } else {
+      setSuccess(quantity);
+    }
   } else {
     setSuccess(quantity);
   }
 
   if (isProcess) {
-    const newRequest = {
+    const updateRequest = {
+      id: form.id,
       accountId: form.accountId,
       inventoryId: form.inventoryId,
       quantity: form.quantity,
-      requestType: form.requestType,
+      status: form.status,
     };
 
-    const response = fetch(
-      "https://localhost:7112/api/inventorymanage/create-approval-request",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(newRequest),
+    console.log(updateRequest);
+
+    try {
+      const response = await axios.put(
+        `https://localhost:7112/api/inventorymanage/update-approval-request`,
+        updateRequest,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+
+      if (response.status === 202) {
+        router.push("/request/getpage");
       }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then(async (data) => {
-        if (data.statusCode !== 201) {
-        }
-        if (data.statusCode === 201) {
-          router.push("/request/getpage");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    } catch (error) {
+      console.log("Error Fetching SupplierInfo", error);
+    }
   }
+};
+
+const TurnBackToRequest = () => {
+  router.push("/request/getpage");
 };
 </script>
 
@@ -139,7 +151,7 @@ const validateInputs = async () => {
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
             <h2 class="text-3xl text-center font-semibold mb-6">
-              Return Request
+              Approve Request
             </h2>
 
             <div class="input-control mb-4">
@@ -161,15 +173,15 @@ const validateInputs = async () => {
 
             <div class="input-control mb-4">
               <label class="block text-gray-700 font-bold mb-2"
-                >Total Borrow</label
+                >Total Available</label
               >
               <input
-                v-model="form.totalBorrow"
+                v-model="form.totalAvailabel"
                 type="number"
-                id="total_borrow"
-                name="total_borrow"
+                id="total_available"
+                name="total_available"
                 class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. total borrow"
+                placeholder="eg. Total Available"
                 disabled
               />
 
@@ -185,6 +197,7 @@ const validateInputs = async () => {
                 name="quantity"
                 class="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. 10"
+                disabled
               />
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
@@ -211,12 +224,36 @@ const validateInputs = async () => {
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
-            <div>
+
+            <div class="input-control mb-4">
+              <label for="type" class="block text-gray-700 font-bold mb-2"
+                >Status Change</label
+              >
+              <input
+                v-model="form.status"
+                type="text"
+                id="quantity"
+                name="quantity"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. 10"
+                disabled
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+            <div class="grid grid-cols-2">
               <button
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Create Request
+                Confirm
+              </button>
+              <button
+                @click="TurnBackToRequest"
+                class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Back
               </button>
             </div>
           </form>
