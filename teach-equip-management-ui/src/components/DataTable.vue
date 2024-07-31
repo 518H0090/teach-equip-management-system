@@ -5,6 +5,7 @@ import FilterRadio from "@/components/FilterRadio.vue";
 import FilterDropdown from "@/components/FilterDropdown.vue";
 import router from "@/router";
 import axios from "axios";
+import { useStore } from "vuex";
 
 const props = defineProps({
   items: Array,
@@ -17,6 +18,8 @@ const props = defineProps({
 });
 
 const searchFilter = ref("");
+
+const store = useStore();
 
 const filteredItems = computed(() => {
   if (searchFilter.value !== "") {
@@ -91,6 +94,44 @@ const removeItem = async (id) => {
     }
   }
 };
+
+const handleApproveRequest = async (item) => {
+  var confirm = window.confirm("Approve this request ?");
+
+  if (confirm) {
+    const updateRequest = {
+      id: item.id,
+      accountId: item.account.id,
+      inventoryId: item.inventory.id,
+      quantity: item.quantity,
+      status: "Accept",
+    };
+
+    try {
+      const response = await axios.put(
+        `https://localhost:7112/api/inventorymanage/update-approval-request`,
+        updateRequest,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+
+      router.go();
+    } catch (error) {
+      console.log("Error Fetching SupplierInfo", error);
+    }
+  }
+};
+
+const TurnBackTool = async (item) => {
+  await store.dispatch("setRequestReturn", item);
+
+  router.push({
+    path: "/request/request-return",
+  });
+};
 </script>
 
 <template>
@@ -102,7 +143,9 @@ const removeItem = async (id) => {
             <!-- Search bar   -->
             <SearchForm @search="handleSearch" />
 
-            <div class="flex items-center justify-end text-sm font-semibold">
+            <div
+              class="flex items-center justify-end justify-end justify-end justify-end justify-end text-sm font-semibold"
+            >
               <!-- Radio buttons   -->
               <!-- <FilterRadio /> -->
               <!-- List of filters for statues   -->
@@ -115,15 +158,6 @@ const removeItem = async (id) => {
             <thead
               class="border-b border-neutral-200 font-medium dark:border-white/10"
             >
-              <tr v-show="props.keys === null">
-                <th class="px-4 py-3 uppercase">UserId</th>
-                <th class="px-4 py-3 uppercase">Id</th>
-                <th class="px-4 py-3 uppercase">Title</th>
-                <th class="px-4 py-3 uppercase">Completed</th>
-                <th class="px-4 py-3 uppercase">
-                  <span class="sr-only">Actions</span>
-                </th>
-              </tr>
               <tr v-show="props.keys !== null">
                 <th v-for="key in keys" :key="key" class="px-4 py-3 uppercase">
                   <span v-if="key !== 'id'">
@@ -138,27 +172,6 @@ const removeItem = async (id) => {
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-show="props.keys === null"
-                v-for="item in filteredItems"
-                :key="item.id"
-                class="border-b"
-              >
-                <td class="px-4 py-3 font-medium text-gray-900">
-                  {{ item.id }}
-                </td>
-                <td class="px-4 py-3 font-medium text-gray-900">
-                  {{ item.userId }}
-                </td>
-                <td class="px-4 py-3">{{ item.title }}</td>
-                <td class="px-4 py-3">{{ item.completed }}</td>
-                <td class="px-4 py-3 flex items-center justify-end">
-                  <RouterLink to="/" class="text-indigo-500 hover:underline"
-                    >Details</RouterLink
-                  >
-                </td>
-              </tr>
-
               <tr
                 v-show="props.keys !== null"
                 v-for="item in filteredItems"
@@ -232,34 +245,53 @@ const removeItem = async (id) => {
                   <span
                     v-else-if="
                       value &&
-                      Array.isArray(value) &&
                       props.page_name === 'request' &&
                       value === item.account
                     "
                   >
-                    {{ `${value.map((value) => value.username)}` }}
+                    {{ `${value.username}` }}
                   </span>
                   <span
                     v-else-if="
                       value &&
-                      Array.isArray(value) &&
                       props.page_name === 'request' &&
                       value === item.inventory
                     "
                   >
-                    {{ `${value.map((value) => value.toolName)}` }}
+                    {{ `${value.tool}` }}
                   </span>
+                  <span
+                    v-else-if="
+                      value &&
+                      props.page_name === 'borrow' &&
+                      value === item.inventory
+                    "
+                  >
+                    {{ value.toolName }}
+                  </span>
+
+                  <span
+                    v-else-if="
+                      value &&
+                      props.page_name === 'borrow' &&
+                      value === item.account
+                    "
+                  >
+                    {{ value.username }}
+                  </span>
+
                   <span v-else>
                     {{ value }}
                   </span>
                 </td>
 
                 <td
-                  class="px-4 py-3 flex items-center justify-end"
+                  class="px-4 py-3 flex items-center"
                   v-show="
                     props.page_name !== 'inventory' &&
                     props.page_name !== 'invoice' &&
-                    props.page_name !== 'request'
+                    props.page_name !== 'request' &&
+                    props.page_name !== 'borrow'
                   "
                 >
                   <RouterLink
@@ -276,7 +308,7 @@ const removeItem = async (id) => {
                 </td>
 
                 <td
-                  class="px-4 py-3 flex items-center justify-end"
+                  class="px-4 py-3 flex items-center"
                   v-show="props.page_name === 'invoice'"
                 >
                   <RouterLink
@@ -293,7 +325,7 @@ const removeItem = async (id) => {
                 </td>
 
                 <td
-                  class="px-4 py-3 flex items-center justify-end"
+                  class="px-4 py-3 flex items-center"
                   v-show="props.page_name === 'inventory'"
                 >
                   <RouterLink
@@ -309,19 +341,35 @@ const removeItem = async (id) => {
                 </td>
 
                 <td
-                  class="px-4 py-3 flex items-center justify-end"
-                  v-show="props.page_name === 'request'"
+                  class="px-4 py-3 flex items-center"
+                  v-show="props.page_name === 'borrow'"
                 >
-                  <RouterLink
-                    :to="`/${props.page_name}/editpage/${item.id}`"
+                  <button
+                    @click="TurnBackTool(item)"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    >Approve</RouterLink
                   >
-                  <RouterLink
-                    :to="`/${props.page_name}/request-form/${item.id}`"
+                    Return
+                  </button>
+                </td>
+
+                <td
+                  class="px-4 py-3 flex items-center"
+                  v-show="
+                    props.page_name === 'request' && item.status === 'Pending'
+                  "
+                >
+                  <button
+                    @click="handleApproveRequest(item)"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    >Delete</RouterLink
                   >
+                    Approve
+                  </button>
+                  <button
+                    @click="removeItem(item.id)"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             </tbody>

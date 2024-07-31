@@ -14,10 +14,6 @@ const route = useRoute();
 const store = useStore();
 
 const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
-  },
   page_name: {
     type: String,
     default: "",
@@ -374,8 +370,6 @@ const allToolCategories = async () => {
 <style lang="scss" scoped>
 .container {
   max-width: 786px;
-  margin-top: 4rem;
-  
 
   form {
     padding: 2rem 2rem;

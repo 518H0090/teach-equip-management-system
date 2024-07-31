@@ -4,29 +4,50 @@ import MainCard from "@/components/MainCard.vue";
 import { onMounted, ref, defineProps, onUnmounted } from "vue";
 import Dashboard from "@/components/Dashboard.vue";
 import router from "@/router";
+import axios from "axios";
 
-const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
-  },
-});
-
-const items = ref([]);
+const users = ref({});
+const tools = ref({});
 
 onMounted(async () => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-  items.value = await response.json();
-  if (localStorage.getItem('access_token') === null) {
-    router.push("/login")
-  }
+  await allUsers();
+  await allTools();
 });
 
-onUnmounted(async () => {
-  if (localStorage.getItem('access_token') === null) {
-    router.push("/login")
+const allUsers = async () => {
+  try {
+    const response = await axios.get(`https://localhost:7112/api/usermanage/all-users`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    });
+
+    users.value = response.data.data.length;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+    // if (error.response.status === 401) {
+    //   console.log("Error Fetching jobs", error);
+    // }
   }
-})
+};
+
+const allTools = async () => {
+  try {
+    const response = await axios.get(`https://localhost:7112/api/toolmanage/all-tools`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    });
+
+    tools.value = response.data.data.length;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+    // if (error.response.status === 401) {
+    //   console.log("Error Fetching jobs", error);
+    // }
+  }
+};
+
 </script>
 
 <template>
@@ -37,7 +58,10 @@ onUnmounted(async () => {
       </li>
     </Navbar>
     <MainCard>
-      <Dashboard />
+      <Dashboard
+        :users="users"
+        :tools="tools"
+      />
     </MainCard>
   </div>
   <RouterView />

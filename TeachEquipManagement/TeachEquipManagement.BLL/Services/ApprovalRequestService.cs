@@ -131,105 +131,74 @@ namespace TeachEquipManagement.BLL.Services
             return response;
         }
 
-        public ApiResponse<ApprovalProcessResponse> GetApprovalProcess(ProcessRequest request, ValidationResult validation)
+        public async Task<ApiResponse<ApprovalProcessResponse>> GetApprovalProcess(int id)
         {
             ApiResponse<ApprovalProcessResponse> response = new();
 
-            if (validation.IsValid)
-            {
-                QueryModel<ApprovalRequest> query = new QueryModel<ApprovalRequest>
-                {
-                    QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
-                };
+            var approvalRequest = await _unitOfWork.ApprovalRequestRepository.GetByIdAsync(id);
 
-                var approvalRequest = _unitOfWork.ApprovalRequestRepository.GetQueryable(query).FirstOrDefault();
+            if (approvalRequest != null)
+            {
+                var dataResponse = _mapper.Map<ApprovalProcessResponse>(approvalRequest);
+                response.Data = dataResponse;
+                response.Message = "Found ApprovalRequest";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            else
+            {
+                _logger.Warning("Warning: Not Found ApprovalRequest");
+                response.Data = null;
+                response.Message = "Not Found ApprovalRequest";
+                response.StatusCode = StatusCodes.Status404NotFound;
+            }
+
+            return response;
+        }
+
+        public async Task<ApiResponse<bool>> Remove(int id)
+        {
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                _unitOfWork.CreateTransaction();
+
+
+                var approvalRequest = await _unitOfWork.ApprovalRequestRepository.GetByIdAsync(id);
 
                 if (approvalRequest != null)
                 {
-                    var dataResponse = _mapper.Map<ApprovalProcessResponse>(approvalRequest);
-                    response.Data = dataResponse;
-                    response.Message = "Found ApprovalRequest";
-                    response.StatusCode = StatusCodes.Status200OK;
+                    _unitOfWork.ApprovalRequestRepository.Delete(approvalRequest!);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    _unitOfWork.Commit();
+
+                    response.Data = true;
+                    response.Message = "Remove Approval Request";
+                    response.StatusCode = StatusCodes.Status202Accepted;
                 }
 
                 else
                 {
-                    _logger.Warning("Warning: Not Found ApprovalRequest");
-                    response.Data = null;
-                    response.Message = "Not Found ApprovalRequest";
+                    _logger.Warning("Warning: Not Found Approval Request");
+                    response.Data = false;
+                    response.Message = "Not Found Approval Request";
                     response.StatusCode = StatusCodes.Status404NotFound;
                 }
             }
-
-            else
+            catch (Exception e)
             {
-                _logger.Warning("Warning: Invalid Request");
-                response.Data = null;
-                response.StatusCode = StatusCodes.Status400BadRequest;
-                response.Message = validation.ToString();
-            }
-
-            return response;
-        }
-
-        public async Task<ApiResponse<bool>> Remove(ProcessRequest request, ValidationResult validation)
-        {
-            ApiResponse<bool> response = new();
-
-            if (validation.IsValid)
-            {
-                try
-                {
-                    _unitOfWork.CreateTransaction();
-
-                    QueryModel<ApprovalRequest> query = new QueryModel<ApprovalRequest>
-                    {
-                        QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
-                    };
-
-                    var approvalRequest = _unitOfWork.ApprovalRequestRepository.GetQueryable(query).FirstOrDefault();
-
-                    if (approvalRequest != null)
-                    {
-                        _unitOfWork.ApprovalRequestRepository.Delete(approvalRequest!);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        _unitOfWork.Commit();
-
-                        response.Data = true;
-                        response.Message = "Remove Approval Request";
-                        response.StatusCode = StatusCodes.Status202Accepted;
-                    }
-
-                    else
-                    {
-                        _logger.Warning("Warning: Not Found Approval Request");
-                        response.Data = false;
-                        response.Message = "Not Found Approval Request";
-                        response.StatusCode = StatusCodes.Status404NotFound;
-                    }
-                }
-                catch (Exception e)
-                {
-                    _logger.Error($"Error with : {e.Message}");
-                    response.Data = false;
-                    response.Message = $"{e.InnerException}";
-                    response.StatusCode = StatusCodes.Status500InternalServerError;
-                    _unitOfWork.Rollback();
-                }
-            }
-
-            else
-            {
-                _logger.Warning("Warning: Invalid Request");
+                _logger.Error($"Error with : {e.Message}");
                 response.Data = false;
-                response.StatusCode = StatusCodes.Status400BadRequest;
-                response.Message = validation.ToString();
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
             }
 
             return response;
         }
-     
+
 
         public async Task<ApiResponse<bool>> Update(ApprovalProcessUpdateRequest request, ValidationResult validation)
         {
@@ -265,7 +234,7 @@ namespace TeachEquipManagement.BLL.Services
 
                     QueryModel<ApprovalRequest> query = new QueryModel<ApprovalRequest>
                     {
-                        QueryCondition = approvalRequest => approvalRequest.InventoryId == request.InventoryId && approvalRequest.AccountId == request.AccountId
+                        QueryCondition = approvalRequest => approvalRequest.Id == request.Id
                     };
 
                     var approvalRequest = _unitOfWork.ApprovalRequestRepository.GetQueryable(query).FirstOrDefault();
@@ -276,7 +245,7 @@ namespace TeachEquipManagement.BLL.Services
                     {
                         int itemQuantity = inventory!.TotalQuantity - request.Quantity;
 
-                        if ((approvalRequest.RequestType == RequestTypeEnum.RequestBorrowType.GetDescription() 
+                        if ((approvalRequest.RequestType == RequestTypeEnum.RequestBorrowType.GetDescription()
                             || approvalRequest.RequestType == RequestTypeEnum.RequestSellType.GetDescription())
                             && itemQuantity < 0)
                         {
@@ -297,13 +266,13 @@ namespace TeachEquipManagement.BLL.Services
                             inventory.TotalQuantity += request.Quantity;
                         }
 
-                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestBorrowType.GetDescription() && itemQuantity > 0)
+                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestBorrowType.GetDescription() && itemQuantity >= 0)
                         {
                             inventory.AmountBorrow += request.Quantity;
                             inventory.TotalQuantity -= request.Quantity;
                         }
 
-                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestSellType.GetDescription() && itemQuantity > 0)
+                        else if (approvalRequest.RequestType == RequestTypeEnum.RequestSellType.GetDescription() && itemQuantity >= 0)
                         {
                             inventory.TotalQuantity -= request.Quantity;
                         }
@@ -313,15 +282,15 @@ namespace TeachEquipManagement.BLL.Services
 
                     if (approvalRequest != null)
                     {
-                        var updateItem = _mapper.Map(request, approvalRequest);
-                        updateItem.IsApproved = isApproved;
-                        updateItem.ApproveDate = DateTime.Now;
-
                         if (isApproved)
                         {
+                            var updateItem = _mapper.Map(request, approvalRequest);
+                            updateItem.IsApproved = isApproved;
+                            updateItem.ApproveDate = DateTime.Now;
+
                             var inventoryHistory = new InventoryHistory
                             {
-                                UserId = updateItem.AccountId,
+                                AccountId = updateItem.AccountId,
                                 InventoryId = updateItem.InventoryId,
                                 Quantity = updateItem.Quantity,
                                 ActionDate = DateTime.Now,

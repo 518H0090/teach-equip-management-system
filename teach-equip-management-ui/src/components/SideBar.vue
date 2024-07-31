@@ -61,13 +61,16 @@ const refreshAccessToken = async (accessToken, refreshToken) => {
       refreshToken,
     };
 
-    const response = await fetch("https://localhost:7112/api/usermanage/refresh-token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(freshToken),
-    })
+    const response = await fetch(
+      "https://localhost:7112/api/usermanage/refresh-token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(freshToken),
+      }
+    )
       .then((response) => response.json())
       .then(async (response) => {
         if (response.statusCode === 200) {
@@ -134,27 +137,12 @@ const handleToken = async () => {
       <!-- <RouterLink class="button" to="/dashboard">
         <span class="material-icons">group</span>
         <span class="text">Team</span>
-      </RouterLink>
+      </RouterLink> -->
 
-      <RouterLink class="button about" to="/about/getpage">
+      <!-- <RouterLink class="button about" to="/about/getpage">
         <span class="material-icons">group</span>
         <span class="text">About</span>
       </RouterLink> -->
-
-      <RouterLink class="button supplier" to="/supplier/getpage">
-        <span class="material-icons">storefront</span>
-        <span class="text">Supplier</span>
-      </RouterLink>
-
-      <RouterLink class="button category" to="/category/getpage">
-        <span class="material-icons">storefront</span>
-        <span class="text">Category</span>
-      </RouterLink>
-
-      <RouterLink class="button tool" to="/tool/getpage">
-        <span class="material-icons">storefront</span>
-        <span class="text">Tool</span>
-      </RouterLink>
 
       <RouterLink class="button account" to="/account/getpage">
         <span class="material-icons">storefront</span>
@@ -169,6 +157,21 @@ const handleToken = async () => {
       <RouterLink class="button request" to="/request/getpage">
         <span class="material-icons">storefront</span>
         <span class="text">Request</span>
+      </RouterLink>
+
+      <RouterLink class="button tool" to="/tool/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Tool</span>
+      </RouterLink>
+
+      <RouterLink class="button supplier" to="/supplier/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Supplier</span>
+      </RouterLink>
+
+      <RouterLink class="button category" to="/category/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Category</span>
       </RouterLink>
     </div>
 

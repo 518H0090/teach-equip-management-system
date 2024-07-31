@@ -81,8 +81,6 @@ function decodeJwtToken(token, userRef) {
           "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ],
       };
-
-      console.log(userRef.value)
     }
   } catch (error) {
     console.error("Invalid token:", error);
@@ -93,13 +91,13 @@ function decodeJwtToken(token, userRef) {
 <template>
   <header :class="`${store.state.is_expanded ? 'is-expanded' : ''}`">
     <nav>
-      <UserProfile :username="user.name" />
       <ul class="navigation" v-show="!mobile">
         <slot></slot>
       </ul>
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
+      <UserProfile :username="user.name" />
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
           <slot></slot>
@@ -112,7 +110,7 @@ function decodeJwtToken(token, userRef) {
 <style lang="scss">
 header {
   width: calc(100vw - (2rem + 32px));
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(127, 161, 195, 0.8);
   z-index: 20;
   position: fixed;
   transition: 0.4s ease-out all;

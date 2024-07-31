@@ -25,6 +25,9 @@ import GetInvoice from '@/components/GetInvoice.vue'
 import InvoiceEditForm from '@/components/InvoiceEditForm.vue'
 import RequestForm from '@/components/RequestForm.vue'
 import RequestView from '@/views/RequestView.vue'
+import GetHistory from '@/components/GetHistory.vue'
+import GetBorrow from '@/components/GetBorrow.vue'
+import RequestReturnForm from '@/components/RequestReturnForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -201,13 +204,18 @@ const router = createRouter({
           component: GetPage
         },
         {
-          path: "editpage/:id",
-          component: AccountEditForm
+          path: 'history',
+          component: GetHistory
         },
         {
-          path: "addpage",
-          component:  AccountForm
-        }
+          path: 'borrow',
+          component: GetBorrow
+        },
+        {
+          path: 'request-return',
+          component: RequestReturnForm,
+          props: true
+        },
       ]
     },
   ]

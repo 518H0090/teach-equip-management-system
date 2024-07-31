@@ -67,7 +67,6 @@ onMounted(async () => {
     await allInvoicess();
     await allInventories();
   } else if (props.page_name === "request") {
-    await fetchValueForRequest();
     await allApprovalRequest();
   }
 });
@@ -387,27 +386,20 @@ const allApprovalRequest = async () => {
       }
     );
 
-    const dataMapped = response.data.data.map(
-      ({ approveDate, managerApprove, requestDate, ...rest }) => rest
-    );
-
-    const mappedFilter = dataMapped.map((item) => ({
+    const mappedFilter = response.data.data.map(async (item) => ({
       id: item.id,
-      account: fetchAccount.value.filter(
-        (account) => account.id === item.accountId
-      ),
-      inventory: fetchInventory.value
-        .filter((inventory) => inventory.id === item.inventoryId)
-        .map((inventory) => inventory.tool)
-        .flat(),
+      account: await accountById(item.accountId),
+      inventory: await inventoryById(item.inventoryId),
       quantity: item.quantity,
       requestType: item.requestType,
       status: item.status,
     }));
 
-    items.value = mappedFilter;
+    const promisesMappedData = await Promise.all(mappedFilter);
 
-    let allKeys = mappedFilter.reduce((keys, obj) => {
+    items.value = promisesMappedData;
+
+    let allKeys = promisesMappedData.reduce((keys, obj) => {
       return keys.concat(Object.keys(obj));
     }, []);
 
@@ -422,13 +414,10 @@ const allApprovalRequest = async () => {
   }
 };
 
-const fetchAccount = ref({});
-const fetchInventory = ref({});
-
-const fetchValueForRequest = async () => {
+const accountById = async (userId) => {
   try {
-    const accounts = await axios.get(
-      `https://localhost:7112/api/usermanage/all-users`,
+    const response = await axios.get(
+      `https://localhost:7112/api/usermanage/user/find/${userId}`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("access_token"),
@@ -436,8 +425,21 @@ const fetchValueForRequest = async () => {
       }
     );
 
-    const inventories = await axios.get(
-      `https://localhost:7112/api/inventorymanage/all-inventories`,
+    const { data } = response.data;
+
+    return data;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+    if (error.response.status === 401) {
+      console.log("Error Fetching jobs", error);
+    }
+  }
+};
+
+const inventoryById = async (inventoryId) => {
+  try {
+    const inventory = await axios.get(
+      `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("access_token"),
@@ -445,8 +447,30 @@ const fetchValueForRequest = async () => {
       }
     );
 
-    const tools = await axios.get(
-      `https://localhost:7112/api/toolmanage/all-tools`,
+    const { data } = inventory.data;
+
+    const { toolId, ...rest } = data;
+
+    const tool = await toolById(toolId);
+
+    let dataResponse = {
+      ...rest,
+      tool,
+    };
+
+    return dataResponse;
+  } catch (error) {
+    console.log("Error Fetching jobs", error);
+    if (error.response.status === 401) {
+      console.log("Error Fetching jobs", error);
+    }
+  }
+};
+
+const toolById = async (toolId) => {
+  try {
+    const tool = await axios.get(
+      `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("access_token"),
@@ -454,22 +478,9 @@ const fetchValueForRequest = async () => {
       }
     );
 
-    const toolJson = tools.data.data;
-    const inventoryJson = inventories.data.data;
-    const accountJson = accounts.data.data;
+    const { data } = tool.data;
 
-    const mappedInventory = inventoryJson.map((item) => ({
-      id: item.id,
-      tool: toolJson.filter((tool) => tool.id === item.toolId),
-    }));
-
-    const mappedUser = accountJson.map((user) => ({
-      id: user.id,
-      username: user.username,
-    }));
-
-    fetchAccount.value = mappedUser;
-    fetchInventory.value = mappedInventory;
+    return data.toolName;
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {

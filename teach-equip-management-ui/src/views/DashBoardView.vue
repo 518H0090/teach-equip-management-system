@@ -3,49 +3,23 @@ import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
 import SupplierForm from "@/components/SupplierForm.vue";
 import CategoryForm from "@/components/CategoryForm.vue";
+import Dashboard from "@/components/Dashboard.vue";
 
 import { useStore } from "vuex";
 import { defineProps } from "vue";
 
 const store = useStore();
-
-const props = defineProps({
-  isShow: {
-    type: Boolean,
-    default: true,
-  },
-});
-
 </script>
 
 <template>
   <div class="content">
     <Navbar>
       <li>
-        <RouterLink to="/dashboard" class="link">View</RouterLink>
-      </li>
-      <li>
-        <RouterLink to="/aaa" class="link">Add</RouterLink>
-      </li>
-      <li>
-        <RouterLink to="/aaaa" class="link">Edit</RouterLink>
+        <RouterLink to="/dashboard" class="link">Dashboard</RouterLink>
       </li>
     </Navbar>
     <MainCard>
-      <h1>Home</h1>
-      <p>
-        This is home
-        pagaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-      </p>
-      <p>{{ store.state.is_expanded }}</p>
-      <img
-        src="https://trunghieu1204.sharepoint.com/:i:/s/FamilyTree/EQ_iu-huGVxDua8NcXLOkyUBn8z3Z1czavxDt0vZCVyARg"
-        alt=""
-      />
-      <img
-        src="https://trunghieu1204.sharepoint.com/sites/FamilyTree/Avatars/landscape-countryside-cartoon-scene-background-green-field-with-dirt-path-and-mountain-background-generative-ai-photo.jpg"
-        alt=""
-      />
+      <Dashboard />
     </MainCard>
   </div>
 </template>

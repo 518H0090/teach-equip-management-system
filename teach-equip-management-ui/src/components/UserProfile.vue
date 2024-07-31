@@ -9,7 +9,7 @@ const store = useStore();
 const props = defineProps({
   username: {
     type: String,
-    default: "Not Contain User",
+    default: "_",
   },
 });
 
@@ -45,10 +45,13 @@ const logOut = async () => {
           await store.dispatch("setAuth", false);
           // await store.dispatch("setIsExpanded", false);
           await router.push("/login");
+        } else if (data.statusCode === 400) {
+          await router.push("/login");
         }
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.error("Error fetching data:", error);
+        await router.push("/login");
       });
   }
 };
@@ -61,6 +64,10 @@ function isNullOrUndefined(value) {
 <template>
   <div class="dropdown-wrapper">
     <div class="dropdown-selected-option" @click="toggleDropdown">
+      <span class="avatar">
+        <img src="../assets/avatarcapybara.jpg" alt="" />
+      </span>
+
       <span class="username">
         {{ props.username }}
       </span>
@@ -91,35 +98,39 @@ function isNullOrUndefined(value) {
   border-radius: 8px;
   box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
-  max-width: 280px;
-  background-color: var(--dark);
+  justify-content: flex-end;
+  align-items: center;
   text-transform: uppercase;
   font-weight: 700;
-  margin-top: 0.4rem;
+  border: 1px solid #f5eded;
+  margin-top: 0.1rem;
 
-  span.username {
-    flex: 1;
-    text-align: center;
+  span.avatar {
+    img {
+      border-radius: 100%;
+      width: 2.4rem;
+      margin-left: -0.6rem;
+    }
   }
 }
 
 .options-wrapper {
-  background-color: var(--dark);
+  background-color: #2a629a;
   border-radius: 8px;
   margin-top: 0.4rem;
 }
 
 .option:hover {
-  border-right: 5px solid var(--primary);
-  background: var(--dark-alt);
+  background: #a0deff;
 }
 
 .option {
-  padding: 16px;
-  border: solid 1px #313131;
+  padding: 1rem;
   box-sizing: border-box;
   border-radius: 8px;
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .option:last-of-type {

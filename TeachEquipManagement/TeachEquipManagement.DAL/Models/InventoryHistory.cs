@@ -10,7 +10,7 @@ namespace TeachEquipManagement.DAL.Models
     {
         public int Id { get; set; }
 
-        public Guid UserId { get; set; }
+        public Guid AccountId { get; set; }
 
         public Guid InventoryId { get; set; }   
 
@@ -20,7 +20,7 @@ namespace TeachEquipManagement.DAL.Models
 
         public string ActionType { get; set; } = string.Empty;
 
-        public Account User { get; set; }
+        public Account Account { get; set; }
 
         public Inventory Inventory { get; set; }
     }

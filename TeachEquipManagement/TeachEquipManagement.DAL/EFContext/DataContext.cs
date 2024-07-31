@@ -219,9 +219,9 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 inventory_history.Property(inventory_history => inventory_history.ActionType).IsRequired();
 
-                inventory_history.HasOne<Account>(approval_request => approval_request.User)
+                inventory_history.HasOne<Account>(approval_request => approval_request.Account)
                       .WithMany(user => user.InventoryHistories)
-                      .HasForeignKey(approval_request => approval_request.UserId)
+                      .HasForeignKey(approval_request => approval_request.AccountId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 inventory_history.HasOne<Inventory>(approval_request => approval_request.Inventory)
