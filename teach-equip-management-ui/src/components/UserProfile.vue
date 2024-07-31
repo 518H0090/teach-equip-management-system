@@ -129,7 +129,7 @@ function isNullOrUndefined(value) {
   box-sizing: border-box;
   border-radius: 8px;
   text-transform: capitalize;
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 

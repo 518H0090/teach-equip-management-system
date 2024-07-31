@@ -1,12 +1,5 @@
 <script setup>
-import {
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  defineProps,
-  computed,
-} from "vue";
+import { onBeforeMount, onMounted, onUnmounted, ref, defineProps, computed } from "vue";
 import axios from "axios";
 import Chart from "chart.js/auto";
 
@@ -289,17 +282,11 @@ const toolById = async (toolId) => {
           <!-- Card -->
           <div class="dashboard">
             <div class="info pie">
-              <h3 class="border rounded w-full py-2 px-3 text-lg font-bold">
-                History
-              </h3>
+              <h3 class="border rounded w-full py-2 px-3 text-lg font-bold">History</h3>
               <canvas id="myChart"></canvas>
             </div>
-            <table
-              class="text-left text-sm font-light text-surface dark:text-white"
-            >
-              <thead
-                class="border-b border-neutral-200 font-medium dark:border-white/10"
-              >
+            <table class="text-left text-sm font-light text-surface dark:text-white">
+              <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
                 <tr>
                   <th class="px-4 py-3 uppercase">Index</th>
                   <th class="px-4 py-3 uppercase">ACTIONTYPE</th>
