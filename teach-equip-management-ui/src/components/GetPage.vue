@@ -7,7 +7,7 @@ import { defineProps, onMounted, onUnmounted, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
 import router from "@/router";
-import ClipLoader from "vue-spinner/src/ClipLoader.vue"
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
 
 const store = useStore();
 
@@ -70,104 +70,101 @@ onUnmounted(() => {
 });
 
 const allSupplier = async () => {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-supplier",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-    items.value = response.data.data;
+  const response = await axios.get("https://localhost:7112/api/toolmanage/all-supplier", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+    },
+  });
+  items.value = response.data.data;
 
-    let allKeys = response.data.data.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let allKeys = response.data.data.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    let uniqueKeys = [...new Set(allKeys)];
+  let uniqueKeys = [...new Set(allKeys)];
 
-    keys.value = uniqueKeys;
+  keys.value = uniqueKeys;
 };
 
 const allCategory = async () => {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-categories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-    items.value = response.data.data;
+  const response = await axios.get(
+    "https://localhost:7112/api/toolmanage/all-categories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
+  items.value = response.data.data;
 
-    let allKeys = response.data.data.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let allKeys = response.data.data.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    let uniqueKeys = [...new Set(allKeys)];
+  let uniqueKeys = [...new Set(allKeys)];
 
-    keys.value = uniqueKeys;
+  keys.value = uniqueKeys;
 };
 
 const allTool = async () => {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tools-include-supplier",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const datajson = response.data.data;
-
-    const mappedData = datajson.map((item) => ({
-      id: item.id,
-      toolName: item.toolName,
-      description: item.description,
-      supplier: {
-        supplierId: item.supplier.id,
-        supplierName: item.supplier.supplierName,
+  const response = await axios.get(
+    "https://localhost:7112/api/toolmanage/all-tools-include-supplier",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
-      category: relationShip.value
-        .filter((toolCategory) => toolCategory.tool.id === item.id)
-        .map((toolCategory) => toolCategory.category),
-    }));
+    }
+  );
 
-    items.value = mappedData;
+  const datajson = response.data.data;
 
-    let allKeys = mappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  const mappedData = datajson.map((item) => ({
+    id: item.id,
+    toolName: item.toolName,
+    description: item.description,
+    supplier: {
+      supplierId: item.supplier.id,
+      supplierName: item.supplier.supplierName,
+    },
+    category: relationShip.value
+      .filter((toolCategory) => toolCategory.tool.id === item.id)
+      .map((toolCategory) => toolCategory.category),
+  }));
 
-    let uniqueKeys = [...new Set(allKeys)];
+  items.value = mappedData;
 
-    keys.value = uniqueKeys;
+  let allKeys = mappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
+
+  let uniqueKeys = [...new Set(allKeys)];
+
+  keys.value = uniqueKeys;
 };
 
 const allAccount = async () => {
-    const response = await axios.get("https://localhost:7112/api/usermanage/all-users");
-    const datajson = response.data.data.map(
-      ({ passwordHash, passwordSalt, refreshToken, refreshTokenExpiryTime, ...rest }) =>
-        rest
-    );
+  const response = await axios.get("https://localhost:7112/api/usermanage/all-users");
+  const datajson = response.data.data.map(
+    ({ passwordHash, passwordSalt, refreshToken, refreshTokenExpiryTime, ...rest }) =>
+      rest
+  );
 
-    const mappedData = datajson.map((item) => ({
-      id: item.id,
-      username: item.username,
-      email: item.email,
-      role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
-    }));
+  const mappedData = datajson.map((item) => ({
+    id: item.id,
+    username: item.username,
+    email: item.email,
+    role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
+  }));
 
-    items.value = mappedData;
+  items.value = mappedData;
 
-    let allKeys = items.value.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let allKeys = items.value.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    let uniqueKeys = [...new Set(allKeys)];
+  let uniqueKeys = [...new Set(allKeys)];
 
-    keys.value = uniqueKeys;
+  keys.value = uniqueKeys;
 };
 
 const aboutFetchs = async () => {
@@ -185,77 +182,77 @@ const aboutFetchs = async () => {
 };
 
 const allToolCategories = async () => {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tool-categories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
+  const response = await axios.get(
+    "https://localhost:7112/api/toolmanage/all-tool-categories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
 
-    const datajson = response.data.data;
+  const datajson = response.data.data;
 
-    relationShip.value = datajson;
+  relationShip.value = datajson;
 };
 
 const roles = ref({});
 
 const allRoles = async () => {
-    const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
-    roles.value = response.data.data;
+  const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
+  roles.value = response.data.data;
 };
 
 const allInventories = async () => {
-    const inventories = await axios.get(
-      "https://localhost:7112/api/inventorymanage/all-inventories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools", {
+  const inventories = await axios.get(
+    "https://localhost:7112/api/inventorymanage/all-inventories",
+    {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
-    });
-
-    let mappedData;
-
-    if (invoices.value.length > 0) {
-      mappedData = inventories.data.data.map((item) => ({
-        id: item.id,
-        tool: tools.data.data
-          .filter((tool) => Number(tool.id) === Number(item.toolId))
-          .map((tool) => tool.toolName),
-        total_quantity: item.totalQuantity,
-        amount_borrow: item.amountBorrow,
-        latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
-          ? getLatestPriceByToolId(invoices.value, item.toolId)
-          : 0,
-      }));
-    } else {
-      mappedData = inventories.data.data.map((item) => ({
-        id: item.id,
-        tool: tools.data.data
-          .filter((tool) => Number(tool.id) === Number(item.toolId))
-          .map((tool) => tool.toolName),
-        total_quantity: item.totalQuantity,
-        amount_borrow: item.amountBorrow,
-      }));
     }
+  );
 
-    items.value = mappedData;
+  const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+    },
+  });
 
-    let allKeys = mappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let mappedData;
 
-    let uniqueKeys = [...new Set(allKeys)];
+  if (invoices.value.length > 0) {
+    mappedData = inventories.data.data.map((item) => ({
+      id: item.id,
+      tool: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.toolName),
+      total_quantity: item.totalQuantity,
+      amount_borrow: item.amountBorrow,
+      latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
+        ? getLatestPriceByToolId(invoices.value, item.toolId)
+        : 0,
+    }));
+  } else {
+    mappedData = inventories.data.data.map((item) => ({
+      id: item.id,
+      tool: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.toolName),
+      total_quantity: item.totalQuantity,
+      amount_borrow: item.amountBorrow,
+    }));
+  }
 
-    keys.value = uniqueKeys;
+  items.value = mappedData;
+
+  let allKeys = mappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
+
+  let uniqueKeys = [...new Set(allKeys)];
+
+  keys.value = uniqueKeys;
 };
 
 const invoices = ref({});
@@ -302,117 +299,89 @@ function getLatestPriceByToolId(data, toolId) {
 }
 
 const allApprovalRequest = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/inventorymanage/all-approval-requests",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const mappedFilter = response.data.data.map(async (item) => ({
-      id: item.id,
-      account: await accountById(item.accountId),
-      inventory: await inventoryById(item.inventoryId),
-      quantity: item.quantity,
-      requestType: item.requestType,
-      status: item.status,
-    }));
-
-    const promisesMappedData = await Promise.all(mappedFilter);
-
-    items.value = promisesMappedData;
-
-    let allKeys = promisesMappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
-
-    let uniqueKeys = [...new Set(allKeys)];
-
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const response = await axios.get(
+    "https://localhost:7112/api/inventorymanage/all-approval-requests",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const mappedFilter = response.data.data.map(async (item) => ({
+    id: item.id,
+    account: await accountById(item.accountId),
+    inventory: await inventoryById(item.inventoryId),
+    quantity: item.quantity,
+    requestType: item.requestType,
+    status: item.status,
+  }));
+
+  const promisesMappedData = await Promise.all(mappedFilter);
+
+  items.value = promisesMappedData;
+
+  let allKeys = promisesMappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
+
+  let uniqueKeys = [...new Set(allKeys)];
+
+  keys.value = uniqueKeys;
 };
 
 const accountById = async (userId) => {
-  try {
-    const response = await axios.get(
-      `https://localhost:7112/api/usermanage/user/find/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = response.data;
-
-    return data;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const response = await axios.get(
+    `https://localhost:7112/api/usermanage/user/find/${userId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = response.data;
+
+  return data;
 };
 
 const inventoryById = async (inventoryId) => {
-  try {
-    const inventory = await axios.get(
-      `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = inventory.data;
-
-    const { toolId, ...rest } = data;
-
-    const tool = await toolById(toolId);
-
-    let dataResponse = {
-      ...rest,
-      tool,
-    };
-
-    return dataResponse;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const inventory = await axios.get(
+    `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = inventory.data;
+
+  const { toolId, ...rest } = data;
+
+  const tool = await toolById(toolId);
+
+  let dataResponse = {
+    ...rest,
+    tool,
+  };
+
+  return dataResponse;
 };
 
 const toolById = async (toolId) => {
-  try {
-    const tool = await axios.get(
-      `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = tool.data;
-
-    return data.toolName;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const tool = await axios.get(
+    `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = tool.data;
+
+  return data.toolName;
 };
 </script>
 
@@ -422,7 +391,7 @@ const toolById = async (toolId) => {
       <ClipLoader size="8rem" />
     </div>
     <DataTable
-    v-else
+      v-else
       :keys="keys"
       :items="items"
       :page_name="props.page_name"
