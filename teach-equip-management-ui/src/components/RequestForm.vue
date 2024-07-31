@@ -253,7 +253,7 @@ const inventoryById = async (inventoryId) => {
               >
                 <option value="-1">Default</option>
                 <option value="Borrow">Borrow</option>
-                <option value="Return">Return</option>
+                <!-- <option value="Return">Return</option> -->
                 <option value="Buy">Buy</option>
                 <option value="Sell">Sell</option>
               </select>

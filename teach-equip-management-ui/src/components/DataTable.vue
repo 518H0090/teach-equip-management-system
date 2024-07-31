@@ -253,6 +253,15 @@ const handleApproveRequest = async (item) => {
                   >
                     {{ `${value.tool}` }}
                   </span>
+                  <span
+                    v-else-if="
+                      value &&
+                      props.page_name === 'borrow' &&
+                      value === item.inventory
+                    "
+                  >
+                    {{ value.toolName }}
+                  </span>
                   <span v-else>
                     {{ value }}
                   </span>
@@ -263,7 +272,8 @@ const handleApproveRequest = async (item) => {
                   v-show="
                     props.page_name !== 'inventory' &&
                     props.page_name !== 'invoice' &&
-                    props.page_name !== 'request'
+                    props.page_name !== 'request' &&
+                    props.page_name !== 'borrow'
                   "
                 >
                   <RouterLink
@@ -309,6 +319,17 @@ const handleApproveRequest = async (item) => {
                     :to="`/${props.page_name}/request-form/${item.id}`"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                     >Request</RouterLink
+                  >
+                </td>
+
+                <td
+                  class="px-4 py-3 flex items-center"
+                  v-show="props.page_name === 'borrow'"
+                >
+                  <RouterLink
+                    :to="`/${props.page_name}/request-form/${item.id}`"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    >Return</RouterLink
                   >
                 </td>
 

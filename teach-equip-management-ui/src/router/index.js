@@ -26,6 +26,7 @@ import InvoiceEditForm from '@/components/InvoiceEditForm.vue'
 import RequestForm from '@/components/RequestForm.vue'
 import RequestView from '@/views/RequestView.vue'
 import GetHistory from '@/components/GetHistory.vue'
+import GetBorrow from '@/components/GetBorrow.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -204,6 +205,10 @@ const router = createRouter({
         {
           path: 'history',
           component: GetHistory
+        },
+        {
+          path: 'borrow',
+          component: GetBorrow
         }
       ]
     },

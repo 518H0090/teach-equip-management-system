@@ -31,7 +31,7 @@ onMounted(async () => {
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
 
-  await allHistories();
+  await allInventoryHistories();
 });
 
 onUnmounted(() => {
@@ -43,7 +43,7 @@ onUnmounted(() => {
   aside_item.classList.remove("router-link-exact-active");
 });
 
-const allHistories = async () => {
+const allInventoryHistories = async () => {
   try {
     const response = await axios.get(
       "https://localhost:7112/api/inventorymanage/all-inventory-histories",
@@ -55,15 +55,14 @@ const allHistories = async () => {
     );
     const { data } = response.data;
 
-    console.log(data);
+    const resultArray = calculateQuantitiesForEachItem(data);
 
-    const mappedFilter = data.map(async (item) => ({
-      id: item.id,
+    console.log(resultArray);
+
+    const mappedFilter = resultArray.map(async (item) => ({
       account: await accountById(item.accountId),
       inventory: await inventoryById(item.inventoryId),
-      quantity: item.quantity,
-      actionType: item.actionType,
-      actionDate: formatDate(item.actionDate),
+      Borrow: item.NetQuantity,
     }));
 
     const promisesMappedData = await Promise.all(mappedFilter);
@@ -110,7 +109,7 @@ const accountById = async (userId) => {
 
     const { data } = response.data;
 
-    return data;
+    return data.username;
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
@@ -136,12 +135,7 @@ const inventoryById = async (inventoryId) => {
 
     const tool = await toolById(toolId);
 
-    let dataResponse = {
-      ...rest,
-      tool,
-    };
-
-    return dataResponse;
+    return tool;
   } catch (error) {
     console.log("Error Fetching jobs", error);
     if (error.response.status === 401) {
@@ -163,13 +157,44 @@ const toolById = async (toolId) => {
 
     const { data } = tool.data;
 
-    return data.toolName;
+    return { toolId: data.id, toolName: data.toolName };
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
+    if (error) {
       console.log("Error Fetching jobs", error);
     }
   }
+};
+
+const calculateQuantitiesForEachItem = (data) => {
+  const result = {};
+  data.forEach((item) => {
+    const { accountId, inventoryId, actionType, quantity } = item;
+
+    const key = `${accountId}_${inventoryId}`;
+
+    if (!result[key]) {
+      result[key] = {
+        accountId,
+        inventoryId,
+        Borrow: 0,
+        Return: 0,
+        NetQuantity: 0,
+      };
+    }
+
+    if (actionType === "Borrow") {
+      result[key].Borrow += quantity;
+    } else if (actionType === "Return") {
+      result[key].Return += quantity;
+    }
+  });
+
+  Object.keys(result).forEach((key) => {
+    result[key].NetQuantity = result[key].Borrow - result[key].Return;
+  });
+
+  return Object.values(result);
 };
 </script>
 
@@ -178,7 +203,7 @@ const toolById = async (toolId) => {
     <DataTable
       :keys="keys"
       :items="items"
-      page_name="request"
+      page_name="borrow"
       :page_service="props.page_service"
     />
   </MainCard>
