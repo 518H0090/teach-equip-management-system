@@ -5,6 +5,7 @@ import FilterRadio from "@/components/FilterRadio.vue";
 import FilterDropdown from "@/components/FilterDropdown.vue";
 import router from "@/router";
 import axios from "axios";
+import { useStore } from "vuex";
 
 const props = defineProps({
   items: Array,
@@ -16,11 +17,9 @@ const props = defineProps({
   page_service: String,
 });
 
-console.log(props.page_name);
-
-console.log(props.page_service);
-
 const searchFilter = ref("");
+
+const store = useStore();
 
 const filteredItems = computed(() => {
   if (searchFilter.value !== "") {
@@ -127,7 +126,11 @@ const handleApproveRequest = async (item) => {
 };
 
 const TurnBackTool = async (item) => {
-  console.log(item);
+  await store.dispatch("setRequestReturn", item);
+
+  router.push({
+    path: "/request/request-return",
+  });
 };
 </script>
 

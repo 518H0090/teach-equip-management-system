@@ -27,6 +27,7 @@ import RequestForm from '@/components/RequestForm.vue'
 import RequestView from '@/views/RequestView.vue'
 import GetHistory from '@/components/GetHistory.vue'
 import GetBorrow from '@/components/GetBorrow.vue'
+import RequestReturnForm from '@/components/RequestReturnForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -209,6 +210,11 @@ const router = createRouter({
         {
           path: 'borrow',
           component: GetBorrow
+        },
+        {
+          path: 'request-return',
+          component: RequestReturnForm,
+          props: true
         },
       ]
     },
