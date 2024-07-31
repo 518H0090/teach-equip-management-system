@@ -96,33 +96,20 @@ const removeItem = async (id) => {
 };
 
 const handleApproveRequest = async (item) => {
-  var confirm = window.confirm("Approve this request ?");
+  const requestApprove = {
+    id: item.id,
+    accountId: item.account.id,
+    inventoryId: item.inventory.id,
+    toolName: item.inventory.tool,
+    quantity: item.quantity,
+    totalQuantity: item.inventory.totalQuantity,
+    requestType: item.requestType,
+    status: "Accept",
+  };
 
-  if (confirm) {
-    const updateRequest = {
-      id: item.id,
-      accountId: item.account.id,
-      inventoryId: item.inventory.id,
-      quantity: item.quantity,
-      status: "Accept",
-    };
+  await store.dispatch("setRequestReturn", requestApprove);
 
-    try {
-      const response = await axios.put(
-        `https://localhost:7112/api/inventorymanage/update-approval-request`,
-        updateRequest,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("access_token"),
-          },
-        }
-      );
-
-      router.go();
-    } catch (error) {
-      console.log("Error Fetching SupplierInfo", error);
-    }
-  }
+  router.push("/request/request-approve");
 };
 
 const TurnBackTool = async (item) => {
