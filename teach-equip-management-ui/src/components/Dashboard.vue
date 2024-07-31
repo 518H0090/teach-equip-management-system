@@ -323,13 +323,11 @@ const toolById = async (toolId) => {
               </tbody>
             </table>
           </div>
-          <div class="dashboard">
-            <div class="info bar">
-              <h3 class="border rounded w-full py-2 px-3 text-lg font-bold">
-                History Follow Day
-              </h3>
-              <canvas id="myBarChart"></canvas>
-            </div>
+          <div class="info bar">
+            <h3 class="border rounded w-full py-2 px-3 text-lg font-bold">
+              History Follow Day
+            </h3>
+            <canvas id="myBarChart"></canvas>
           </div>
         </div>
       </div>
@@ -345,17 +343,14 @@ const toolById = async (toolId) => {
 }
 
 .info {
+  flex: 1;
+
   h3 {
     margin-left: 1rem;
   }
 
   &.bar {
-    flex: 1;
-    margin-top: 0.4rem;
-  }
-
-  &.pie {
-    flex: 1;
+    width: 80%;
   }
 }
 
