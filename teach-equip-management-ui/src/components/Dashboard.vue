@@ -1,5 +1,12 @@
 <script setup>
-import { onBeforeMount, onMounted, onUnmounted, ref, defineProps, computed } from "vue";
+import {
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  defineProps,
+  computed,
+} from "vue";
 import axios from "axios";
 import Chart from "chart.js/auto";
 
@@ -9,38 +16,6 @@ const props = defineProps({
 });
 
 const histories = ref({});
-
-const labels = ["January", "February", "March"];
-
-const data = {
-  labels: labels,
-  datasets: [
-    {
-      label: "First",
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgb(255, 99, 132)",
-      data: [0, 10, 5, 2, 20, 30, 45],
-    },
-    {
-      label: "Second",
-      backgroundColor: "rgb(54, 162, 235)",
-      borderColor: "rgb(54, 162, 235)",
-      data: [0, 109, 50, 20, 200, 30, 450],
-    },
-    {
-      label: "Third",
-      backgroundColor: "rgb(255, 205, 86)",
-      borderColor: "rgb(255, 205, 86)",
-      data: [10, 5, 220, 40, 230, 65, 110],
-    },
-  ],
-};
-
-const config = {
-  type: "bar",
-  data: data,
-  options: {},
-};
 
 let myChart = null;
 let myBarChart = null;
@@ -54,10 +29,10 @@ onMounted(async () => {
       {
         label: "Inventory History",
         data: [
-          histories.value.borrow,
-          histories.value.return,
-          histories.value.buy,
-          histories.value.sell,
+          histories.value.borrow.length,
+          histories.value.return.length,
+          histories.value.buy.length,
+          histories.value.sell.length,
         ],
         backgroundColor: [
           "rgb(255, 99, 132)",
@@ -73,6 +48,19 @@ onMounted(async () => {
   const configPie = {
     type: "doughnut",
     data: dataPie,
+    options: {},
+  };
+
+  const chartData = transformDataForChart(histories.value.groupedData);
+
+  const data = {
+    labels: chartData.labels,
+    datasets: chartData.datasets,
+  };
+
+  const config = {
+    type: "bar",
+    data: data,
     options: {},
   };
 
@@ -103,23 +91,26 @@ const allHistories = async () => {
 
     const dataJson = response.data.data;
 
+    const groupedData = countByDateAndType(response.data.data);
+
     const mappedData = {
       all: dataJson.length,
-      borrow: dataJson.filter((history) => history.actionType === "Borrow").length,
-      return: dataJson.filter((history) => history.actionType === "Return").length,
-      buy: dataJson.filter((history) => history.actionType === "Buy").length,
-      sell: dataJson.filter((history) => history.actionType === "Sell").length,
+      borrow: dataJson.filter((history) => history.actionType === "Borrow"),
+      return: dataJson.filter((history) => history.actionType === "Return"),
+      buy: dataJson.filter((history) => history.actionType === "Buy"),
+      sell: dataJson.filter((history) => history.actionType === "Sell"),
       latest5Items: dataJson
         .sort((a, b) => new Date(b.actionDate) - new Date(a.actionDate))
         .slice(0, 5)
-        .map( (item, index) => ({
-          index: (index + 1),
+        .map((item, index) => ({
+          index: index + 1,
           actionType: item.actionType,
           actionDate: formatDate(item.actionDate),
         })),
+      groupedData: groupedData,
     };
 
-    histories.value =  mappedData;
+    histories.value = mappedData;
   } catch (error) {
     console.log("Error Fetching jobs", error);
     // if (error.response.status === 401) {
@@ -127,6 +118,66 @@ const allHistories = async () => {
     // }
   }
 };
+const formatDateBasic = (dateStr) => dateStr.split("T")[0];
+
+const countByDateAndType = (data) => {
+  const result = {};
+
+  const actionTypes = ["Borrow", "Return", "Buy", "Sell"];
+
+  actionTypes.forEach((actionType) => {
+    result[actionType] = data
+      .filter((history) => history.actionType === actionType)
+      .reduce((acc, item) => {
+        const dateOnly = formatDateBasic(item.actionDate);
+        if (!acc[dateOnly]) {
+          acc[dateOnly] = 0;
+        }
+        acc[dateOnly] += 1;
+        return acc;
+      }, {});
+  });
+
+  return result;
+};
+
+function transformDataForChart(groupedData) {
+  const dates = Array.from(
+    new Set(Object.values(groupedData).flatMap((data) => Object.keys(data)))
+  ).sort();
+
+  const labels = dates.map((date) => {
+    const [year, month, day] = date.split("-");
+    return (
+      new Date(year, month - 1, day).toLocaleString("default", {
+        month: "long",
+      }) +
+      " " +
+      year
+    );
+  });
+
+  const datasets = Object.keys(groupedData).map((actionType) => ({
+    label: actionType,
+    backgroundColor: getRandomColor(),
+    borderColor: getRandomColor(),
+    data: dates.map((date) => groupedData[actionType][date] || 0),
+  }));
+
+  function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  return {
+    labels: labels,
+    datasets: datasets,
+  };
+}
 
 function formatDate(timestamp) {
   const date = new Date(timestamp);
@@ -218,12 +269,9 @@ const toolById = async (toolId) => {
             >
               <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2 uppercase">Tool</div>
-                <p
-                  class="total-show"
-                >
+                <p class="total-show">
                   {{ props.tools > 0 ? props.tools : 0 }}
                 </p>
-             
               </div>
             </div>
             <div
@@ -232,7 +280,7 @@ const toolById = async (toolId) => {
               <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2 uppercase">History</div>
                 <p class="total-show">
-                  {{ histories.all > 0 ? histories.all : 0}}
+                  {{ histories.all > 0 ? histories.all : 0 }}
                 </p>
               </div>
             </div>
@@ -240,11 +288,17 @@ const toolById = async (toolId) => {
           <!-- Card -->
           <div class="dashboard">
             <div class="info pie">
-              <h1 class="border rounded w-full py-2 px-3 text-lg font-bold">History</h1>
+              <h3 class="border rounded w-full py-2 px-3 text-lg font-bold">
+                History
+              </h3>
               <canvas id="myChart"></canvas>
             </div>
-            <table class="text-left text-sm font-light text-surface dark:text-white">
-              <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+            <table
+              class="text-left text-sm font-light text-surface dark:text-white"
+            >
+              <thead
+                class="border-b border-neutral-200 font-medium dark:border-white/10"
+              >
                 <tr>
                   <th class="px-4 py-3 uppercase">Index</th>
                   <th class="px-4 py-3 uppercase">ACTIONTYPE</th>
@@ -270,45 +324,11 @@ const toolById = async (toolId) => {
           </div>
           <div class="dashboard">
             <div class="info bar">
-              <h1>Chart</h1>
+              <h3 class="border rounded w-full py-2 px-3 text-lg font-bold">
+                History Follow Day
+              </h3>
               <canvas id="myBarChart"></canvas>
             </div>
-            <table class="text-left text-sm font-light text-surface dark:text-white">
-              <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
-                <tr>
-                  <th class="px-4 py-3 uppercase">hehehehe</th>
-                  <th class="px-4 py-3 uppercase">hehehehe</th>
-                  <th class="px-4 py-3 uppercase">hehehehe</th>
-                  <th class="px-4 py-3 uppercase">hehehehe</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="border-b">
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                </tr>
-                <tr class="border-b">
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                </tr>
-                <tr class="border-b">
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                </tr>
-                <tr class="border-b">
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                  <td class="px-4 py-3 font-medium text-gray-900">Okay</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
@@ -324,12 +344,13 @@ const toolById = async (toolId) => {
 }
 
 .info {
-  h1 {
+  h3 {
     margin-left: 1rem;
   }
 
   &.bar {
-    flex: 2;
+    flex: 1;
+    margin-top: 0.6rem;
   }
 
   &.pie {
