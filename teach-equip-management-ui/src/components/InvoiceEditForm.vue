@@ -9,6 +9,10 @@ import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
 
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
 const route = useRoute();
 
 const store = useStore();
@@ -54,14 +58,11 @@ const tools = ref({});
 
 const allTools = async () => {
   try {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tools",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
+    const response = await axios.get("https://localhost:7112/api/toolmanage/all-tools", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    });
     tools.value = response.data.data;
   } catch (error) {
     console.log("Error Fetching jobs", error);
@@ -104,17 +105,14 @@ const validateInputs = async () => {
       price: form.price,
     };
 
-    const response = fetch(
-      "https://localhost:7112/api/toolmanage/update-invoice",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(updateInvoice),
-      }
-    )
+    const response = fetch("https://localhost:7112/api/toolmanage/update-invoice", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+      body: JSON.stringify(updateInvoice),
+    })
       .then((response) => {
         return response.json();
       })
@@ -124,12 +122,15 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 202) {
+          toast.success("success edit Invoice");
           router.push("/inventory/get-invoice");
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 
@@ -160,9 +161,7 @@ const ItemById = async (itemId) => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Edit Invoice
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Edit Invoice</h2>
 
             <div class="input-control mb-4">
               <label for="type" class="block text-gray-700 font-bold mb-2"
@@ -177,11 +176,7 @@ const ItemById = async (itemId) => {
                 disabled
               >
                 <option value="-1">Default</option>
-                <option
-                  v-for="tool in tools"
-                  :key="tool.id"
-                  :value="`${tool.id}`"
-                >
+                <option v-for="tool in tools" :key="tool.id" :value="`${tool.id}`">
                   {{ tool.toolName }}
                 </option>
               </select>

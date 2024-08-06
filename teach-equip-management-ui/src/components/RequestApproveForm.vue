@@ -10,6 +10,10 @@ import { useRoute } from "vue-router";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
 const route = useRoute();
 
 const store = useStore();
@@ -126,11 +130,14 @@ const validateInputs = async () => {
       );
 
       if (response.status === 202) {
+        toast.success("success approve request");
         router.push("/request/getpage");
       }
     } catch (error) {
       console.log("Error Fetching SupplierInfo", error);
     }
+  } else {
+    toast.error("Something error");
   }
 };
 

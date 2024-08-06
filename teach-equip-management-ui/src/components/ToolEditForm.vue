@@ -8,6 +8,9 @@ import { defineProps, onMounted, onUnmounted, reactive, ref } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const route = useRoute();
 
@@ -128,17 +131,14 @@ const validateInputs = async () => {
       supplierId: form.supplierId,
     };
 
-    const response = fetch(
-      "https://localhost:7112/api/toolmanage/update-tool",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(updateTool),
-      }
-    )
+    const response = fetch("https://localhost:7112/api/toolmanage/update-tool", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+      body: JSON.stringify(updateTool),
+    })
       .then((response) => {
         return response.json();
       })
@@ -176,6 +176,7 @@ const validateInputs = async () => {
           }
 
           await allToolCategories();
+          toast.success("success edit tool");
           router.push("/tool/getpage");
           await allToolCategories();
         }
@@ -183,6 +184,8 @@ const validateInputs = async () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 
@@ -356,9 +359,7 @@ const toolById = async (itemId) => {
             </div>
 
             <div class="input-control mb-4">
-              <label
-                for="tool_description"
-                class="block text-gray-700 font-bold mb-2"
+              <label for="tool_description" class="block text-gray-700 font-bold mb-2"
                 >Tool Description</label
               >
               <textarea

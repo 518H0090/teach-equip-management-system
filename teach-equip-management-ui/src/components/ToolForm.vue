@@ -8,6 +8,9 @@ import { defineProps, onMounted, onUnmounted, reactive, ref } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const route = useRoute();
 
@@ -103,17 +106,14 @@ const validateInputs = async () => {
       supplierId: form.supplierId,
     };
 
-    const response = fetch(
-      "https://localhost:7112/api/toolmanage/create-tool",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(newTool),
-      }
-    )
+    const response = fetch("https://localhost:7112/api/toolmanage/create-tool", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+      body: JSON.stringify(newTool),
+    })
       .then((response) => {
         return response.json();
       })
@@ -144,8 +144,7 @@ const validateInputs = async () => {
               newInventory,
               {
                 headers: {
-                  Authorization:
-                    "Bearer " + localStorage.getItem("access_token"),
+                  Authorization: "Bearer " + localStorage.getItem("access_token"),
                 },
               }
             );
@@ -156,6 +155,7 @@ const validateInputs = async () => {
           }
 
           await allToolCategories();
+          toast.success("success create new tool");
           router.push("/tool/getpage");
           await allToolCategories();
         }
@@ -163,6 +163,8 @@ const validateInputs = async () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 
@@ -283,9 +285,7 @@ const allToolCategories = async () => {
             </div>
 
             <div class="input-control mb-4">
-              <label
-                for="tool_description"
-                class="block text-gray-700 font-bold mb-2"
+              <label for="tool_description" class="block text-gray-700 font-bold mb-2"
                 >Tool Description</label
               >
               <textarea
