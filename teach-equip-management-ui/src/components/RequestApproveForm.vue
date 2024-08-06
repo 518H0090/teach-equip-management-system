@@ -4,14 +4,7 @@ import MainCard from "@/components/MainCard.vue";
 import eventBus from "@/eventBus";
 
 import { useStore } from "vuex";
-import {
-  defineProps,
-  onMounted,
-  onUnmounted,
-  reactive,
-  ref,
-  computed,
-} from "vue";
+import { defineProps, onMounted, onUnmounted, reactive, ref, computed } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
@@ -95,7 +88,9 @@ const validateInputs = async () => {
   let isProcess = true;
 
   if (form.requestType === "Borrow" || form.requestType === "Sell") {
-    if (quantityValue > totalAvailableValue) {
+    if (form.quantity > form.totalAvailabel) {
+      console.log(quantityValue);
+      console.log(totalAvailableValue);
       setError(quantity, "You can't get greater than total available");
       isProcess = false;
     } else if (quantityValue <= 0) {
@@ -150,14 +145,10 @@ const TurnBackToRequest = () => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Approve Request
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Approve Request</h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Tool Name</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Tool Name</label>
               <input
                 v-model="form.toolName"
                 type="text"
@@ -172,9 +163,7 @@ const TurnBackToRequest = () => {
             </div>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Total Available</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Total Available</label>
               <input
                 v-model="form.totalAvailabel"
                 type="number"
