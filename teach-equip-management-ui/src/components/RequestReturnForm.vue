@@ -4,18 +4,14 @@ import MainCard from "@/components/MainCard.vue";
 import eventBus from "@/eventBus";
 
 import { useStore } from "vuex";
-import {
-  defineProps,
-  onMounted,
-  onUnmounted,
-  reactive,
-  ref,
-  computed,
-} from "vue";
+import { defineProps, onMounted, onUnmounted, reactive, ref, computed } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const route = useRoute();
 
@@ -122,12 +118,15 @@ const validateInputs = async () => {
         if (data.statusCode !== 201) {
         }
         if (data.statusCode === 201) {
+          toast.success("success create new request return tool");
           router.push("/request/getpage");
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 </script>
@@ -138,14 +137,10 @@ const validateInputs = async () => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Return Request
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Return Request</h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Tool Name</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Tool Name</label>
               <input
                 v-model="form.toolName"
                 type="text"
@@ -160,9 +155,7 @@ const validateInputs = async () => {
             </div>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Total Borrow</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Total Borrow</label>
               <input
                 v-model="form.totalBorrow"
                 type="number"

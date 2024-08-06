@@ -8,10 +8,13 @@ import { defineProps, onMounted, onUnmounted, reactive } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useToast } from "vue-toastification";
 
 const route = useRoute();
 
 const store = useStore();
+
+const toast = useToast();
 
 const props = defineProps({
   page_name: {
@@ -112,12 +115,15 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 202) {
+          toast.success("success edit category");
           router.push("/category/getpage");
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 
