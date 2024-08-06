@@ -95,17 +95,14 @@ const validateInputs = async () => {
       unit: form.unit,
     };
 
-    const response = fetch(
-      "https://localhost:7112/api/toolmanage/update-category",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(updateCategory),
-      }
-    )
+    const response = fetch("https://localhost:7112/api/toolmanage/update-category", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+      body: JSON.stringify(updateCategory),
+    })
       .then((response) => {
         return response.json();
       })
@@ -153,9 +150,7 @@ const ItemById = async (itemId) => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Edit Category
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Edit Category</h2>
 
             <div class="input-control mb-4">
               <label class="block text-gray-700 font-bold mb-2">Type</label>
