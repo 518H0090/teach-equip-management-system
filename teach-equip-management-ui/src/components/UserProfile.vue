@@ -102,10 +102,12 @@ function isNullOrUndefined(value) {
   border: 1px solid #f5eded;
   margin-top: 0.4rem;
   width: fit-content;
+  border-radius: 10px;
   span.avatar {
     img {
       border-radius: 100%;
       width: 3rem;
+      margin-left: -0.4rem;
     }
   }
 }
