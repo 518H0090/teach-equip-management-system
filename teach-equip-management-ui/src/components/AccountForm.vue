@@ -8,10 +8,13 @@ import { defineProps, onMounted, onUnmounted, reactive, ref } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useToast } from "vue-toastification";
 
 const route = useRoute();
 
 const store = useStore();
+
+const toast = useToast();
 
 const props = defineProps({
   page_name: {
@@ -49,9 +52,7 @@ const roles = ref({});
 
 const allRoles = async () => {
   try {
-    const response = await axios.get(
-      "https://localhost:7112/api/usermanage/all-roles"
-    );
+    const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
     roles.value = response.data.data;
   } catch (error) {
     console.log("Error Fetching jobs", error);
@@ -144,16 +145,13 @@ const validateInputs = async () => {
 
     console.log(newAccount);
 
-    const response = fetch(
-      "https://localhost:7112/api/usermanage/create-user",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newAccount),
-      }
-    )
+    const response = fetch("https://localhost:7112/api/usermanage/create-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newAccount),
+    })
       .then((response) => {
         return response.json();
       })
@@ -163,12 +161,15 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 201) {
+          toast.success("success add new account");
           router.push("/account/getpage");
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 
@@ -242,9 +243,7 @@ const toggleDropdown = () => {
             </div>
 
             <div class="input-control mb-4">
-              <label for="type" class="block text-gray-700 font-bold mb-2"
-                >Role</label
-              >
+              <label for="type" class="block text-gray-700 font-bold mb-2">Role</label>
               <select
                 v-model="form.roleId"
                 id="roleId"
@@ -253,11 +252,7 @@ const toggleDropdown = () => {
                 required
               >
                 <option value="-1">Default</option>
-                <option
-                  v-for="role in roles"
-                  :key="role.id"
-                  :value="`${role.id}`"
-                >
+                <option v-for="role in roles" :key="role.id" :value="`${role.id}`">
                   {{ role.roleName }}
                 </option>
               </select>

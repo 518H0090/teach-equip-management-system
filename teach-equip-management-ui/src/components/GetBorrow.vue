@@ -7,11 +7,13 @@ import { defineProps, onMounted, onUnmounted, onActivated, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
 import router from "@/router";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
 
 const store = useStore();
 
 const items = ref({});
 const keys = ref([]);
+const isLoading = ref(true);
 
 const props = defineProps({
   page_name: {
@@ -30,8 +32,13 @@ onMounted(async () => {
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
-
-  await allInventoryHistories();
+  try {
+    await allInventoryHistories();
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 onUnmounted(() => {
@@ -44,41 +51,37 @@ onUnmounted(() => {
 });
 
 const allInventoryHistories = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/inventorymanage/all-inventory-histories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-    const { data } = response.data;
+  const response = await axios.get(
+    "https://localhost:7112/api/inventorymanage/all-inventory-histories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
+  const { data } = response.data;
 
-    const resultArray = calculateQuantitiesForEachItem(data).filter(
-      (item) => item.NetQuantity > 0
-    );
+  const resultArray = calculateQuantitiesForEachItem(data).filter(
+    (item) => item.NetQuantity > 0
+  );
 
-    const mappedFilter = resultArray.map(async (item) => ({
-      account: await accountById(item.accountId),
-      inventory: await inventoryById(item.inventoryId),
-      Borrow: item.NetQuantity,
-    }));
+  const mappedFilter = resultArray.map(async (item) => ({
+    account: await accountById(item.accountId),
+    inventory: await inventoryById(item.inventoryId),
+    Borrow: item.NetQuantity,
+  }));
 
-    const promisesMappedData = await Promise.all(mappedFilter);
+  const promisesMappedData = await Promise.all(mappedFilter);
 
-    items.value = promisesMappedData;
+  items.value = promisesMappedData;
 
-    let allKeys = promisesMappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let allKeys = promisesMappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    let uniqueKeys = [...new Set(allKeys)];
+  let uniqueKeys = [...new Set(allKeys)];
 
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-  }
+  keys.value = uniqueKeys;
 };
 
 function formatDate(timestamp) {
@@ -95,73 +98,52 @@ function formatDate(timestamp) {
 }
 
 const accountById = async (userId) => {
-  try {
-    const response = await axios.get(
-      `https://localhost:7112/api/usermanage/user/find/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = response.data;
-
-    return { username: data.username, accountId: data.id };
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const response = await axios.get(
+    `https://localhost:7112/api/usermanage/user/find/${userId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = response.data;
+
+  return { username: data.username, accountId: data.id };
 };
 
 const inventoryById = async (inventoryId) => {
-  try {
-    const inventory = await axios.get(
-      `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = inventory.data;
-
-    const { toolId, ...rest } = data;
-
-    const tool = await toolById(toolId);
-
-    return { inventoryId: rest.id, toolName: tool };
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const inventory = await axios.get(
+    `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = inventory.data;
+
+  const { toolId, ...rest } = data;
+
+  const tool = await toolById(toolId);
+
+  return { inventoryId: rest.id, toolName: tool };
 };
 
 const toolById = async (toolId) => {
-  try {
-    const tool = await axios.get(
-      `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = tool.data;
-
-    return data.toolName;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error) {
-      console.log("Error Fetching jobs", error);
+  const tool = await axios.get(
+    `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = tool.data;
+
+  return data.toolName;
 };
 
 const calculateQuantitiesForEachItem = (data) => {
@@ -198,7 +180,11 @@ const calculateQuantitiesForEachItem = (data) => {
 
 <template>
   <MainCard>
+    <div v-if="isLoading" class="text-center text-gray-500 py-6">
+      <ClipLoader size="8rem" />
+    </div>
     <DataTable
+      v-else
       :keys="keys"
       :items="items"
       page_name="borrow"

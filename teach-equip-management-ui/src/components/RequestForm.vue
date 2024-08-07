@@ -9,6 +9,9 @@ import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const route = useRoute();
 
@@ -126,12 +129,15 @@ const validateInputs = async () => {
         if (data.statusCode !== 201) {
         }
         if (data.statusCode === 201) {
+          toast.success("success create new request");
           router.push("/inventory/getpage");
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 
@@ -145,15 +151,10 @@ function decodeJwtToken(token, userRef) {
 
       userRef.value = {
         exp: decoded.exp,
-        id: decoded[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ],
-        name: decoded[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-        ],
-        role: decoded[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ],
+        id:
+          decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+        name: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
       };
 
       form.accountId = userRef.value.id;
@@ -210,9 +211,7 @@ const inventoryById = async (inventoryId) => {
             <h2 class="text-3xl text-center font-semibold mb-6">New Request</h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Tool Name</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Tool Name</label>
               <input
                 v-model="form.toolName"
                 type="text"

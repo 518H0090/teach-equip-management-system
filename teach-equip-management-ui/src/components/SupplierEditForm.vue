@@ -8,6 +8,9 @@ import { defineProps, onMounted, onUnmounted, reactive } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const route = useRoute();
 
@@ -129,10 +132,13 @@ const validateInputs = async () => {
         }
       );
 
+      toast.success("success edit supplier");
       router.push("/supplier/getpage");
     } catch (error) {
       console.log("Error Fetching jobs", error);
     }
+  } else {
+    toast.error("Something error");
   }
 };
 
@@ -165,14 +171,10 @@ const supplierById = async (supplierId) => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Edit Supplier
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Edit Supplier</h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Supplier Name</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Supplier Name</label>
               <input
                 v-model="form.supplierName"
                 type="text"
@@ -186,9 +188,7 @@ const supplierById = async (supplierId) => {
             </div>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Contact Name</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Contact Name</label>
               <input
                 v-model="form.contactName"
                 type="text"

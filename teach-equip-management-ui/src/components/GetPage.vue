@@ -3,16 +3,19 @@ import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
 
 import { useStore } from "vuex";
-import { defineProps, onMounted, onUnmounted, onActivated, ref } from "vue";
+import { defineProps, onMounted, onUnmounted, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
 import router from "@/router";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
 
 const store = useStore();
 
 const items = ref({});
 const keys = ref([]);
 const relationShip = ref({});
+
+const isLoading = ref(true);
 
 const props = defineProps({
   page_name: {
@@ -25,49 +28,35 @@ const props = defineProps({
   },
 });
 
-onActivated(async () => {
-  if (props.page_name === "supplier") {
-    allSupplier();
-  } else if (props.page_name === "about") {
-    aboutFetchs();
-  } else if (props.page_name === "category") {
-    allCategory();
-  } else if (props.page_name === "tool") {
-    await allToolCategories();
-    await allTool();
-  } else if (props.page_name === "account") {
-    await allRoles();
-    await allAccount();
-  } else if (props.page_name === "inventory") {
-    await allInvoicess();
-    await allInventories();
-  }
-});
-
 onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
 
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
-
-  if (props.page_name === "supplier") {
-    allSupplier();
-  } else if (props.page_name === "about") {
-    aboutFetchs();
-  } else if (props.page_name === "category") {
-    allCategory();
-  } else if (props.page_name === "tool") {
-    await allToolCategories();
-    await allTool();
-  } else if (props.page_name === "account") {
-    await allRoles();
-    await allAccount();
-  } else if (props.page_name === "inventory") {
-    await allInvoicess();
-    await allInventories();
-  } else if (props.page_name === "request") {
-    await allApprovalRequest();
+  try {
+    if (props.page_name === "supplier") {
+      await allSupplier();
+    } else if (props.page_name === "about") {
+      await aboutFetchs();
+    } else if (props.page_name === "category") {
+      await allCategory();
+    } else if (props.page_name === "tool") {
+      await allToolCategories();
+      await allTool();
+    } else if (props.page_name === "account") {
+      await allRoles();
+      await allAccount();
+    } else if (props.page_name === "inventory") {
+      await allInvoicess();
+      await allInventories();
+    } else if (props.page_name === "request") {
+      await allApprovalRequest();
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoading.value = false;
   }
 });
 
@@ -81,141 +70,101 @@ onUnmounted(() => {
 });
 
 const allSupplier = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-supplier",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-    items.value = response.data.data;
+  const response = await axios.get("https://localhost:7112/api/toolmanage/all-supplier", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+    },
+  });
+  items.value = response.data.data;
 
-    let allKeys = response.data.data.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let allKeys = response.data.data.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    let uniqueKeys = [...new Set(allKeys)];
+  let uniqueKeys = [...new Set(allKeys)];
 
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
+  keys.value = uniqueKeys;
 };
 
 const allCategory = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-categories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-    items.value = response.data.data;
-
-    let allKeys = response.data.data.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
-
-    let uniqueKeys = [...new Set(allKeys)];
-
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const response = await axios.get(
+    "https://localhost:7112/api/toolmanage/all-categories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+  items.value = response.data.data;
+
+  let allKeys = response.data.data.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
+
+  let uniqueKeys = [...new Set(allKeys)];
+
+  keys.value = uniqueKeys;
 };
 
 const allTool = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tools-include-supplier",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const datajson = response.data.data;
-
-    const mappedData = datajson.map((item) => ({
-      id: item.id,
-      toolName: item.toolName,
-      description: item.description,
-      supplier: {
-        supplierId: item.supplier.id,
-        supplierName: item.supplier.supplierName,
+  const response = await axios.get(
+    "https://localhost:7112/api/toolmanage/all-tools-include-supplier",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
-      category: relationShip.value
-        .filter((toolCategory) => toolCategory.tool.id === item.id)
-        .map((toolCategory) => toolCategory.category),
-    }));
-
-    items.value = mappedData;
-
-    let allKeys = mappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
-
-    let uniqueKeys = [...new Set(allKeys)];
-
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
     }
-  }
+  );
+
+  const datajson = response.data.data;
+
+  const mappedData = datajson.map((item) => ({
+    id: item.id,
+    toolName: item.toolName,
+    description: item.description,
+    supplier: {
+      supplierId: item.supplier.id,
+      supplierName: item.supplier.supplierName,
+    },
+    category: relationShip.value
+      .filter((toolCategory) => toolCategory.tool.id === item.id)
+      .map((toolCategory) => toolCategory.category),
+  }));
+
+  items.value = mappedData;
+
+  let allKeys = mappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
+
+  let uniqueKeys = [...new Set(allKeys)];
+
+  keys.value = uniqueKeys;
 };
 
 const allAccount = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/usermanage/all-users"
-    );
-    const datajson = response.data.data.map(
-      ({
-        passwordHash,
-        passwordSalt,
-        refreshToken,
-        refreshTokenExpiryTime,
-        ...rest
-      }) => rest
-    );
+  const response = await axios.get("https://localhost:7112/api/usermanage/all-users");
+  const datajson = response.data.data.map(
+    ({ passwordHash, passwordSalt, refreshToken, refreshTokenExpiryTime, ...rest }) =>
+      rest
+  );
 
-    const mappedData = datajson.map((item) => ({
-      id: item.id,
-      username: item.username,
-      email: item.email,
-      role: roles.value.filter(
-        (role) => Number(role.id) === Number(item.roleId)
-      ),
-    }));
+  const mappedData = datajson.map((item) => ({
+    id: item.id,
+    username: item.username,
+    email: item.email,
+    role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
+  }));
 
-    items.value = mappedData;
+  items.value = mappedData;
 
-    let allKeys = items.value.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let allKeys = items.value.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    let uniqueKeys = [...new Set(allKeys)];
+  let uniqueKeys = [...new Set(allKeys)];
 
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
+  keys.value = uniqueKeys;
 };
 
 const aboutFetchs = async () => {
@@ -233,103 +182,77 @@ const aboutFetchs = async () => {
 };
 
 const allToolCategories = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tool-categories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const datajson = response.data.data;
-
-    relationShip.value = datajson;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const response = await axios.get(
+    "https://localhost:7112/api/toolmanage/all-tool-categories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const datajson = response.data.data;
+
+  relationShip.value = datajson;
 };
 
 const roles = ref({});
 
 const allRoles = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/usermanage/all-roles"
-    );
-    roles.value = response.data.data;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
+  const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
+  roles.value = response.data.data;
 };
 
 const allInventories = async () => {
-  try {
-    const inventories = await axios.get(
-      "https://localhost:7112/api/inventorymanage/all-inventories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const tools = await axios.get(
-      "https://localhost:7112/api/toolmanage/all-tools",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    let mappedData;
-
-    if (invoices.value.length > 0) {
-      mappedData = inventories.data.data.map((item) => ({
-        id: item.id,
-        tool: tools.data.data
-          .filter((tool) => Number(tool.id) === Number(item.toolId))
-          .map((tool) => tool.toolName),
-        total_quantity: item.totalQuantity,
-        amount_borrow: item.amountBorrow,
-        latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
-          ? getLatestPriceByToolId(invoices.value, item.toolId)
-          : 0,
-      }));
-    } else {
-      mappedData = inventories.data.data.map((item) => ({
-        id: item.id,
-        tool: tools.data.data
-          .filter((tool) => Number(tool.id) === Number(item.toolId))
-          .map((tool) => tool.toolName),
-        total_quantity: item.totalQuantity,
-        amount_borrow: item.amountBorrow,
-      }));
+  const inventories = await axios.get(
+    "https://localhost:7112/api/inventorymanage/all-inventories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
+  );
 
-    items.value = mappedData;
+  const tools = await axios.get("https://localhost:7112/api/toolmanage/all-tools", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+    },
+  });
 
-    let allKeys = mappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
+  let mappedData;
 
-    let uniqueKeys = [...new Set(allKeys)];
-
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
+  if (invoices.value.length > 0) {
+    mappedData = inventories.data.data.map((item) => ({
+      id: item.id,
+      tool: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.toolName),
+      total_quantity: item.totalQuantity,
+      amount_borrow: item.amountBorrow,
+      latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
+        ? getLatestPriceByToolId(invoices.value, item.toolId)
+        : 0,
+    }));
+  } else {
+    mappedData = inventories.data.data.map((item) => ({
+      id: item.id,
+      tool: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.toolName),
+      total_quantity: item.totalQuantity,
+      amount_borrow: item.amountBorrow,
+    }));
   }
+
+  items.value = mappedData;
+
+  let allKeys = mappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
+
+  let uniqueKeys = [...new Set(allKeys)];
+
+  keys.value = uniqueKeys;
 };
 
 const invoices = ref({});
@@ -376,123 +299,99 @@ function getLatestPriceByToolId(data, toolId) {
 }
 
 const allApprovalRequest = async () => {
-  try {
-    const response = await axios.get(
-      "https://localhost:7112/api/inventorymanage/all-approval-requests",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const mappedFilter = response.data.data.map(async (item) => ({
-      id: item.id,
-      account: await accountById(item.accountId),
-      inventory: await inventoryById(item.inventoryId),
-      quantity: item.quantity,
-      requestType: item.requestType,
-      status: item.status,
-    }));
-
-    const promisesMappedData = await Promise.all(mappedFilter);
-
-    items.value = promisesMappedData;
-
-    let allKeys = promisesMappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
-
-    let uniqueKeys = [...new Set(allKeys)];
-
-    keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const response = await axios.get(
+    "https://localhost:7112/api/inventorymanage/all-approval-requests",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const mappedFilter = response.data.data.map(async (item) => ({
+    id: item.id,
+    account: await accountById(item.accountId),
+    inventory: await inventoryById(item.inventoryId),
+    quantity: item.quantity,
+    requestType: item.requestType,
+    status: item.status,
+  }));
+
+  const promisesMappedData = await Promise.all(mappedFilter);
+
+  items.value = promisesMappedData;
+
+  let allKeys = promisesMappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
+
+  let uniqueKeys = [...new Set(allKeys)];
+
+  keys.value = uniqueKeys;
 };
 
 const accountById = async (userId) => {
-  try {
-    const response = await axios.get(
-      `https://localhost:7112/api/usermanage/user/find/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = response.data;
-
-    return data;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const response = await axios.get(
+    `https://localhost:7112/api/usermanage/user/find/${userId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = response.data;
+
+  return data;
 };
 
 const inventoryById = async (inventoryId) => {
-  try {
-    const inventory = await axios.get(
-      `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = inventory.data;
-
-    const { toolId, ...rest } = data;
-
-    const tool = await toolById(toolId);
-
-    let dataResponse = {
-      ...rest,
-      tool,
-    };
-
-    return dataResponse;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const inventory = await axios.get(
+    `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = inventory.data;
+
+  const { toolId, ...rest } = data;
+
+  const tool = await toolById(toolId);
+
+  let dataResponse = {
+    ...rest,
+    tool,
+  };
+
+  return dataResponse;
 };
 
 const toolById = async (toolId) => {
-  try {
-    const tool = await axios.get(
-      `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
-
-    const { data } = tool.data;
-
-    return data.toolName;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
+  const tool = await axios.get(
+    `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
     }
-  }
+  );
+
+  const { data } = tool.data;
+
+  return data.toolName;
 };
 </script>
 
 <template>
   <MainCard>
+    <div v-if="isLoading" class="text-center text-gray-500 py-6">
+      <ClipLoader size="8rem" />
+    </div>
     <DataTable
+      v-else
       :keys="keys"
       :items="items"
       :page_name="props.page_name"
