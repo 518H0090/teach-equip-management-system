@@ -13,5 +13,7 @@ namespace TeachEquipManagement.BLL.IServices
         Task<ApiResponse<AuthenticatedResponse>> Refresh(AuthenticatedRefreshRequest request, ValidationResult validation);
 
         Task<ApiResponse<bool>> Revoke(Guid userId);
+
+        Task<ApiResponse<bool>> ReadUserInfo(List<Claim> claims);
     }
 }
