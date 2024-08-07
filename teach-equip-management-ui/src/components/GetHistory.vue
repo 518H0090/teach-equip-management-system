@@ -7,11 +7,13 @@ import { defineProps, onMounted, onUnmounted, onActivated, ref } from "vue";
 import DataTable from "@/components/DataTable.vue";
 import axios from "axios";
 import router from "@/router";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
 
 const store = useStore();
 
 const items = ref({});
 const keys = ref([]);
+const isLoading = ref(true);
 
 const props = defineProps({
   page_name: {
@@ -31,7 +33,17 @@ onMounted(async () => {
   aside_item.classList.add("router-link-active");
   aside_item.classList.add("router-link-exact-active");
 
-  await allHistories();
+  try {
+    await allHistories();
+  }
+  catch(error) {
+    console.log(error)
+  }
+
+  finally {
+    isLoading.value = false;
+  }
+
 });
 
 onUnmounted(() => {
@@ -44,7 +56,6 @@ onUnmounted(() => {
 });
 
 const allHistories = async () => {
-  try {
     const response = await axios.get(
       "https://localhost:7112/api/inventorymanage/all-inventory-histories",
       {
@@ -79,9 +90,6 @@ const allHistories = async () => {
     let uniqueKeys = [...new Set(allKeys)];
 
     keys.value = uniqueKeys;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-  }
 };
 
 function formatDate(timestamp) {
@@ -98,7 +106,6 @@ function formatDate(timestamp) {
 }
 
 const accountById = async (userId) => {
-  try {
     const response = await axios.get(
       `https://localhost:7112/api/usermanage/user/find/${userId}`,
       {
@@ -111,16 +118,9 @@ const accountById = async (userId) => {
     const { data } = response.data;
 
     return data;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const inventoryById = async (inventoryId) => {
-  try {
     const inventory = await axios.get(
       `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
       {
@@ -142,16 +142,9 @@ const inventoryById = async (inventoryId) => {
     };
 
     return dataResponse;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 
 const toolById = async (toolId) => {
-  try {
     const tool = await axios.get(
       `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
       {
@@ -164,18 +157,16 @@ const toolById = async (toolId) => {
     const { data } = tool.data;
 
     return data.toolName;
-  } catch (error) {
-    console.log("Error Fetching jobs", error);
-    if (error.response.status === 401) {
-      console.log("Error Fetching jobs", error);
-    }
-  }
 };
 </script>
 
 <template>
   <MainCard>
+    <div v-if="isLoading" class="text-center text-gray-500 py-6">
+      <ClipLoader size="8rem" />
+    </div>
     <DataTable
+    v-else
       :keys="keys"
       :items="items"
       page_name="request"

@@ -8,10 +8,13 @@ import { defineProps, onMounted, onUnmounted, reactive } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useToast } from "vue-toastification";
 
 const route = useRoute();
 
 const store = useStore();
+
+const toast = useToast();
 
 const props = defineProps({
   page_name: {
@@ -115,12 +118,15 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 202) {
+          toast.success("success edit inventory");
           router.push("/inventory/getpage");
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  } else {
+    toast.error("Something error");
   }
 };
 
@@ -153,14 +159,10 @@ const ItemById = async (itemId) => {
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
           <form @submit.prevent="validateInputs">
-            <h2 class="text-3xl text-center font-semibold mb-6">
-              Edit Inventory
-            </h2>
+            <h2 class="text-3xl text-center font-semibold mb-6">Edit Inventory</h2>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Total Quantity</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Total Quantity</label>
               <input
                 v-model="form.totalQuantity"
                 type="number"
@@ -174,9 +176,7 @@ const ItemById = async (itemId) => {
             </div>
 
             <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Amount Borrow</label
-              >
+              <label class="block text-gray-700 font-bold mb-2">Amount Borrow</label>
               <input
                 v-model="form.amountBorrow"
                 type="number"
