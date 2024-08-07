@@ -122,6 +122,18 @@ namespace TeachEquipManagement.WebAPI.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("user-info-token")]
+        public async Task<IActionResult> UserInfoToken()
+        {
+            var claims = User.Claims.ToList();
+
+            var response = await _userManageService.TokenService.ReadUserInfo(claims);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
         #endregion
 
         #region Role

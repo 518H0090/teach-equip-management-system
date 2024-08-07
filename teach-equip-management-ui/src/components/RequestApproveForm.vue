@@ -8,8 +8,6 @@ import { defineProps, onMounted, onUnmounted, reactive, ref, computed } from "vu
 import router from "@/router";
 import { useRoute } from "vue-router";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
