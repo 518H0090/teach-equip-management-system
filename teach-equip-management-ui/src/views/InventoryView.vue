@@ -36,7 +36,6 @@ const decodeJwtToken = async (token, userRef) => {
   }
 }
 
-
 </script>
 
 <template>
@@ -45,11 +44,11 @@ const decodeJwtToken = async (token, userRef) => {
       <li>
         <RouterLink to="/inventory/getpage" class="link">Inventory</RouterLink>
       </li>
-      <li>
-        <RouterLink to="/inventory/get-invoice" class="link" v-if="user.role === 'admin' || user.role === 'manager'">Invoice</RouterLink>
+      <li v-if="user.role === 'admin' || user.role === 'manager'">
+        <RouterLink to="/inventory/get-invoice" class="link" >Invoice</RouterLink>
       </li>
-      <li>
-        <RouterLink to="/inventory/add-invoice" class="link" v-if="user.role === 'admin' || user.role === 'manager'">Create Invoice</RouterLink>
+      <li v-if="user.role === 'admin' || user.role === 'manager'">
+        <RouterLink to="/inventory/add-invoice" class="link" >Create Invoice</RouterLink>
       </li>
     </Navbar>
     <RouterView page_name="inventory" page_service="toolmanage" />

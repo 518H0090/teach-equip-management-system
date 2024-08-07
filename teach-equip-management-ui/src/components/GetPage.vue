@@ -26,6 +26,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  role: {
+    type: String,
+    default: ""
+  }
 });
 
 onMounted(async () => {
@@ -396,6 +400,7 @@ const toolById = async (toolId) => {
       :items="items"
       :page_name="props.page_name"
       :page_service="props.page_service"
+      :role="props.role"
     />
   </MainCard>
 </template>
