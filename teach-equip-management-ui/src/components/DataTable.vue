@@ -15,6 +15,10 @@ const props = defineProps({
     default: "",
   },
   page_service: String,
+  role: {
+    type: String,
+    default: "",
+  },
 });
 
 const searchFilter = ref("");
@@ -24,9 +28,7 @@ const store = useStore();
 const filteredItems = computed(() => {
   if (searchFilter.value !== "") {
     if (props.page_name === "about") {
-      return props.items.filter((item) =>
-        item.title.includes(searchFilter.value)
-      );
+      return props.items.filter((item) => item.title.includes(searchFilter.value));
     } else if (props.page_name === "supplier") {
       return props.items.filter(
         (item) =>
@@ -36,8 +38,7 @@ const filteredItems = computed(() => {
     } else if (props.page_name === "category") {
       return props.items.filter(
         (item) =>
-          item.type.includes(searchFilter.value) ||
-          item.unit.includes(searchFilter.value)
+          item.type.includes(searchFilter.value) || item.unit.includes(searchFilter.value)
       );
     } else if (props.page_name === "tool") {
       return props.items.filter(
@@ -142,15 +143,11 @@ const TurnBackTool = async (item) => {
           <table
             class="min-w-full text-left text-sm font-light text-surface dark:text-white"
           >
-            <thead
-              class="border-b border-neutral-200 font-medium dark:border-white/10"
-            >
+            <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
               <tr v-show="props.keys !== null">
                 <th v-for="key in keys" :key="key" class="px-4 py-3 uppercase">
                   <span v-if="key !== 'id'">
-                    {{
-                      key.split("_").length > 1 ? key.split("_").join(" ") : key
-                    }}
+                    {{ key.split("_").length > 1 ? key.split("_").join(" ") : key }}
                   </span>
                   <span v-if="key === 'id'" hidden>
                     {{ `Id: ${key} ` }}
@@ -181,9 +178,7 @@ const TurnBackTool = async (item) => {
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      Array.isArray(value) &&
-                      props.page_name === 'tool'
+                      value && Array.isArray(value) && props.page_name === 'tool'
                     "
                   >
                     {{
@@ -196,9 +191,7 @@ const TurnBackTool = async (item) => {
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      Array.isArray(value) &&
-                      props.page_name === 'account'
+                      value && Array.isArray(value) && props.page_name === 'account'
                     "
                   >
                     {{
@@ -209,9 +202,7 @@ const TurnBackTool = async (item) => {
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      Array.isArray(value) &&
-                      props.page_name === 'inventory'
+                      value && Array.isArray(value) && props.page_name === 'inventory'
                     "
                   >
                     {{
@@ -222,36 +213,28 @@ const TurnBackTool = async (item) => {
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      Array.isArray(value) &&
-                      props.page_name === 'invoice'
+                      value && Array.isArray(value) && props.page_name === 'invoice'
                     "
                   >
                     {{ value.length > 0 ? `${value} ` : "Missing Invoice" }}
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      props.page_name === 'request' &&
-                      value === item.account
+                      value && props.page_name === 'request' && value === item.account
                     "
                   >
                     {{ `${value.username}` }}
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      props.page_name === 'request' &&
-                      value === item.inventory
+                      value && props.page_name === 'request' && value === item.inventory
                     "
                   >
                     {{ `${value.tool}` }}
                   </span>
                   <span
                     v-else-if="
-                      value &&
-                      props.page_name === 'borrow' &&
-                      value === item.inventory
+                      value && props.page_name === 'borrow' && value === item.inventory
                     "
                   >
                     {{ value.toolName }}
@@ -259,9 +242,7 @@ const TurnBackTool = async (item) => {
 
                   <span
                     v-else-if="
-                      value &&
-                      props.page_name === 'borrow' &&
-                      value === item.account
+                      value && props.page_name === 'borrow' && value === item.account
                     "
                   >
                     {{ value.username }}
@@ -317,6 +298,7 @@ const TurnBackTool = async (item) => {
                 >
                   <RouterLink
                     :to="`/${props.page_name}/editpage/${item.id}`"
+                    v-show="props.role !== 'user'"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                     >Edit</RouterLink
                   >
@@ -341,11 +323,10 @@ const TurnBackTool = async (item) => {
 
                 <td
                   class="px-4 py-3 flex items-center"
-                  v-show="
-                    props.page_name === 'request' && item.status === 'Pending'
-                  "
+                  v-show="props.page_name === 'request' && item.status === 'Pending'"
                 >
                   <button
+                    v-show="props.role !== 'user'"
                     @click="handleApproveRequest(item)"
                     class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                   >
