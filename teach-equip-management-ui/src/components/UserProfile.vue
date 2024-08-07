@@ -67,8 +67,8 @@ function isNullOrUndefined(value) {
 
       <span class="username">
         {{
-          props.username.length > 13
-            ? props.username.slice(0, 13) + "..."
+          props.username.length > 12
+            ? props.username.slice(0, 12) + "..."
             : props.username
         }}
       </span>
@@ -95,19 +95,19 @@ function isNullOrUndefined(value) {
 .dropdown-selected-option {
   box-sizing: border-box;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   text-transform: uppercase;
   font-weight: 700;
   border: 1px solid #f5eded;
-  margin-top: 0.4rem;
-  width: fit-content;
-  border-radius: 10px;
+  min-width: 12rem;
+  max-width: 16rem;
+  border-radius: 4rem;
+  margin-top: 0.3rem;
   span.avatar {
     img {
       border-radius: 100%;
-      width: 3rem;
-      margin-left: -0.4rem;
+      width: 2.4rem;
     }
   }
 }

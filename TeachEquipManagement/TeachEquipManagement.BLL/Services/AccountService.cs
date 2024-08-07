@@ -3,7 +3,6 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.SharePoint.Client;
 using Polly;
 using Polly.Retry;
 using Serilog;
@@ -553,8 +552,12 @@ namespace TeachEquipManagement.BLL.Services
                     return response;
                 }
 
+                var expired = int.Parse(claims.FirstOrDefault(claim => claim.Type == "exp").Value);
+
+              
+
                 response.Data = true;
-                response.Message = "Valid Token";
+                response.Message = "Valid UserInfo Successfully";
                 response.StatusCode = StatusCodes.Status200OK;
             }
 

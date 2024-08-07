@@ -27,6 +27,8 @@ onMounted(async () => {
   await store.dispatch("setAuth", true);
 
   await handleToken();
+
+  await decodeJwtToken(token.value, user);
 });
 
 onUnmounted(async () => {
@@ -34,6 +36,7 @@ onUnmounted(async () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   await store.dispatch("setAuth", false);
+  user.value = {};
 });
 
 const auth = ref(store.state.authenticated === "true");
@@ -96,11 +99,14 @@ const handleToken = async () => {
         try {
           await refreshAccessToken(accessToken, refreshToken);
         } catch (error) {
+          toast.error("Unable to refresh tokens, we will push you to login")
           console.error("Unable to refresh tokens", error);
           router.push("/login");
           return;
         }
       } else {
+        toast.error("Unable to refresh tokens, we will push you to login")
+        console.error("Unable to refresh tokens");
         router.push("/login");
         return;
       }
@@ -110,10 +116,31 @@ const handleToken = async () => {
     throw new Error("An error occurred while handling the token.");
   }
 };
+
+const token = ref(localStorage.getItem("access_token") || "");
+const user = ref({});
+
+const decodeJwtToken = async (token, userRef) => {
+  try {
+    if (token) {
+      const decoded = jwtDecode(token);
+
+      userRef.value = {
+        exp: decoded.exp,
+        id:
+          decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+        name: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+      };
+    }
+  } catch (error) {
+    console.error("Invalid token:", error);
+  }
+}
 </script>
 
 <template>
-  <aside :class="`${is_expanded ? 'is-expanded' : ''}`">
+  <aside :class="`${is_expanded ? 'is-expanded' : ''}`" v-show="auth">
     <!-- Logo -->
     <div class="logo">
       <img src="../assets/logo.svg" alt="Vue" />
@@ -128,7 +155,9 @@ const handleToken = async () => {
 
     <!-- Menu -->
     <h3>Menu</h3>
-    <div class="menu">
+
+    <!-- Show For Admin -->
+    <div class="menu" v-if="user.role === 'admin'">
       <RouterLink class="button" to="/">
         <span class="material-icons">dashboard</span>
         <span class="text">Home</span>
@@ -173,6 +202,56 @@ const handleToken = async () => {
         <span class="material-icons">category</span>
         <span class="text">Category</span>
       </RouterLink>
+    </div>
+    <!-- Show For Manager -->
+    <div class="menu" v-else-if="user.role === 'manager'">
+      <RouterLink class="button" to="/">
+        <span class="material-icons">dashboard</span>
+        <span class="text">Home</span>
+      </RouterLink>
+
+      <RouterLink class="button inventory" to="/inventory/getpage">
+        <span class="material-icons">inventory</span>
+        <span class="text">Inventory</span>
+      </RouterLink>
+
+      <RouterLink class="button request" to="/request/getpage">
+        <span class="material-icons">post_add</span>
+        <span class="text">Request</span>
+      </RouterLink>
+
+      <RouterLink class="button tool" to="/tool/getpage">
+        <span class="material-icons">construction</span>
+        <span class="text">Tool</span>
+      </RouterLink>
+
+      <RouterLink class="button supplier" to="/supplier/getpage">
+        <span class="material-icons">storefront</span>
+        <span class="text">Supplier</span>
+      </RouterLink>
+
+      <RouterLink class="button category" to="/category/getpage">
+        <span class="material-icons">category</span>
+        <span class="text">Category</span>
+      </RouterLink>
+    </div>
+    <!-- Show For User -->
+    <div class="menu" v-else-if="user.role === 'user'">
+      <RouterLink class="button" to="/">
+        <span class="material-icons">dashboard</span>
+        <span class="text">Home</span>
+      </RouterLink>
+
+      <RouterLink class="button inventory" to="/inventory/getpage">
+        <span class="material-icons">inventory</span>
+        <span class="text">Inventory</span>
+      </RouterLink>
+
+      <RouterLink class="button request" to="/request/getpage">
+        <span class="material-icons">post_add</span>
+        <span class="text">Request</span>
+      </RouterLink>
+    
     </div>
 
     <div class="flex"></div>
