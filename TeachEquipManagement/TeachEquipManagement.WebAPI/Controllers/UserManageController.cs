@@ -126,17 +126,6 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         #region Role
 
-        [HttpPost]
-        [Route("create-role")]
-        public async Task<IActionResult> CreateRole([FromBody] RoleRequest request)
-        {
-            var validationResult = new RoleRequestValidator().Validate(request);
-
-            var response = await _userManageService.RoleService.Create(request, validationResult);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
         [HttpGet]
         [Route("all-roles")]
         public async Task<IActionResult> GetAllRoles()
@@ -151,26 +140,6 @@ namespace TeachEquipManagement.WebAPI.Controllers
         public async Task<IActionResult> FindRoleById(int id)
         {
             var response = await _userManageService.RoleService.GetById(id);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpDelete]
-        [Route("remove-role/{id}")]
-        public async Task<IActionResult> RemoveRole(int id)
-        {
-            var response = await _userManageService.RoleService.Remove(id);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpPut]
-        [Route("update-role")]
-        public async Task<IActionResult> UpdateCategory([FromBody] RoleUpdateRequest request)
-        {
-            var validationResult = new RoleUpdateRequestValidator().Validate(request);
-
-            var response = await _userManageService.RoleService.Update(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
         }

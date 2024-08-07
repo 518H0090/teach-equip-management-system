@@ -25,16 +25,13 @@ const logOut = async () => {
   if (isNullOrUndefined(accessToken)) {
     router.push("/login");
   } else {
-    const response = fetch(
-      "https://localhost:7112/api/usermanage/revoke-token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    )
+    const response = fetch("https://localhost:7112/api/usermanage/revoke-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    })
       .then((response) => {
         return response.json();
       })
@@ -72,9 +69,7 @@ function isNullOrUndefined(value) {
         {{ props.username }}
       </span>
 
-      <span class="material-symbols-outlined">
-        keyboard_double_arrow_down
-      </span>
+      <span class="material-symbols-outlined"> keyboard_double_arrow_down </span>
     </div>
     <div class="options-wrapper" v-if="dropdownOpen">
       <div class="option" @click="logOut">Logout</div>
@@ -94,8 +89,6 @@ function isNullOrUndefined(value) {
 }
 
 .dropdown-selected-option {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
   box-sizing: border-box;
   display: flex;
   justify-content: flex-end;
@@ -103,13 +96,12 @@ function isNullOrUndefined(value) {
   text-transform: uppercase;
   font-weight: 700;
   border: 1px solid #f5eded;
-  margin-top: 0.1rem;
-
+  margin-top: 0.62rem;
+  width: fit-content;
   span.avatar {
     img {
       border-radius: 100%;
-      width: 2.4rem;
-      margin-left: -0.6rem;
+      width: 3rem;
     }
   }
 }

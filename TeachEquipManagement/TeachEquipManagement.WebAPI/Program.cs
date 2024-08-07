@@ -13,6 +13,7 @@ using TeachEquipManagement.DAL.UnitOfWorks;
 using TeachEquipManagement.Utilities;
 using TeachEquipManagement.Utilities.CustomAttribute;
 using TeachEquipManagement.Utilities.OptionPattern;
+using TeachEquipManagement.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -189,5 +190,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MigrateDatabase();
 
 app.Run();
