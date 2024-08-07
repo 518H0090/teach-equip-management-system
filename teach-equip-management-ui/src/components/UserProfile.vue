@@ -66,7 +66,11 @@ function isNullOrUndefined(value) {
       </span>
 
       <span class="username">
-        {{ props.username }}
+        {{
+          props.username.length > 13
+            ? props.username.slice(0, 13) + "..."
+            : props.username
+        }}
       </span>
 
       <span class="material-symbols-outlined"> keyboard_double_arrow_down </span>
@@ -96,7 +100,7 @@ function isNullOrUndefined(value) {
   text-transform: uppercase;
   font-weight: 700;
   border: 1px solid #f5eded;
-  margin-top: 0.62rem;
+  margin-top: 0.4rem;
   width: fit-content;
   span.avatar {
     img {
