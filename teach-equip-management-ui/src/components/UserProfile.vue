@@ -76,7 +76,12 @@ function isNullOrUndefined(value) {
       <span class="material-symbols-outlined"> keyboard_double_arrow_down </span>
     </div>
     <div class="options-wrapper" v-if="dropdownOpen">
-      <div class="option" @click="logOut">Logout</div>
+      <div class="option" @click="logOut">
+        <span class="material-symbols-outlined">
+          logout
+          </span>
+        <span>Logout</span>  
+        </div>
     </div>
   </div>
 </template>
@@ -130,6 +135,8 @@ function isNullOrUndefined(value) {
   text-transform: capitalize;
   font-size: 0.8rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
 }
 
 .option:last-of-type {
