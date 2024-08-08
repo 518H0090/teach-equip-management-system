@@ -1,6 +1,17 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import MainCard from "@/components/MainCard.vue";
+import { ref } from 'vue';
+
+const profileSrc = ref('src/assets/avatarcapybara.jpg');
+
+const onFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    profileSrc.value = URL.createObjectURL(file);
+  }
+};
+
 </script>
 
 <template>
@@ -14,6 +25,14 @@ import MainCard from "@/components/MainCard.vue";
           <form>
             <h2 class="text-3xl text-center font-semibold mb-6">User Profile</h2>
       
+            <div class="hero">
+              <div class="card">
+                <img :src="`${profileSrc}`" alt="capybara" id="profile-pic">
+                <label for="input-file">Update Image</label>
+                <input @change="onFileChange" type="file" accept="image/jpeg, image/png, image/jpg" id="input-file"/>
+              </div>
+            </div>
+
             <h3 class="text-2xl mb-5">User Info</h3>
 
             <div class="input-control mb-4">
@@ -45,8 +64,6 @@ import MainCard from "@/components/MainCard.vue";
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>
-
-          
 
             <div class="input-control mb-4">
               <label for="company" class="block text-gray-700 font-bold mb-2"
@@ -87,6 +104,50 @@ import MainCard from "@/components/MainCard.vue";
     button {
       padding: 1rem;
     }
+  }
+}
+
+.hero {
+  width: 100%;
+  height: 18rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  width: 480px;
+  background: #fff;
+  border-radius: 15px;
+  text-align: center;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0.1rem 0.2rem 0.6rem var(--dark);
+
+  img {
+    width: 180x;
+    height: 180px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    justify-content: center;
+  }
+  
+
+  label {
+    display: block;
+    width: 200px;
+    background: #e3362c;
+    color: #fff;
+    padding: 12px;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  input {
+    display: none;
   }
 }
 </style>
