@@ -477,10 +477,6 @@ namespace TeachEquipManagement.BLL.Services
 
             try
             {
-                //var principal = GetPrincipalFromExpiredToken(accessToken);
-
-                //string username = principal.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.Name).Value.ToString();
-
                 QueryModel<Account> query = new QueryModel<Account>
                 {
                     QueryCondition = x => x.Id == userId
@@ -515,6 +511,66 @@ namespace TeachEquipManagement.BLL.Services
             }
 
            
+            return response;
+        }
+
+        public async Task<ApiResponse<bool>> ReadUserInfo(List<Claim> claims)
+        {
+            ApiResponse<bool> response = new();
+
+            try
+            {
+                var userId = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+                var username = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name).Value;
+
+                QueryModel<Account> query = new QueryModel<Account>
+                {
+                    QueryCondition = x => x.Id == Guid.Parse(userId.ToString()) && x.Username == username.ToString()
+                };
+
+                var findUser = _unitOfWork.AccountRepository.GetQueryable(query).FirstOrDefault();
+
+                if (findUser == null)
+                {
+                    response.Data = false;
+                    response.Message = "Not Found User";
+                    response.StatusCode = StatusCodes.Status404NotFound;
+
+                    return response;
+                }
+
+                var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
+
+                var findRole = await _unitOfWork.RoleRepository.GetByIdAsync(findUser.RoleId);
+
+                if (findRole == null && role == findRole.RoleName)
+                {
+                    response.Data = false;
+                    response.Message = "Role Isn't Valid";
+                    response.StatusCode = StatusCodes.Status404NotFound;
+
+                    return response;
+                }
+
+                var expired = int.Parse(claims.FirstOrDefault(claim => claim.Type == "exp").Value);
+
+              
+
+                response.Data = true;
+                response.Message = "Valid UserInfo Successfully";
+                response.StatusCode = StatusCodes.Status200OK;
+            }
+
+            catch (Exception e)
+            {
+                _logger.Error($"Error with : {e.Message}");
+                response.Data = false;
+                response.Message = $"{e.InnerException}";
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                _unitOfWork.Rollback();
+            }
+
+
             return response;
         }
 

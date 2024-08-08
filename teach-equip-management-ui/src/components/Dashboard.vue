@@ -106,9 +106,6 @@ const allHistories = async () => {
     histories.value = mappedData;
   } catch (error) {
     console.log("Error Fetching jobs", error);
-    // if (error.response.status === 401) {
-    //   console.log("Error Fetching jobs", error);
-    // }
   }
 };
 const formatDateBasic = (dateStr) => dateStr.split("T")[0];

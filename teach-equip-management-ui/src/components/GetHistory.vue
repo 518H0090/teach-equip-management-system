@@ -24,6 +24,14 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  role: {
+    type: String,
+    default: "",
+  },
+  username: {
+    type: String,
+    default: "",
+  },
 });
 
 onMounted(async () => {
@@ -35,15 +43,11 @@ onMounted(async () => {
 
   try {
     await allHistories();
-  }
-  catch(error) {
-    console.log(error)
-  }
-
-  finally {
+  } catch (error) {
+    console.log(error);
+  } finally {
     isLoading.value = false;
   }
-
 });
 
 onUnmounted(() => {
@@ -56,40 +60,44 @@ onUnmounted(() => {
 });
 
 const allHistories = async () => {
-    const response = await axios.get(
-      "https://localhost:7112/api/inventorymanage/all-inventory-histories",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
+  const response = await axios.get(
+    "https://localhost:7112/api/inventorymanage/all-inventory-histories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
+  const { data } = response.data;
+
+  console.log(data);
+
+  const mappedFilter = data.map(async (item) => ({
+    id: item.id,
+    account: await accountById(item.accountId),
+    inventory: await inventoryById(item.inventoryId),
+    quantity: item.quantity,
+    actionType: item.actionType,
+    actionDate: formatDate(item.actionDate),
+  }));
+
+  let promisesMappedData = await Promise.all(mappedFilter);
+
+  if (props.role === "user" && props.username !== null) {
+    promisesMappedData = promisesMappedData.filter(
+      (data) => data.account.username === props.username
     );
-    const { data } = response.data;
+  }
 
-    console.log(data);
+  items.value = promisesMappedData;
 
-    const mappedFilter = data.map(async (item) => ({
-      id: item.id,
-      account: await accountById(item.accountId),
-      inventory: await inventoryById(item.inventoryId),
-      quantity: item.quantity,
-      actionType: item.actionType,
-      actionDate: formatDate(item.actionDate),
-    }));
+  let allKeys = promisesMappedData.reduce((keys, obj) => {
+    return keys.concat(Object.keys(obj));
+  }, []);
 
-    const promisesMappedData = await Promise.all(mappedFilter);
+  let uniqueKeys = [...new Set(allKeys)];
 
-    console.log(promisesMappedData);
-
-    items.value = promisesMappedData;
-
-    let allKeys = promisesMappedData.reduce((keys, obj) => {
-      return keys.concat(Object.keys(obj));
-    }, []);
-
-    let uniqueKeys = [...new Set(allKeys)];
-
-    keys.value = uniqueKeys;
+  keys.value = uniqueKeys;
 };
 
 function formatDate(timestamp) {
@@ -106,57 +114,57 @@ function formatDate(timestamp) {
 }
 
 const accountById = async (userId) => {
-    const response = await axios.get(
-      `https://localhost:7112/api/usermanage/user/find/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
+  const response = await axios.get(
+    `https://localhost:7112/api/usermanage/user/find/${userId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
 
-    const { data } = response.data;
+  const { data } = response.data;
 
-    return data;
+  return data;
 };
 
 const inventoryById = async (inventoryId) => {
-    const inventory = await axios.get(
-      `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
+  const inventory = await axios.get(
+    `https://localhost:7112/api/inventorymanage/inventory/find/${inventoryId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
 
-    const { data } = inventory.data;
+  const { data } = inventory.data;
 
-    const { toolId, ...rest } = data;
+  const { toolId, ...rest } = data;
 
-    const tool = await toolById(toolId);
+  const tool = await toolById(toolId);
 
-    let dataResponse = {
-      ...rest,
-      tool,
-    };
+  let dataResponse = {
+    ...rest,
+    tool,
+  };
 
-    return dataResponse;
+  return dataResponse;
 };
 
 const toolById = async (toolId) => {
-    const tool = await axios.get(
-      `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    );
+  const tool = await axios.get(
+    `https://localhost:7112/api/toolmanage/tool/find/${toolId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
 
-    const { data } = tool.data;
+  const { data } = tool.data;
 
-    return data.toolName;
+  return data.toolName;
 };
 </script>
 
@@ -166,7 +174,7 @@ const toolById = async (toolId) => {
       <ClipLoader size="8rem" />
     </div>
     <DataTable
-    v-else
+      v-else
       :keys="keys"
       :items="items"
       page_name="request"

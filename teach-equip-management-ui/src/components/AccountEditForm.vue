@@ -21,6 +21,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  role: {
+    type: String,
+    default: "",
+  },
 });
 
 const form = reactive({
@@ -60,7 +64,13 @@ const roles = ref({});
 const allRoles = async () => {
   try {
     const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
-    roles.value = response.data.data;
+    if (props.role === 'admin') {
+      roles.value = response.data.data;
+    }
+
+    else if (props.role === 'manager') {
+      roles.value = response.data.data.filter(role => role.roleName === 'user');
+    }
   } catch (error) {
     console.log("Error Fetching jobs", error);
   }
@@ -226,7 +236,7 @@ const ItemById = async (itemId) => {
     <section class="bg-green-50">
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
-          <form @submit.prevent="validateInputs">
+          <form @submit.prevent="validateInputs" v-if="props.role === 'admin'">
             <h2 class="text-3xl text-center font-semibold mb-6">Add Account</h2>
 
             <div class="input-control mb-4">
@@ -303,7 +313,91 @@ const ItemById = async (itemId) => {
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Add Category
+                Edit User
+              </button>
+            </div>
+          </form>
+
+          <form @submit.prevent="validateInputs" v-else-if="props.role === 'manager'">
+            <h2 class="text-3xl text-center font-semibold mb-6">Add Account</h2>
+
+            <div class="input-control mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Username</label>
+              <input
+                v-model="form.username"
+                type="text"
+                id="username"
+                name="username"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. username"
+                disabled
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Password</label>
+              <input
+                v-model="form.password"
+                type="password"
+                id="password"
+                name="password"
+                @input="handlePressPassword"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. password"
+              />
+
+              <p class="block text-gray-700 font-bold mb-2 warning">
+                Please write new password
+              </p>
+
+              <button @click.prevent="toggleDropdown">
+                {{ dropdownOpen ? "Hide Password" : "Show Password" }}
+              </button>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Email</label>
+              <input
+                v-model="form.email"
+                type="text"
+                id="email"
+                name="email"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. unit"
+                disabled
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label for="type" class="block text-gray-700 font-bold mb-2">Role</label>
+              <select
+                v-model="form.roleId"
+                id="roleId"
+                name="roleId"
+                class="border rounded w-full py-2 px-3"
+                required
+              >
+                <option value="-1">Default</option>
+                <option v-for="role in roles" :key="role.id" :value="`${role.id}`">
+                  {{ role.roleName }}
+                </option>
+              </select>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div>
+              <button
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Edit User
               </button>
             </div>
           </form>

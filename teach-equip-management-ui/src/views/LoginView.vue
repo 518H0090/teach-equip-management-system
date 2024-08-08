@@ -65,7 +65,7 @@ const handleLogin = async () => {
         // await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
         aside.style.display = "flex";
         // router.push("/").then(() => router.go());
-        router.push("/");
+        router.push("/").then(() => router.go());
       }
     } catch (error) {
       console.log("Error Fetching jobs", error);
