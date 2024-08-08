@@ -36,6 +36,8 @@ const form = reactive({
 
 const items = computed(() => store.state.request_return_item);
 
+const totalBorrows = ref(0);
+
 onMounted(async () => {
   const itemSelector = `aside .menu .${props.page_name}`;
   const aside_item = document.querySelector(itemSelector);
@@ -55,6 +57,8 @@ onMounted(async () => {
   form.quantity = items.value.quantity;
   form.requestType = items.value.requestType;
   form.status = items.value.status;
+
+  await allInventoryHistories(form.accountId, form.inventoryId);
 });
 
 onUnmounted(() => {
@@ -142,6 +146,58 @@ const validateInputs = async () => {
 const TurnBackToRequest = () => {
   router.push("/request/getpage");
 };
+
+const allInventoryHistories = async (accountId, inventoryId) => {
+  const response = await axios.get(
+    "https://localhost:7112/api/inventorymanage/all-inventory-histories",
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    }
+  );
+  const { data } = response.data;
+
+  const resultArray = calculateQuantitiesForEachItem(data).filter(
+    item => 
+  item.NetQuantity > 0
+  );
+
+  const mappingData = resultArray.filter(item => item.accountId === accountId && item.inventoryId)
+
+  totalBorrows.value = mappingData.map(item => item.NetQuantity);
+};
+
+const calculateQuantitiesForEachItem = (data) => {
+  const result = {};
+  data.forEach((item) => {
+    const { accountId, inventoryId, actionType, quantity } = item;
+
+    const key = `${accountId}_${inventoryId}`;
+
+    if (!result[key]) {
+      result[key] = {
+        accountId,
+        inventoryId,
+        Borrow: 0,
+        Return: 0,
+        NetQuantity: 0,
+      };
+    }
+
+    if (actionType === "Borrow") {
+      result[key].Borrow += quantity;
+    } else if (actionType === "Return") {
+      result[key].Return += quantity;
+    }
+  });
+
+  Object.keys(result).forEach((key) => {
+    result[key].NetQuantity = result[key].Borrow - result[key].Return;
+  });
+
+  return Object.values(result);
+};
 </script>
 
 <template>
@@ -149,7 +205,7 @@ const TurnBackToRequest = () => {
     <section class="bg-green-50">
       <div class="container m-auto">
         <div class="bg-white shadow-md rounded-md border m-4 md:m-0">
-          <form @submit.prevent="validateInputs">
+          <form @submit.prevent="validateInputs" v-if="form.requestType !== 'Return'">
             <h2 class="text-3xl text-center font-semibold mb-6">Approve Request</h2>
 
             <div class="input-control mb-4">
@@ -171,6 +227,109 @@ const TurnBackToRequest = () => {
               <label class="block text-gray-700 font-bold mb-2">Total Available</label>
               <input
                 v-model="form.totalAvailabel"
+                type="number"
+                id="total_available"
+                name="total_available"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. Total Available"
+                disabled
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Quantity</label>
+              <input
+                v-model="form.quantity"
+                type="number"
+                id="quantity"
+                name="quantity"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. 10"
+                disabled
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label for="type" class="block text-gray-700 font-bold mb-2"
+                >Request Type</label
+              >
+              <select
+                v-model="form.requestType"
+                id="request_type"
+                name="request_type"
+                class="border rounded w-full py-2 px-3"
+                required
+                disabled
+              >
+                <option value="-1">Default</option>
+                <option value="Borrow">Borrow</option>
+                <option value="Return">Return</option>
+                <option value="Buy">Buy</option>
+                <option value="Sell">Sell</option>
+              </select>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label for="type" class="block text-gray-700 font-bold mb-2"
+                >Status Change</label
+              >
+              <input
+                v-model="form.status"
+                type="text"
+                id="quantity"
+                name="quantity"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. 10"
+                disabled
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+            <div class="grid grid-cols-2">
+              <button
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Confirm
+              </button>
+              <button
+                @click="TurnBackToRequest"
+                class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Back
+              </button>
+            </div>
+          </form>
+
+          <form @submit.prevent="validateInputs" v-else>
+            <h2 class="text-3xl text-center font-semibold mb-6">Approve Request</h2>
+
+            <div class="input-control mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Tool Name</label>
+              <input
+                v-model="form.toolName"
+                type="text"
+                id="tool_name"
+                name="tool_name"
+                class="border rounded w-full py-2 px-3 mb-2"
+                placeholder="eg. Tool Name"
+                disabled
+              />
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Total Borrow</label>
+              <input
+                v-model="totalBorrows"
                 type="number"
                 id="total_available"
                 name="total_available"

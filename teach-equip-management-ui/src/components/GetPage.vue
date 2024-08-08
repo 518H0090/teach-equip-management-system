@@ -332,7 +332,7 @@ const allApprovalRequest = async () => {
   let promisesMappedData = await Promise.all(mappedFilter);
 
   if (props.role === 'user' && props.username !== null) {
-    promisesMappedData = promisesMappedData.filter(data => data.account.username === props.username);
+    promisesMappedData = promisesMappedData.filter(data => data.account.username === props.username)
   }
 
   items.value = promisesMappedData;

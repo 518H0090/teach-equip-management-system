@@ -23,6 +23,10 @@ const props = defineProps({
     default: "",
   },
   user: Array,
+  role: {
+    type: String,
+    default: "",
+  },
 });
 
 const form = reactive({
