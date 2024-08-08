@@ -29,6 +29,10 @@ const props = defineProps({
   role: {
     type: String,
     default: ""
+  },
+  username: {
+    type: String,
+    default: ""
   }
 });
 
@@ -325,7 +329,11 @@ const allApprovalRequest = async () => {
     status: item.status,
   }));
 
-  const promisesMappedData = await Promise.all(mappedFilter);
+  let promisesMappedData = await Promise.all(mappedFilter);
+
+  if (props.role === 'user' && props.username !== null) {
+    promisesMappedData = promisesMappedData.filter(data => data.account.username === props.username);
+  }
 
   items.value = promisesMappedData;
 

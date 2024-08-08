@@ -249,6 +249,7 @@ const inventoryById = async (inventoryId) => {
                 name="request_type"
                 class="border rounded w-full py-2 px-3"
                 required
+                v-if="props.role === 'admin' || props.role === 'manager'"
               >
                 <option value="-1">Default</option>
                 <option value="Borrow">Borrow</option>
@@ -256,6 +257,18 @@ const inventoryById = async (inventoryId) => {
                 <option value="Buy">Buy</option>
                 <option value="Sell">Sell</option>
               </select>
+
+              <select
+              v-model="form.requestType"
+              id="request_type"
+              name="request_type"
+              class="border rounded w-full py-2 px-3"
+              required
+              v-else
+            >
+              <option value="-1">Default</option>
+              <option value="Borrow">Borrow</option>
+            </select>
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
             </div>

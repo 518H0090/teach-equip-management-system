@@ -24,6 +24,14 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  role: {
+    type: String,
+    default: "",
+  },
+  username: {
+    type: String,
+    default: "",
+  },
 });
 
 onMounted(async () => {
@@ -71,7 +79,13 @@ const allInventoryHistories = async () => {
     Borrow: item.NetQuantity,
   }));
 
-  const promisesMappedData = await Promise.all(mappedFilter);
+  let promisesMappedData = await Promise.all(mappedFilter);
+
+  if (props.role === "user" && props.username !== null) {
+    promisesMappedData = promisesMappedData.filter(
+      (data) => data.account.username === props.username
+    );
+  }
 
   items.value = promisesMappedData;
 

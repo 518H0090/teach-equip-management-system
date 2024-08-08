@@ -49,7 +49,7 @@ const decodeJwtToken = async (token, userRef) => {
         <RouterLink to="/inventory/add-invoice" class="link" >Create Invoice</RouterLink>
       </li>
     </Navbar>
-    <RouterView page_name="inventory" page_service="toolmanage" />
+    <RouterView page_name="inventory" page_service="toolmanage" :role="user.role" />
   </div>
 </template>
 

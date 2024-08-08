@@ -50,7 +50,7 @@ const decodeJwtToken = async (token, userRef) => {
         <RouterLink to="/request/borrow" class="link">Borrow</RouterLink>
       </li>
     </Navbar>
-    <RouterView page_name="request" page_service="inventorymanage" :role="user.role" />
+    <RouterView page_name="request" page_service="inventorymanage" :role="user.role" :username="user.name" />
   </div>
 </template>
 
