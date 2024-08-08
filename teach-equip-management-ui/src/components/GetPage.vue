@@ -153,12 +153,16 @@ const allAccount = async () => {
       rest
   );
 
-  const mappedData = datajson.map((item) => ({
+  let mappedData = datajson.map((item) => ({
     id: item.id,
     username: item.username,
     email: item.email,
     role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
   }));
+
+  if (props.role === 'manager') {
+    mappedData = mappedData.filter(data => data.role[0].roleName === 'user');
+  }
 
   items.value = mappedData;
 
@@ -403,6 +407,7 @@ const toolById = async (toolId) => {
       :role="props.role"
     />
   </MainCard>
+  
 </template>
 
 <style lang="scss" scoped></style>

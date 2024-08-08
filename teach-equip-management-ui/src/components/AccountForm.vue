@@ -21,6 +21,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  role: {
+    type: String,
+    default: "",
+  },
 });
 
 const form = reactive({
@@ -53,7 +57,14 @@ const roles = ref({});
 const allRoles = async () => {
   try {
     const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
-    roles.value = response.data.data;
+    if (props.role === 'admin') {
+      roles.value = response.data.data;
+    }
+
+    else if (props.role === 'manager') {
+      roles.value = response.data.data.filter(role => role.roleName === 'user');
+    }
+   
   } catch (error) {
     console.log("Error Fetching jobs", error);
   }
@@ -265,7 +276,7 @@ const toggleDropdown = () => {
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Add Category
+                Add User
               </button>
             </div>
           </form>

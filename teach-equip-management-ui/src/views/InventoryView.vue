@@ -7,8 +7,6 @@ import { jwtDecode } from "jwt-decode";
 
 onMounted(async () => {
   await decodeJwtToken(token.value, user);
-
-  console.log(user.value)
 })
 
 onUnmounted(() => {

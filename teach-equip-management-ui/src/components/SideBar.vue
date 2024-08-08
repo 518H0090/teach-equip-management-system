@@ -156,8 +156,8 @@ const decodeJwtToken = async (token, userRef) => {
     <!-- Menu -->
     <h3>Menu</h3>
 
-    <!-- Show For Admin -->
-    <div class="menu" v-if="user.role === 'admin'">
+    <!-- Show For Admin And Manager -->
+    <div class="menu" v-if="user.role === 'admin' || user.role === 'manager'">
       <RouterLink class="button" to="/">
         <span class="material-icons">dashboard</span>
         <span class="text">Home</span>
@@ -176,38 +176,6 @@ const decodeJwtToken = async (token, userRef) => {
       <RouterLink class="button account" to="/account/getpage">
         <span class="material-icons">group</span>
         <span class="text">Account</span>
-      </RouterLink>
-
-      <RouterLink class="button inventory" to="/inventory/getpage">
-        <span class="material-icons">inventory</span>
-        <span class="text">Inventory</span>
-      </RouterLink>
-
-      <RouterLink class="button request" to="/request/getpage">
-        <span class="material-icons">post_add</span>
-        <span class="text">Request</span>
-      </RouterLink>
-
-      <RouterLink class="button tool" to="/tool/getpage">
-        <span class="material-icons">construction</span>
-        <span class="text">Tool</span>
-      </RouterLink>
-
-      <RouterLink class="button supplier" to="/supplier/getpage">
-        <span class="material-icons">storefront</span>
-        <span class="text">Supplier</span>
-      </RouterLink>
-
-      <RouterLink class="button category" to="/category/getpage">
-        <span class="material-icons">category</span>
-        <span class="text">Category</span>
-      </RouterLink>
-    </div>
-    <!-- Show For Manager -->
-    <div class="menu" v-else-if="user.role === 'manager'">
-      <RouterLink class="button" to="/">
-        <span class="material-icons">dashboard</span>
-        <span class="text">Home</span>
       </RouterLink>
 
       <RouterLink class="button inventory" to="/inventory/getpage">
