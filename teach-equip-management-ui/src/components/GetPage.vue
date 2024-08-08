@@ -29,6 +29,10 @@ const props = defineProps({
   role: {
     type: String,
     default: ""
+  },
+  username: {
+    type: String,
+    default: ""
   }
 });
 
@@ -153,12 +157,16 @@ const allAccount = async () => {
       rest
   );
 
-  const mappedData = datajson.map((item) => ({
+  let mappedData = datajson.map((item) => ({
     id: item.id,
     username: item.username,
     email: item.email,
     role: roles.value.filter((role) => Number(role.id) === Number(item.roleId)),
   }));
+
+  if (props.role === 'manager') {
+    mappedData = mappedData.filter(data => data.role[0].roleName === 'user');
+  }
 
   items.value = mappedData;
 
@@ -321,7 +329,11 @@ const allApprovalRequest = async () => {
     status: item.status,
   }));
 
-  const promisesMappedData = await Promise.all(mappedFilter);
+  let promisesMappedData = await Promise.all(mappedFilter);
+
+  if (props.role === 'user' && props.username !== null) {
+    promisesMappedData = promisesMappedData.filter(data => data.account.username === props.username)
+  }
 
   items.value = promisesMappedData;
 
@@ -403,6 +415,7 @@ const toolById = async (toolId) => {
       :role="props.role"
     />
   </MainCard>
+  
 </template>
 
 <style lang="scss" scoped></style>
