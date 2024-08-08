@@ -103,7 +103,8 @@ function isNullOrUndefined(value) {
   min-width: 12rem;
   max-width: 16rem;
   border-radius: 4rem;
-  margin-top: 0.3rem;
+  margin-top: 0.6rem;
+  height: 2.4rem;
   span.avatar {
     img {
       border-radius: 100%;
