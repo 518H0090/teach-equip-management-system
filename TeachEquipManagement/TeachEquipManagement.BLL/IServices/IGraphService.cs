@@ -16,5 +16,7 @@ namespace TeachEquipManagement.BLL.IServices
         Task<string> GetItemShareLink(string itemId);
 
         Task<string> GetImageUrl(string itemId);
+
+        Task<string> GetAccessGraphToken();
     }
 }

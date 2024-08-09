@@ -210,5 +210,15 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        [Route("access-graph-token")]
+        public async Task<IActionResult> GetAccessGraphToken()
+        {
+            var response = await _userManageService.AccountDetailService.GetAccessGraphToken();
+
+            return Ok(response);
+
+        }
     }
 }

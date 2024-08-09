@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Azure.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Drives.Item.Items.Item.CreateLink;
@@ -183,5 +185,29 @@ namespace TeachEquipManagement.BLL.Services
         }
 
         #endregion
+
+        public async Task<string> GetAccessGraphToken()
+        {
+            var clientId = _azureConfiguration.ClientId;
+            var tenantId = _azureConfiguration.TenantId;
+            var clientSecret = _azureConfiguration.ClientSecret;
+
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(clientSecret))
+            {
+                throw new InvalidOperationException("AzureAd settings are not configured properly.");
+            }
+
+            var options = new ClientSecretCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+            };
+
+            var clientSecretCredential = new ClientSecretCredential(
+                tenantId, clientId, clientSecret, options);
+
+            var tokenRequestContext = new TokenRequestContext(new[] { "https://graph.microsoft.com/.default" });
+            AccessToken token = await clientSecretCredential.GetTokenAsync(tokenRequestContext);
+            return token.Token;
+        }
     }
 }
