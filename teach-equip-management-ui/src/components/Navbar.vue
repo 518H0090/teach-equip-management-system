@@ -17,6 +17,10 @@ const props = defineProps({
     type: String,
     default: "This is a default title",
   },
+  hideProfile: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const mobile = ref(false);
@@ -55,6 +59,8 @@ onMounted(async () => {
   decodeJwtToken(token.value, user);
 
   await validUserToken();
+
+  await userDetailById(user.value.id);
 });
 
 onUnmounted(() => {
@@ -98,6 +104,29 @@ const validUserToken = async () => {
     router.push("/login");
   }
 };
+
+const userDetailById = async (accountId) => {
+  try {
+    const response = await axios.get(
+      `https://localhost:7112/api/usermanage/user-detail/find/${accountId}`
+    );
+
+    const datajson = response.data.data;
+
+    const avatar = datajson.avatar;
+
+    if(avatar !== "") {
+      localStorage.setItem("profileSrc", avatar)
+    }
+
+    else {
+      localStorage.setItem("profileSrc", "src/assets/avatarcapybara.jpg")
+    }
+
+  } catch (error) {
+    console.log("Error Fetching SupplierInfo", error);
+  }
+};
 </script>
 
 <template>
@@ -109,7 +138,7 @@ const validUserToken = async () => {
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
-      <UserProfile :username="user.name" />
+      <UserProfile :username="user.name" v-show="!props.hideProfile" />
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
           <slot></slot>

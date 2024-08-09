@@ -23,5 +23,7 @@ namespace TeachEquipManagement.BLL.IServices
         Task<ApiResponse<List<AccountDetailResponse>>> GetAll();
 
         Task<ApiResponse<AccountDetailResponse>> GetById(Guid id);
+
+        Task<string> GetAccessGraphToken();
     }
 }
