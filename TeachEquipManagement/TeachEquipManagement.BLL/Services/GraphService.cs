@@ -125,7 +125,7 @@ namespace TeachEquipManagement.BLL.Services
 
                 if (driveItem != null)
                 {
-                    spoFileUrl = await CreateShareLink(documentId, itemId);
+                    spoFileUrl = driveItem!.WebUrl;
                 }
 
                 else

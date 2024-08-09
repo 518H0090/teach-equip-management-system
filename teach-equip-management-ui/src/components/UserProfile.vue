@@ -64,7 +64,7 @@ function isNullOrUndefined(value) {
   <div class="dropdown-wrapper">
     <div class="dropdown-selected-option" @click="toggleDropdown">
       <span class="avatar">
-        <img :src="`${profileSrc}`" alt="capybara" />
+        <img :src="`${profileSrc}`" />
       </span>
 
       <span class="username">

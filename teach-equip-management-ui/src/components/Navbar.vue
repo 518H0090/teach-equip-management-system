@@ -17,6 +17,10 @@ const props = defineProps({
     type: String,
     default: "This is a default title",
   },
+  hideProfile: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const mobile = ref(false);
@@ -134,7 +138,7 @@ const userDetailById = async (accountId) => {
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
-      <UserProfile :username="user.name" />
+      <UserProfile :username="user.name" v-show="!props.hideProfile" />
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
           <slot></slot>
