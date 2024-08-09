@@ -172,8 +172,7 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 201) {
-          toast.success("success add new account");
-          router.push("/account/getpage");
+          await createUserDetail(data.data);
         }
       })
       .catch((error) => {
@@ -197,6 +196,46 @@ const toggleDropdown = () => {
     inputPassword.type = "password";
   }
 };
+
+const createUserDetail = async (accountId) => {
+  try {
+
+    const newUserDetail = {
+      accountId: accountId,
+      fullName: "",
+      address: "",
+      phone: ""
+    }
+
+      const response = await axios.post(
+        "https://localhost:7112/api/usermanage/create-user-detail",
+        newUserDetail,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+
+      toast.success("success add new account");
+      router.push("/account/getpage");
+    } catch (error) {
+      console.log("Error Fetching jobs", error);
+      toast.error("Can't create user detail so we will delete user");
+
+      await axios.delete(
+        `https://localhost:7112/api/usermanage/remove-account/${accountId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+      
+    }
+}
 </script>
 
 <template>
