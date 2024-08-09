@@ -48,9 +48,9 @@ namespace TeachEquipManagement.BLL.Services
 
         #region User
 
-        public async Task<ApiResponse<bool>> CreateUser(AccountRequest request, ValidationResult validation)
+        public async Task<ApiResponse<Guid>> CreateUser(AccountRequest request, ValidationResult validation)
         {
-            ApiResponse<bool> response = new ApiResponse<bool>();
+            ApiResponse<Guid> response = new ApiResponse<Guid>();
 
             try
             {
@@ -76,7 +76,7 @@ namespace TeachEquipManagement.BLL.Services
 
                     if ( existRole == null)
                     {
-                        response.Data = false;
+                        response.Data = Guid.Empty;
                         response.StatusCode = StatusCodes.Status400BadRequest;
                         response.Message = "Not Found Role which adds to User";
 
@@ -100,14 +100,14 @@ namespace TeachEquipManagement.BLL.Services
 
                     _unitOfWork.Commit();
 
-                    response.Data = true;
+                    response.Data = newUser.Id;
                     response.StatusCode = StatusCodes.Status201Created;
                     response.Message = "Create new User successfully";
                 }
 
                 else
                 {
-                    response.Data = false;
+                    response.Data = Guid.Empty;
                     response.StatusCode = StatusCodes.Status400BadRequest;
                     response.Message = validation.ToString();
                 }
@@ -116,6 +116,7 @@ namespace TeachEquipManagement.BLL.Services
             catch (Exception e)
             {
                 _logger.Error($"Error with : {e.Message}");
+                response.Data = Guid.Empty;
                 response.Message = $"{e.InnerException}";
                 response.StatusCode = StatusCodes.Status500InternalServerError;
                 _unitOfWork.Rollback();

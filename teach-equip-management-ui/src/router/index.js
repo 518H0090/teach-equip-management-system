@@ -29,6 +29,7 @@ import GetHistory from '@/components/GetHistory.vue'
 import GetBorrow from '@/components/GetBorrow.vue'
 import RequestReturnForm from '@/components/RequestReturnForm.vue'
 import RequestApproveForm from '@/components/RequestApproveForm.vue'
+import UserSettings from '@/views/UserSettings.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -224,6 +225,10 @@ const router = createRouter({
         },
       ]
     },
+    {
+      path: '/settings',
+      component: UserSettings
+    }
   ]
 })
 

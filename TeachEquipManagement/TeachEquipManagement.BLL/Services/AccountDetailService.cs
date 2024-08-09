@@ -45,7 +45,8 @@ namespace TeachEquipManagement.BLL.Services
 
                     var existUser = await _unitOfWork.AccountRepository.GetByIdAsync(request.AccountId);
 
-                    if (existUser == null) {
+                    if (existUser == null)
+                    {
 
                         _logger.Warning("Warning: Not Found User To Mapping");
                         response.Data = false;
@@ -214,12 +215,13 @@ namespace TeachEquipManagement.BLL.Services
                         if (request.FileUpload != null)
                         {
                             var spoFileId = await _graphService.UploadDriveItemAsync(request.FileUpload);
-                            var urlShareFile = await _graphService.GetItemShareLink(spoFileId);
+                            //var urlShareFile = await _graphService.GetItemShareLink(spoFileId);
+                            var imageUrl = await _graphService.GetImageUrl(spoFileId);
 
-                            if (!string.IsNullOrEmpty(spoFileId) || !string.IsNullOrEmpty(urlShareFile))
+                            if (!string.IsNullOrEmpty(spoFileId) || !string.IsNullOrEmpty(imageUrl))
                             {
                                 updateItem.SpoFileId = spoFileId;
-                                updateItem.Avatar = urlShareFile;
+                                updateItem.Avatar = imageUrl;
                             }
                         }
 
@@ -257,6 +259,12 @@ namespace TeachEquipManagement.BLL.Services
             }
 
             return response;
+        }
+
+
+        public async Task<string> GetAccessGraphToken()
+        {
+            return await _graphService.GetAccessGraphToken();
         }
     }
 }
