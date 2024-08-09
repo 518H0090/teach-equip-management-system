@@ -1,16 +1,14 @@
 <script setup>
-import {
-  computed,
-  defineProps,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-} from "vue";
+import { computed, defineProps, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 
 import { useStore } from "vuex";
 import { jwtDecode } from "jwt-decode";
 import UserProfile from "./UserProfile.vue";
+import axios from "axios";
+import { useToast } from "vue-toastification";
+import router from "@/router";
+
+const toast = useToast();
 
 const store = useStore();
 
@@ -19,6 +17,10 @@ const props = defineProps({
     type: String,
     default: "This is a default title",
   },
+  hideProfile: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const mobile = ref(false);
@@ -50,11 +52,15 @@ onBeforeMount(async () => {
   await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
 });
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener("resize", CheckScreen);
   CheckScreen();
 
   decodeJwtToken(token.value, user);
+
+  await validUserToken();
+
+  await userDetailById(user.value.id);
 });
 
 onUnmounted(() => {
@@ -71,21 +77,56 @@ function decodeJwtToken(token, userRef) {
 
       userRef.value = {
         exp: decoded.exp,
-        id: decoded[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ],
-        name: decoded[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-        ],
-        role: decoded[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ],
+        id:
+          decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+        name: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
       };
     }
   } catch (error) {
     console.error("Invalid token:", error);
   }
 }
+
+const validUserToken = async () => {
+  try {
+    const response = await axios.get(
+      "https://localhost:7112/api/usermanage/user-info-token",
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      }
+    );
+  } catch (error) {
+    toast.error("Your Token is Invalid, we will logout");
+
+    router.push("/login");
+  }
+};
+
+const userDetailById = async (accountId) => {
+  try {
+    const response = await axios.get(
+      `https://localhost:7112/api/usermanage/user-detail/find/${accountId}`
+    );
+
+    const datajson = response.data.data;
+
+    const avatar = datajson.avatar;
+
+    if(avatar !== "") {
+      localStorage.setItem("profileSrc", avatar)
+    }
+
+    else {
+      localStorage.setItem("profileSrc", "src/assets/avatarcapybara.jpg")
+    }
+
+  } catch (error) {
+    console.log("Error Fetching SupplierInfo", error);
+  }
+};
 </script>
 
 <template>
@@ -97,7 +138,7 @@ function decodeJwtToken(token, userRef) {
       <div :class="`icon ${mobileNav ? 'icon-active' : ''}`" v-show="mobile">
         <span class="material-icons" v-on:click="ToggleMobileNav">menu</span>
       </div>
-      <UserProfile :username="user.name" />
+      <UserProfile :username="user.name" v-show="!props.hideProfile" />
       <div class="mobile-nav">
         <ul class="dropdown-nav" v-show="mobileNav">
           <slot></slot>

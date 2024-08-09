@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 using TeachEquipManagement.DAL.Models;
+using TeachEquipManagement.DAL.SeedData;
 
 namespace TeachEquipManagement.DAL.EFContext
 {
@@ -35,6 +36,8 @@ namespace TeachEquipManagement.DAL.EFContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new RoleSeed());
 
             modelBuilder.Entity<Account>(account =>
             {

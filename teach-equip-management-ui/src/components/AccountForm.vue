@@ -21,6 +21,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  role: {
+    type: String,
+    default: "",
+  },
 });
 
 const form = reactive({
@@ -53,7 +57,14 @@ const roles = ref({});
 const allRoles = async () => {
   try {
     const response = await axios.get("https://localhost:7112/api/usermanage/all-roles");
-    roles.value = response.data.data;
+    if (props.role === 'admin') {
+      roles.value = response.data.data;
+    }
+
+    else if (props.role === 'manager') {
+      roles.value = response.data.data.filter(role => role.roleName === 'user');
+    }
+   
   } catch (error) {
     console.log("Error Fetching jobs", error);
   }
@@ -161,8 +172,7 @@ const validateInputs = async () => {
         }
 
         if (data.statusCode === 201) {
-          toast.success("success add new account");
-          router.push("/account/getpage");
+          await createUserDetail(data.data);
         }
       })
       .catch((error) => {
@@ -186,6 +196,46 @@ const toggleDropdown = () => {
     inputPassword.type = "password";
   }
 };
+
+const createUserDetail = async (accountId) => {
+  try {
+
+    const newUserDetail = {
+      accountId: accountId,
+      fullName: "",
+      address: "",
+      phone: ""
+    }
+
+      const response = await axios.post(
+        "https://localhost:7112/api/usermanage/create-user-detail",
+        newUserDetail,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+
+      toast.success("success add new account");
+      router.push("/account/getpage");
+    } catch (error) {
+      console.log("Error Fetching jobs", error);
+      toast.error("Can't create user detail so we will delete user");
+
+      await axios.delete(
+        `https://localhost:7112/api/usermanage/remove-account/${accountId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+      
+    }
+}
 </script>
 
 <template>
@@ -265,7 +315,7 @@ const toggleDropdown = () => {
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Add Category
+                Add User
               </button>
             </div>
           </form>

@@ -10,10 +10,12 @@ const props = defineProps({
   username: {
     type: String,
     default: "_",
-  },
+  }
 });
 
 const dropdownOpen = ref(false);
+
+const profileSrc = ref(localStorage.getItem("profileSrc"));
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
@@ -25,16 +27,13 @@ const logOut = async () => {
   if (isNullOrUndefined(accessToken)) {
     router.push("/login");
   } else {
-    const response = fetch(
-      "https://localhost:7112/api/usermanage/revoke-token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      }
-    )
+    const response = fetch("https://localhost:7112/api/usermanage/revoke-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    })
       .then((response) => {
         return response.json();
       })
@@ -65,19 +64,26 @@ function isNullOrUndefined(value) {
   <div class="dropdown-wrapper">
     <div class="dropdown-selected-option" @click="toggleDropdown">
       <span class="avatar">
-        <img src="../assets/avatarcapybara.jpg" alt="" />
+        <img :src="`${profileSrc}`" />
       </span>
 
       <span class="username">
-        {{ props.username }}
+        {{
+          props.username.length > 12
+            ? props.username.slice(0, 12) + "..."
+            : props.username
+        }}
       </span>
 
-      <span class="material-symbols-outlined">
-        keyboard_double_arrow_down
-      </span>
+      <span class="material-symbols-outlined"> keyboard_double_arrow_down </span>
     </div>
     <div class="options-wrapper" v-if="dropdownOpen">
-      <div class="option" @click="logOut">Logout</div>
+      <div class="option" @click="logOut">
+        <span class="material-symbols-outlined">
+          logout
+          </span>
+        <span>Logout</span>  
+        </div>
     </div>
   </div>
 </template>
@@ -94,22 +100,22 @@ function isNullOrUndefined(value) {
 }
 
 .dropdown-selected-option {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
   box-sizing: border-box;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   text-transform: uppercase;
   font-weight: 700;
   border: 1px solid #f5eded;
-  margin-top: 0.1rem;
-
+  min-width: 12rem;
+  max-width: 16rem;
+  border-radius: 4rem;
+  margin-top: 0.6rem;
+  height: 2.4rem;
   span.avatar {
     img {
       border-radius: 100%;
       width: 2.4rem;
-      margin-left: -0.6rem;
     }
   }
 }
@@ -131,6 +137,8 @@ function isNullOrUndefined(value) {
   text-transform: capitalize;
   font-size: 0.8rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
 }
 
 .option:last-of-type {

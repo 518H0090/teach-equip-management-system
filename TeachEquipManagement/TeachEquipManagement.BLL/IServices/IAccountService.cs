@@ -10,7 +10,7 @@ namespace TeachEquipManagement.BLL.IServices
 {
     public interface IAccountService
     {
-        Task<ApiResponse<bool>> CreateUser(AccountRequest request, ValidationResult validation);
+        Task<ApiResponse<Guid>> CreateUser(AccountRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> UpdateUser(AccountUpdateRequest request, ValidationResult validation);
         Task<ApiResponse<bool>> RemoveUser(Guid id);
         Task<ApiResponse<List<AccountResponse>>> GetAllUser();

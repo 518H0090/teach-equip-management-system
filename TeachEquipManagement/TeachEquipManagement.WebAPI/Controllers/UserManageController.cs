@@ -122,20 +122,21 @@ namespace TeachEquipManagement.WebAPI.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        #endregion
-
-        #region Role
-
-        [HttpPost]
-        [Route("create-role")]
-        public async Task<IActionResult> CreateRole([FromBody] RoleRequest request)
+        [HttpGet]
+        [Authorize]
+        [Route("user-info-token")]
+        public async Task<IActionResult> UserInfoToken()
         {
-            var validationResult = new RoleRequestValidator().Validate(request);
+            var claims = User.Claims.ToList();
 
-            var response = await _userManageService.RoleService.Create(request, validationResult);
+            var response = await _userManageService.TokenService.ReadUserInfo(claims);
 
             return StatusCode(response.StatusCode, response);
         }
+
+        #endregion
+
+        #region Role
 
         [HttpGet]
         [Route("all-roles")]
@@ -151,26 +152,6 @@ namespace TeachEquipManagement.WebAPI.Controllers
         public async Task<IActionResult> FindRoleById(int id)
         {
             var response = await _userManageService.RoleService.GetById(id);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpDelete]
-        [Route("remove-role/{id}")]
-        public async Task<IActionResult> RemoveRole(int id)
-        {
-            var response = await _userManageService.RoleService.Remove(id);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpPut]
-        [Route("update-role")]
-        public async Task<IActionResult> UpdateCategory([FromBody] RoleUpdateRequest request)
-        {
-            var validationResult = new RoleUpdateRequestValidator().Validate(request);
-
-            var response = await _userManageService.RoleService.Update(request, validationResult);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -229,5 +210,15 @@ namespace TeachEquipManagement.WebAPI.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        [Route("access-graph-token")]
+        public async Task<IActionResult> GetAccessGraphToken()
+        {
+            var response = await _userManageService.AccountDetailService.GetAccessGraphToken();
+
+            return Ok(response);
+
+        }
     }
 }
