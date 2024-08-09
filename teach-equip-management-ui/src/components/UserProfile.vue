@@ -10,10 +10,12 @@ const props = defineProps({
   username: {
     type: String,
     default: "_",
-  },
+  }
 });
 
 const dropdownOpen = ref(false);
+
+const profileSrc = ref(localStorage.getItem("profileSrc"));
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
@@ -62,7 +64,7 @@ function isNullOrUndefined(value) {
   <div class="dropdown-wrapper">
     <div class="dropdown-selected-option" @click="toggleDropdown">
       <span class="avatar">
-        <img src="../assets/avatarcapybara.jpg" alt="" />
+        <img :src="`${profileSrc}`" alt="capybara" />
       </span>
 
       <span class="username">

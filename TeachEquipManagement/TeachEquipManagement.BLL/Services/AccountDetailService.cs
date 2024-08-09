@@ -214,12 +214,13 @@ namespace TeachEquipManagement.BLL.Services
                         if (request.FileUpload != null)
                         {
                             var spoFileId = await _graphService.UploadDriveItemAsync(request.FileUpload);
-                            var urlShareFile = await _graphService.GetItemShareLink(spoFileId);
+                            //var urlShareFile = await _graphService.GetItemShareLink(spoFileId);
+                            var imageUrl = await _graphService.GetImageUrl(spoFileId);
 
-                            if (!string.IsNullOrEmpty(spoFileId) || !string.IsNullOrEmpty(urlShareFile))
+                            if (!string.IsNullOrEmpty(spoFileId) || !string.IsNullOrEmpty(imageUrl))
                             {
                                 updateItem.SpoFileId = spoFileId;
-                                updateItem.Avatar = urlShareFile;
+                                updateItem.Avatar = imageUrl;
                             }
                         }
 

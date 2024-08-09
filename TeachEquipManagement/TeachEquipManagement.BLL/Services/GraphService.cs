@@ -113,6 +113,32 @@ namespace TeachEquipManagement.BLL.Services
             return spoFileUrl;
         }
 
+        public async Task<string> GetImageUrl(string itemId)
+        {
+            string spoFileUrl = string.Empty;
+
+            spoFileUrl = await _retryPolicy.ExecuteAsync(async () =>
+            {
+                var documentId = await GetDocumenLibraryId(ConstantValues.documentLibraryName);
+
+                var driveItem = await GetDriveItem(documentId, itemId);
+
+                if (driveItem != null)
+                {
+                    spoFileUrl = await CreateShareLink(documentId, itemId);
+                }
+
+                else
+                {
+                    throw new Exception("Not Found Drive Item");
+                }
+
+                return spoFileUrl;
+            });
+
+            return spoFileUrl;
+        }
+
         #region Support Function
 
         private async Task<string> GetDocumenLibraryId(string folderName)

@@ -55,6 +55,8 @@ onMounted(async () => {
   decodeJwtToken(token.value, user);
 
   await validUserToken();
+
+  await userDetailById(user.value.id);
 });
 
 onUnmounted(() => {
@@ -96,6 +98,29 @@ const validUserToken = async () => {
     toast.error("Your Token is Invalid, we will logout");
 
     router.push("/login");
+  }
+};
+
+const userDetailById = async (accountId) => {
+  try {
+    const response = await axios.get(
+      `https://localhost:7112/api/usermanage/user-detail/find/${accountId}`
+    );
+
+    const datajson = response.data.data;
+
+    const avatar = datajson.avatar;
+
+    if(avatar !== "") {
+      localStorage.setItem("profileSrc", avatar)
+    }
+
+    else {
+      localStorage.setItem("profileSrc", "src/assets/avatarcapybara.jpg")
+    }
+
+  } catch (error) {
+    console.log("Error Fetching SupplierInfo", error);
   }
 };
 </script>

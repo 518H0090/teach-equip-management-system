@@ -14,5 +14,7 @@ namespace TeachEquipManagement.BLL.IServices
         Task DeleteDriveItemAsync(string itemId);
 
         Task<string> GetItemShareLink(string itemId);
+
+        Task<string> GetImageUrl(string itemId);
     }
 }
