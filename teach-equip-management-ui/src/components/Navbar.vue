@@ -19,8 +19,8 @@ const props = defineProps({
   },
   hideProfile: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const mobile = ref(false);
@@ -115,14 +115,11 @@ const userDetailById = async (accountId) => {
 
     const avatar = datajson.avatar;
 
-    if(avatar !== "") {
-      localStorage.setItem("profileSrc", avatar)
+    if (avatar !== "") {
+      localStorage.setItem("profileSrc", avatar);
+    } else {
+      localStorage.setItem("profileSrc", "http://localhost:5173/src/assets/avatarcapybara.jpg");
     }
-
-    else {
-      localStorage.setItem("profileSrc", "src/assets/avatarcapybara.jpg")
-    }
-
   } catch (error) {
     console.log("Error Fetching SupplierInfo", error);
   }

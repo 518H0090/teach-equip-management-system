@@ -115,7 +115,7 @@ function isNullOrUndefined(value) {
   span.avatar {
     img {
       border-radius: 100%;
-      width: 2.4rem;
+      width: 1.8rem;
     }
   }
 }

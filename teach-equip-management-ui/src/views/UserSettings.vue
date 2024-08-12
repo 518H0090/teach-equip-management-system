@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import router from "@/router";
-const profileSrc = ref("src/assets/avatarcapybara.jpg");
+const profileSrc = ref("http://localhost:5173/src/assets/avatarcapybara.jpg");
 
 const onFileChange = (event) => {
   const file = event.target.files[0];
