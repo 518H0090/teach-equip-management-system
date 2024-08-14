@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeachEquipManagement.BLL.BusinessModels
+namespace TeachEquipManagement.BLL.BusinessModels.Enum
 {
     public enum RequestTypeEnum
     {

@@ -182,7 +182,11 @@ const validateInputs = async () => {
 
 <template>
   <div class="content">
-    <Navbar hideProfile="true" />
+    <Navbar hideProfile="true">
+      <li>
+        <RouterLink to="/settings" class="link">User Profile</RouterLink>
+      </li>
+    </Navbar>
     <MainCard>
       <section class="bg-green-50">
         <div class="container m-auto">
