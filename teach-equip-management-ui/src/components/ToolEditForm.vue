@@ -347,7 +347,7 @@ const toolById = async (itemId) => {
     form.unit = datajson.unit;
     form.avatar = datajson.avatar;
 
-    if (form.avatar !== "") {
+    if (form.avatar !== null) {
       profileSrc.value = form.avatar;
     }
 

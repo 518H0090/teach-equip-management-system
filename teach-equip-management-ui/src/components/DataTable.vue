@@ -202,7 +202,7 @@ const TurnBackTool = async (item) => {
                   </span>
                   <span
                     v-else-if="
-                      value && Array.isArray(value) && props.page_name === 'inventory'
+                      value && Array.isArray(value) && value === item.tool && props.page_name === 'inventory'
                     "
                   >
                     {{
@@ -211,6 +211,15 @@ const TurnBackTool = async (item) => {
                         : "Missing Tool - Something error please contact admin"
                     }}
                   </span>
+
+                  <span
+                  v-else-if="
+                    value && Array.isArray(value) && value === item.avatar && props.page_name === 'inventory'
+                  "
+                >
+                <img :src="item.avatar ? item.avatar : ''" class="inventory" alt="Avatar">
+                </span>
+                  
                   <span
                     v-else-if="
                       value && Array.isArray(value) && props.page_name === 'invoice'
@@ -253,7 +262,7 @@ const TurnBackTool = async (item) => {
                     value && props.page_name === 'tool' && value === item.avatar
                   "
                 >
-                   <img :src="item.avatar ? item.avatar : ''" alt="Avatar">
+                   <img :src="item.avatar ? item.avatar : ''" class="tool" alt="Avatar">
                 </span>
 
                   <span v-else>
@@ -375,7 +384,16 @@ const TurnBackTool = async (item) => {
 }
 
 img {
-  width: 40%;
-  height: 40%;
+
+  &.tool {
+    width: 40%;
+    height: 40%;
+  }
+ 
+  &.inventory {
+    width: 20%;
+    height: 20%;
+  }
 }
+
 </style>

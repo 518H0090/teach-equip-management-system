@@ -237,6 +237,9 @@ const allInventories = async () => {
   if (invoices.value.length > 0) {
     mappedData = inventories.data.data.map((item) => ({
       id: item.id,
+      avatar: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.avatar),
       tool: tools.data.data
         .filter((tool) => Number(tool.id) === Number(item.toolId))
         .map((tool) => tool.toolName),
@@ -249,6 +252,9 @@ const allInventories = async () => {
   } else {
     mappedData = inventories.data.data.map((item) => ({
       id: item.id,
+      avatar: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.avatar),
       tool: tools.data.data
         .filter((tool) => Number(tool.id) === Number(item.toolId))
         .map((tool) => tool.toolName),
@@ -256,6 +262,8 @@ const allInventories = async () => {
       amount_borrow: item.amountBorrow,
     }));
   }
+
+  console.log(mappedData)
 
   items.value = mappedData;
 
