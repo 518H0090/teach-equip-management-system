@@ -13,7 +13,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
         public DbSet<Account> Accounts { get; set; }
 
-        public DbSet<AccountDetail> UserDetails { get; set; }
+        public DbSet<AccountDetail> AccountDetails { get; set; }
 
         public DbSet<Supplier> Suppliers { get; set; }
 

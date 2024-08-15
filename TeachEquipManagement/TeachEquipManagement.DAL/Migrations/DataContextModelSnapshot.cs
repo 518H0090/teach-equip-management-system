@@ -100,7 +100,7 @@ namespace TeachEquipManagement.DAL.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.ToTable("UserDetails");
+                    b.ToTable("AccountDetails");
                 });
 
             modelBuilder.Entity("TeachEquipManagement.DAL.Models.ApprovalRequest", b =>
@@ -133,7 +133,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 8, 7, 9, 19, 49, 31, DateTimeKind.Local).AddTicks(6010));
+                        .HasDefaultValue(new DateTime(2024, 8, 11, 12, 20, 21, 145, DateTimeKind.Local).AddTicks(1404));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -214,7 +214,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 8, 7, 9, 19, 49, 32, DateTimeKind.Local).AddTicks(2965));
+                        .HasDefaultValue(new DateTime(2024, 8, 11, 12, 20, 21, 145, DateTimeKind.Local).AddTicks(8508));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -248,7 +248,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 8, 7, 9, 19, 49, 31, DateTimeKind.Local).AddTicks(2848));
+                        .HasDefaultValue(new DateTime(2024, 8, 11, 12, 20, 21, 144, DateTimeKind.Local).AddTicks(8136));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
