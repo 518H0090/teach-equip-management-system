@@ -248,6 +248,14 @@ const TurnBackTool = async (item) => {
                     {{ value.username }}
                   </span>
 
+                  <span
+                  v-else-if="
+                    value && props.page_name === 'tool' && value === item.avatar
+                  "
+                >
+                   <img :src="item.avatar ? item.avatar : ''" alt="Avatar">
+                </span>
+
                   <span v-else>
                     {{ value }}
                   </span>
@@ -364,5 +372,10 @@ const TurnBackTool = async (item) => {
   div.flex.flex-col {
     width: fit-content;
   }
+}
+
+img {
+  width: 40%;
+  height: 40%;
 }
 </style>

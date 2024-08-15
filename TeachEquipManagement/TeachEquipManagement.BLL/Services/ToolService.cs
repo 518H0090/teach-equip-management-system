@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Microsoft.TeamFoundation.Core.WebApi.Team;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,14 @@ namespace TeachEquipManagement.BLL.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IGraphService _graphService;
 
-        public ToolService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
+        public ToolService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger, IGraphService graphService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _graphService = graphService;
         }
 
         public async Task<ApiResponse<int>> Create(ToolRequest request, ValidationResult validation)
@@ -54,8 +57,21 @@ namespace TeachEquipManagement.BLL.Services
                     {
                         Supplier = existSupplier,
                         Description = request.Description,
-                        ToolName = request.ToolName
+                        ToolName = request.ToolName,
+                        Unit = request.Unit
                     };
+
+                    if (request.FileUpload != null)
+                    {
+                        var spoFileId = await _graphService.UploadDriveItemAsync(request.FileUpload);
+                        var imageUrl = await _graphService.GetImageUrl(spoFileId);
+
+                        if (!string.IsNullOrEmpty(spoFileId) || !string.IsNullOrEmpty(imageUrl))
+                        {
+                            tool.SpoFileId = spoFileId;
+                            tool.Avatar = imageUrl;
+                        }
+                    }
 
                     var entity = await _unitOfWork.ToolRepository.InsertAsync(tool);
                     await _unitOfWork.SaveChangesAsync();
@@ -174,9 +190,14 @@ namespace TeachEquipManagement.BLL.Services
                 if (tool != null)
                 {
                     _unitOfWork.ToolRepository.Delete(tool!);
-                    await _unitOfWork.SaveChangesAsync();
+                    bool isSuccess = await _unitOfWork.SaveChangesAsync();
 
                     _unitOfWork.Commit();
+
+                    if (isSuccess && tool.SpoFileId != null)
+                    {
+                        await _graphService.DeleteDriveItemAsync(tool.SpoFileId);
+                    }
 
                     response.Data = true;
                     response.Message = "Remove Tool";
@@ -216,9 +237,31 @@ namespace TeachEquipManagement.BLL.Services
                     if (tool != null)
                     {
                         var updateSupplier = _mapper.Map(request, tool);
-                        await _unitOfWork.SaveChangesAsync();
+
+                        string oldSpoFileId = null;
+
+
+                        if (request.FileUpload != null)
+                        {
+                            var spoFileId = await _graphService.UploadDriveItemAsync(request.FileUpload);
+                            var imageUrl = await _graphService.GetImageUrl(spoFileId);
+
+                            if (!string.IsNullOrEmpty(spoFileId) || !string.IsNullOrEmpty(imageUrl))
+                            {
+                                oldSpoFileId = tool.SpoFileId;
+                                tool.SpoFileId = spoFileId;
+                                tool.Avatar = imageUrl;
+                            }
+                        }
+
+                        var isSuccess = await _unitOfWork.SaveChangesAsync();
 
                         _unitOfWork.Commit();
+
+                        if (isSuccess && !string.IsNullOrEmpty(oldSpoFileId))
+                        {
+                            await _graphService.DeleteDriveItemAsync(oldSpoFileId);
+                        }
 
                         response.Data = true;
                         response.Message = "Update Tool";

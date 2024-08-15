@@ -16,6 +16,8 @@ const route = useRoute();
 
 const store = useStore();
 
+const profileSrc = ref("http://localhost:5173/src/assets/avatarcapybara.jpg");
+
 const props = defineProps({
   page_name: {
     type: String,
@@ -28,6 +30,8 @@ const form = reactive({
   description: "",
   supplierId: -1,
   categories: [],
+  avatar: "",
+  unit: "-1"
 });
 
 onMounted(() => {
@@ -69,9 +73,11 @@ const validateInputs = async () => {
   const toolName = document.querySelector("#tool_name");
   const toolDescription = document.querySelector("#tool_description");
   const supplier = document.querySelector("#supplier");
+  const unit = document.querySelector("#unit");
   const toolNameValue = toolName.value.trim();
   const toolDescriptionValue = toolDescription.value.trim();
   const supplierValue = supplier.value.trim();
+  const unitValue = unit.value.trim();
 
   let isProcess = true;
   if (toolNameValue === "") {
@@ -97,22 +103,38 @@ const validateInputs = async () => {
     setSuccess(supplier);
   }
 
-  console.log(form);
+  if (unitValue === "") {
+    setError(unit, "This is required");
+    isProcess = false;
+  } else if (unitValue === String(-1)) {
+    setError(unit, "Must select Unit instead of default");
+    isProcess = false;
+  } else {
+    setSuccess(unit);
+  }
 
   if (isProcess) {
     const newTool = {
       toolName: form.toolName,
       description: form.description,
       supplierId: form.supplierId,
+      unit: form.unit,
+      fileUpload: typeof form.avatar === "string" ? null : form.avatar
     };
+
+    const formData = new FormData();
+    formData.append("ToolName", newTool.toolName);
+    formData.append("Description", newTool.description);
+    formData.append("SupplierId", newTool.supplierId);
+    formData.append("Unit", newTool.unit);
+    formData.append("FileUpload", newTool.fileUpload);
 
     const response = fetch("https://localhost:7112/api/toolmanage/create-tool", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
-      body: JSON.stringify(newTool),
+      body: formData,
     })
       .then((response) => {
         return response.json();
@@ -260,6 +282,14 @@ const allToolCategories = async () => {
     console.log("Error Fetching jobs", error);
   }
 };
+
+const onFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    profileSrc.value = URL.createObjectURL(file);
+    form.avatar = file;
+  }
+};
 </script>
 
 <template>
@@ -270,7 +300,20 @@ const allToolCategories = async () => {
           <form>
             <h2 class="text-3xl text-center font-semibold mb-6">Add Tool</h2>
 
-            <div class="input-control mb-4">
+            <div class="hero">
+              <div class="card">
+                <img :src="`${profileSrc}`" alt="capybara" id="profile-pic" />
+                <label for="input-file">Update Image</label>
+                <input
+                  @change="onFileChange"
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  id="input-file"
+                />
+              </div>
+            </div>
+
+            <div class="input-control mb-4 mt-6">
               <label class="block text-gray-700 font-bold mb-2">ToolName</label>
               <input
                 v-model="form.toolName"
@@ -319,6 +362,25 @@ const allToolCategories = async () => {
                 >
                   {{ supplier.supplierName }}
                 </option>
+              </select>
+
+              <div class="error block text-gray-700 font-bold mb-2"></div>
+            </div>
+
+            <div class="input-control mb-4">
+              <label for="type" class="block text-gray-700 font-bold mb-2">Unit</label>
+              <select
+                v-model="form.unit"
+                id="unit"
+                name="unit"
+                class="border rounded w-full py-2 px-3"
+                required
+              >
+                <option value="-1">Default</option>
+                <option value="pieces">pieces</option>
+                <option value="set">set</option>
+                <option value="dozen">dozen</option>
+                <option value="bottle">bottle</option>
               </select>
 
               <div class="error block text-gray-700 font-bold mb-2"></div>
@@ -408,4 +470,48 @@ const allToolCategories = async () => {
   color: #ff3860;
   padding: 1rem 0.4rem;
 }
+
+.hero {
+  width: 100%;
+  height: 18rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  width: 480px;
+  background: #fff;
+  border-radius: 15px;
+  text-align: center;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0.1rem 0.2rem 0.6rem var(--dark);
+
+  img {
+    width: 180x;
+    height: 180px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    justify-content: center;
+  }
+
+  label {
+    display: block;
+    width: 200px;
+    background: #e3362c;
+    color: #fff;
+    padding: 12px;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  input {
+    display: none;
+  }
+}
+
 </style>

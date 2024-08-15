@@ -125,9 +125,10 @@ const allTool = async () => {
   );
 
   const datajson = response.data.data;
-
+  
   const mappedData = datajson.map((item) => ({
     id: item.id,
+    avatar: item.avatar,
     toolName: item.toolName,
     description: item.description,
     supplier: {

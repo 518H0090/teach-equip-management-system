@@ -17,7 +17,11 @@ namespace TeachEquipManagement.BLL.FluentValidator
 
             RuleFor(x => x.ToolName)
             .NotEmpty().WithMessage("ToolName is required.")
-            .MaximumLength(20).WithMessage("ToolName must not exceed 20 characters.");
+            .MaximumLength(50).WithMessage("ToolName must not exceed 50 characters.");
+
+            RuleFor(x => x.Unit)
+           .NotEmpty().WithMessage("Unit is required.")
+           .MaximumLength(50).WithMessage("Unit must not exceed 50 characters.");
 
             RuleFor(x => x.SupplierId)
             .NotEmpty().WithMessage("Supplier is required.");

@@ -18,7 +18,14 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageServic
         [JsonProperty("tool_description")]
         public string Description { get; set; } = string.Empty;
 
+        [JsonProperty("avatar")]
+        public string? Avatar { get; set; } = string.Empty;
+
+        [JsonProperty("unit")]
+        public string Unit { get; set; } = string.Empty;
+
         [JsonProperty("supplier")]
         public SupplierResponse? Supplier { get; set; }
+
     }
 }

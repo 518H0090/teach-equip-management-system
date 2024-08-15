@@ -144,7 +144,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         [HttpPost]
         [Route("create-tool")]
-        public async Task<IActionResult> CreateTool([FromBody] ToolRequest request)
+        public async Task<IActionResult> CreateTool([FromForm] ToolRequest request)
         {
             var validationResult = new ToolRequestValidator().Validate(request);
 
@@ -191,7 +191,7 @@ namespace TeachEquipManagement.WebAPI.Controllers
 
         [HttpPut]
         [Route("update-tool")]
-        public async Task<IActionResult> UpdateTool([FromBody] ToolUpdateRequest request)
+        public async Task<IActionResult> UpdateTool([FromForm] ToolUpdateRequest request)
         {
             var validationResult = new ToolUpdateRequestValidator().Validate(request);
 
