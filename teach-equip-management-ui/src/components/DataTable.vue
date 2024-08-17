@@ -163,15 +163,15 @@ const TurnBackTool = async (item) => {
               class="flex items-center justify-end justify-end justify-end justify-end justify-end text-sm font-semibold"
             >
               <!-- Radio buttons   -->
-              <FilterRadio 
+              <!-- <FilterRadio 
               @filter="handleRadioFilter"
               :page_name="props.page_name"
                v-if="props.page_name === 'account' || props.page_name === 'request' || props.page_name === 'history' || props.page_name === 'invoice'" 
-              />
+              /> -->
               <!-- List of filters for statues   -->
-              <FilterDropdown
+              <!-- <FilterDropdown
                v-if="props.page_name === 'tool' || props.page_name === 'inventory'"
-              @filter="handleCheckBoxFilter" />
+              @filter="handleCheckBoxFilter" /> -->
             </div>
           </div>
           <table
