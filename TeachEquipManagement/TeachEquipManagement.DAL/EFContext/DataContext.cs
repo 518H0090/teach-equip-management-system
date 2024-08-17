@@ -139,8 +139,6 @@ namespace TeachEquipManagement.DAL.EFContext
 
                 category.Property(category => category.Type).IsRequired();
 
-                category.Property(category => category.Unit).IsRequired();
-
                 category.HasMany<ToolCategory>(category => category.ToolCategories)
                         .WithOne(category => category.Category)
                         .HasForeignKey(t => t.CategoryId)
