@@ -384,16 +384,8 @@ const TurnBackTool = async (item) => {
 }
 
 img {
-
-  &.tool {
-    width: 40%;
-    height: 40%;
-  }
- 
-  &.inventory {
-    width: 20%;
-    height: 20%;
-  }
+  object-fit: contain;
+  width: 140px;
 }
 
 </style>

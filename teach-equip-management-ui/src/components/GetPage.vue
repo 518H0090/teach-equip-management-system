@@ -131,6 +131,7 @@ const allTool = async () => {
     avatar: item.avatar,
     toolName: item.toolName,
     description: item.description,
+    unit: item.unit,
     supplier: {
       supplierId: item.supplier.id,
       supplierName: item.supplier.supplierName,
