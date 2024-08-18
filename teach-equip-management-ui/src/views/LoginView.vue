@@ -3,6 +3,7 @@ import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import router from "@/router";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
 
 const store = useStore();
 const aside = document.querySelector("aside");
@@ -13,6 +14,8 @@ const form = reactive({
   username: "",
   password: "",
 });
+
+const toast = useToast();
 
 onMounted(async () => {
   localStorage.removeItem("access_token");
@@ -33,18 +36,14 @@ const handleLogin = async () => {
   let isProcess = true;
 
   if (usernameValue === "") {
-    setError(username);
+    toast.error("Username can't empty")
     isProcess = false;
-  } else {
-    setSuccess(username);
-  }
+  } 
 
   if (passwordValue === "") {
-    setError(password);
+    toast.error("Password can't empty")
     isProcess = false;
-  } else {
-    setSuccess(password);
-  }
+  } 
 
   if (isProcess) {
     const loginInfo = {
@@ -65,27 +64,17 @@ const handleLogin = async () => {
         // await store.dispatch("setIsExpanded", localStorage.getItem("is_expanded"));
         aside.style.display = "flex";
         // router.push("/").then(() => router.go());
+        toast.success("Login Successful")
         router.push("/").then(() => router.go());
       }
     } catch (error) {
+      toast.error("Login Failed")
       console.log("Error Fetching jobs", error);
       await store.dispatch("setAuth", false);
     }
   }
 };
 
-const setError = (element) => {
-  const inputControl = element.parentElement;
-  const errorDisplay = inputControl.querySelector(".error");
-  inputControl.classList.add("error");
-  inputControl.classList.remove("success");
-};
-
-const setSuccess = (element) => {
-  const inputControl = element.parentElement;
-  const errorDisplay = inputControl.querySelector(".error");
-  inputControl.classList.remove("error");
-};
 </script>
 
 <template>
@@ -200,33 +189,5 @@ aside {
     padding-right: 2rem;
   }
 }
-.input-control.success {
-  border: 2px solid #09c372;
-  padding: 0.4rem;
-  border-radius: 10px;
-  display: block;
 
-  input:focus,
-  textarea:focus {
-    outline: 0;
-  }
-}
-
-.input-control.error {
-  border: 2px solid #ff3860;
-  padding: 0.4rem;
-  border-radius: 10px;
-  display: block;
-  color: inherit;
-
-  input:focus,
-  textarea:focus {
-    outline: 0;
-  }
-}
-
-.error {
-  color: #ff3860;
-  padding: 1rem 0.4rem;
-}
 </style>

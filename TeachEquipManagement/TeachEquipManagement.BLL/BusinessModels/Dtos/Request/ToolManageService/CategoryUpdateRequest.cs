@@ -14,8 +14,5 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService
 
         [JsonProperty("category_type")]
         public string Type { get; set; } = string.Empty;
-
-        [JsonProperty("category_unit")]
-        public string Unit { get; set; } = string.Empty;
     }
 }

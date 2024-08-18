@@ -20,5 +20,11 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Response.ToolManageServic
 
         [JsonProperty("tool_supplierid")]
         public int SupplierId { get; set; }
+
+        [JsonProperty("avatar")]
+        public string? Avatar { get; set; } = string.Empty;
+
+        [JsonProperty("unit")]
+        public string Unit { get; set; } = string.Empty;
     }
 }
