@@ -56,6 +56,7 @@ onMounted(async () => {
       await allRoles();
       await allAccount();
     } else if (props.page_name === "inventory") {
+      await allToolCategories();
       await allInvoicess();
       await allInventories();
     } else if (props.page_name === "request") {
@@ -244,6 +245,9 @@ const allInventories = async () => {
       tool: tools.data.data
         .filter((tool) => Number(tool.id) === Number(item.toolId))
         .map((tool) => tool.toolName),
+        category: relationShip.value
+      .filter((toolCategory) => toolCategory.tool.id === item.toolId)
+      .map((toolCategory) => toolCategory.category),
       total_quantity: item.totalQuantity,
       amount_borrow: item.amountBorrow,
       latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
@@ -259,6 +263,9 @@ const allInventories = async () => {
       tool: tools.data.data
         .filter((tool) => Number(tool.id) === Number(item.toolId))
         .map((tool) => tool.toolName),
+        category: relationShip.value
+      .filter((toolCategory) => toolCategory.tool.id === item.toolId)
+      .map((toolCategory) => toolCategory.category),
       total_quantity: item.totalQuantity,
       amount_borrow: item.amountBorrow,
     }));
