@@ -133,7 +133,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("RequestDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 8, 11, 12, 20, 21, 145, DateTimeKind.Local).AddTicks(1404));
+                        .HasDefaultValue(new DateTime(2024, 8, 17, 9, 7, 16, 829, DateTimeKind.Local).AddTicks(519));
 
                     b.Property<string>("RequestType")
                         .IsRequired()
@@ -161,10 +161,6 @@ namespace TeachEquipManagement.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -214,7 +210,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("ActionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 8, 11, 12, 20, 21, 145, DateTimeKind.Local).AddTicks(8508));
+                        .HasDefaultValue(new DateTime(2024, 8, 17, 9, 7, 16, 830, DateTimeKind.Local).AddTicks(3035));
 
                     b.Property<string>("ActionType")
                         .IsRequired()
@@ -248,7 +244,7 @@ namespace TeachEquipManagement.DAL.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 8, 11, 12, 20, 21, 144, DateTimeKind.Local).AddTicks(8136));
+                        .HasDefaultValue(new DateTime(2024, 8, 17, 9, 7, 16, 828, DateTimeKind.Local).AddTicks(2931));
 
                     b.Property<double>("Price")
                         .ValueGeneratedOnAdd()
@@ -343,14 +339,24 @@ namespace TeachEquipManagement.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpoFileId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
                     b.Property<string>("ToolName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

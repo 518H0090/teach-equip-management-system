@@ -32,7 +32,7 @@ namespace TeachEquipManagement.BLL.ManageServices
             _graphService = graphService;
         }
 
-        public IToolManageService ToolManageService =>  new ToolManageService(_unitOfWork, _mapper, _logger);
+        public IToolManageService ToolManageService =>  new ToolManageService(_unitOfWork, _mapper, _logger, _graphService);
 
         public IInventoryManageService InventoryManageService =>  new InventoryManageService(_unitOfWork, _mapper, _logger);
 

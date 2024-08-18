@@ -26,7 +26,6 @@ const props = defineProps({
 const form = reactive({
   id: "",
   type: "",
-  unit: "",
 });
 
 let paramId = route.params.id;
@@ -69,10 +68,8 @@ const setSuccess = (element) => {
 
 const validateInputs = async () => {
   const type = document.querySelector("#type");
-  const unit = document.querySelector("#unit");
 
   const typeValue = type.value.trim();
-  const unitValue = unit.value.trim();
   let isProcess = true;
 
   if (typeValue === "") {
@@ -82,20 +79,10 @@ const validateInputs = async () => {
     setSuccess(type);
   }
 
-  if (unitValue === "") {
-    setError(unit, "This is required");
-    isProcess = false;
-  } else {
-    setSuccess(unit);
-  }
-
-  console.log(form);
-
   if (isProcess) {
     const updateCategory = {
       id: form.id,
       type: form.type,
-      unit: form.unit,
     };
 
     const response = fetch("https://localhost:7112/api/toolmanage/update-category", {
@@ -141,9 +128,6 @@ const ItemById = async (itemId) => {
     const datajson = response.data.data;
     form.id = datajson.id;
     form.type = datajson.type;
-    form.unit = datajson.unit;
-
-    console.log(response);
   } catch (error) {
     console.log("Error Fetching SupplierInfo", error);
   }
@@ -167,20 +151,6 @@ const ItemById = async (itemId) => {
                 name="type"
                 class="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. everyday"
-              />
-
-              <div class="error block text-gray-700 font-bold mb-2"></div>
-            </div>
-
-            <div class="input-control mb-4">
-              <label class="block text-gray-700 font-bold mb-2">unit</label>
-              <input
-                v-model="form.unit"
-                type="text"
-                id="unit"
-                name="unit"
-                class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. unit"
               />
 
               <div class="error block text-gray-700 font-bold mb-2"></div>

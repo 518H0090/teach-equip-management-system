@@ -16,14 +16,16 @@ namespace TeachEquipManagement.BLL.ManageServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IGraphService _graphService;
 
-        public ToolManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger)
+        public ToolManageService(IUnitOfWork unitOfWork, IMapper mapper, ILogger logger, IGraphService graphService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _graphService = graphService;
         }
-        public IToolService ToolService => new ToolService(_unitOfWork, _mapper, _logger);
+        public IToolService ToolService => new ToolService(_unitOfWork, _mapper, _logger, _graphService);
 
         public ISupplierService SupplierService => new SupplierService(_unitOfWork, _mapper, _logger);
 

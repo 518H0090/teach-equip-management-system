@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,11 @@ namespace TeachEquipManagement.BLL.BusinessModels.Dtos.Request.ToolManageService
 
         [JsonProperty("tool_supplierid")]
         public int SupplierId { get; set; }
+
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
+
+        [JsonProperty("file_upload")]
+        public IFormFile? FileUpload { get; set; }
     }
 }

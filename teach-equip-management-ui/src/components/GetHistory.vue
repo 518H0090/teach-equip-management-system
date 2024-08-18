@@ -177,7 +177,7 @@ const toolById = async (toolId) => {
       v-else
       :keys="keys"
       :items="items"
-      page_name="request"
+      page_name="history"
       :page_service="props.page_service"
     />
   </MainCard>
