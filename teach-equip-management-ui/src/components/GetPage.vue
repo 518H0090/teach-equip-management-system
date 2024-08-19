@@ -56,6 +56,7 @@ onMounted(async () => {
       await allRoles();
       await allAccount();
     } else if (props.page_name === "inventory") {
+      await allToolCategories();
       await allInvoicess();
       await allInventories();
     } else if (props.page_name === "request") {
@@ -125,11 +126,13 @@ const allTool = async () => {
   );
 
   const datajson = response.data.data;
-
+  
   const mappedData = datajson.map((item) => ({
     id: item.id,
+    avatar: item.avatar,
     toolName: item.toolName,
     description: item.description,
+    unit: item.unit,
     supplier: {
       supplierId: item.supplier.id,
       supplierName: item.supplier.supplierName,
@@ -236,9 +239,15 @@ const allInventories = async () => {
   if (invoices.value.length > 0) {
     mappedData = inventories.data.data.map((item) => ({
       id: item.id,
+      avatar: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.avatar),
       tool: tools.data.data
         .filter((tool) => Number(tool.id) === Number(item.toolId))
         .map((tool) => tool.toolName),
+        category: relationShip.value
+      .filter((toolCategory) => toolCategory.tool.id === item.toolId)
+      .map((toolCategory) => toolCategory.category),
       total_quantity: item.totalQuantity,
       amount_borrow: item.amountBorrow,
       latest_prices: getLatestPriceByToolId(invoices.value, item.toolId)
@@ -248,13 +257,21 @@ const allInventories = async () => {
   } else {
     mappedData = inventories.data.data.map((item) => ({
       id: item.id,
+      avatar: tools.data.data
+        .filter((tool) => Number(tool.id) === Number(item.toolId))
+        .map((tool) => tool.avatar),
       tool: tools.data.data
         .filter((tool) => Number(tool.id) === Number(item.toolId))
         .map((tool) => tool.toolName),
+        category: relationShip.value
+      .filter((toolCategory) => toolCategory.tool.id === item.toolId)
+      .map((toolCategory) => toolCategory.category),
       total_quantity: item.totalQuantity,
       amount_borrow: item.amountBorrow,
     }));
   }
+
+  console.log(mappedData)
 
   items.value = mappedData;
 

@@ -13,7 +13,7 @@ namespace TeachEquipManagement.DAL.EFContext
 
         public DbSet<Account> Accounts { get; set; }
 
-        public DbSet<AccountDetail> UserDetails { get; set; }
+        public DbSet<AccountDetail> AccountDetails { get; set; }
 
         public DbSet<Supplier> Suppliers { get; set; }
 
@@ -138,8 +138,6 @@ namespace TeachEquipManagement.DAL.EFContext
                 category.Property(category => category.Id).UseIdentityColumn(1, 1);
 
                 category.Property(category => category.Type).IsRequired();
-
-                category.Property(category => category.Unit).IsRequired();
 
                 category.HasMany<ToolCategory>(category => category.ToolCategories)
                         .WithOne(category => category.Category)

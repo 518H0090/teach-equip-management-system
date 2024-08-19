@@ -15,10 +15,6 @@ namespace TeachEquipManagement.BLL.FluentValidator
             RuleFor(x => x.Type)
             .NotEmpty().WithMessage("CategoryType is required.")
             .MaximumLength(20).WithMessage("CategoryType must not exceed 20 characters.");
-
-            RuleFor(x => x.Unit)
-            .NotEmpty().WithMessage("CategoryUnit is required.")
-            .MaximumLength(20).WithMessage("CategoryUnit must not exceed 20 characters.");
         }
     }
 }

@@ -18,6 +18,12 @@ namespace TeachEquipManagement.DAL.Models
 
         public int SupplierId { get; set; }
 
+        public string? Avatar { get; set; } = string.Empty;
+
+        public string? SpoFileId { get; set; } = string.Empty;
+
+        public string Unit { get; set; } = string.Empty;
+
         public virtual Inventory Inventory { get; set; } 
 
         public virtual List<Invoice> Invoices { get; set; } 

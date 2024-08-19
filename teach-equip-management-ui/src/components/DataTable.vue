@@ -22,47 +22,76 @@ const props = defineProps({
 });
 
 const searchFilter = ref("");
+const radioFilter = ref("");
+const checkboxFilter = ref([]);
 
 const store = useStore();
 
 const filteredItems = computed(() => {
+  let items = props.items;
+
+  switch (radioFilter.value) {
+    case "today":
+      break;
+    case "past":
+      break;
+  }
+
+  if (checkboxFilter.value.length > 0) {
+    const filteredArray = items.filter((item) =>
+      item.category.some((cat) => checkboxFilter.value.includes(cat.type))
+    );
+    items = filteredArray;
+  }
+
   if (searchFilter.value !== "") {
     if (props.page_name === "about") {
-      return props.items.filter((item) => item.title.includes(searchFilter.value));
+      items = items.filter((item) => item.title.includes(searchFilter.value));
     } else if (props.page_name === "supplier") {
-      return props.items.filter(
+      items = items.filter(
         (item) =>
           item.supplierName.includes(searchFilter.value) ||
           item.phone.includes(searchFilter.value)
       );
     } else if (props.page_name === "category") {
-      return props.items.filter(
+      items = items.filter(
         (item) =>
           item.type.includes(searchFilter.value) || item.unit.includes(searchFilter.value)
       );
     } else if (props.page_name === "tool") {
-      return props.items.filter(
+      items = items.filter(
         (item) =>
           item.toolName.includes(searchFilter.value) ||
           item.description.includes(searchFilter.value) ||
           item.supplier.supplierName.includes(searchFilter.value)
       );
     } else if (props.page_name === "account") {
-      return props.items.filter(
+      items = items.filter(
         (item) =>
           item.username.includes(searchFilter.value) ||
           item.email.includes(searchFilter.value)
       );
     } else if (props.page_name === "inventory") {
-      return props.items;
+      items = items;
     }
   }
 
-  return props.items;
+  return items;
 });
 
 const handleSearch = (search) => {
   searchFilter.value = search;
+};
+
+const handleRadioFilter = (filter) => {
+  radioFilter.value = filter;
+};
+
+const handleCheckBoxFilter = (filter) => {
+  if (checkboxFilter.value.includes(filter)) {
+    return checkboxFilter.value.splice(checkboxFilter.value.indexOf(filter), 1);
+  }
+  return checkboxFilter.value.push(filter);
 };
 
 const removeItem = async (id) => {
@@ -135,9 +164,17 @@ const TurnBackTool = async (item) => {
               class="flex items-center justify-end justify-end justify-end justify-end justify-end text-sm font-semibold"
             >
               <!-- Radio buttons   -->
-              <!-- <FilterRadio /> -->
+              <!-- <FilterRadio 
+              @filter="handleRadioFilter"
+              :page_name="props.page_name"
+               v-if="props.page_name === 'account' || props.page_name === 'request' || props.page_name === 'history' || props.page_name === 'invoice'" 
+              /> -->
               <!-- List of filters for statues   -->
-              <!-- <FilterDropdown /> -->
+              <FilterDropdown
+                v-if="props.page_name === 'tool' || props.page_name === 'inventory'"
+                :items="props.items"
+                @filter="handleCheckBoxFilter"
+              />
             </div>
           </div>
           <table
@@ -202,7 +239,10 @@ const TurnBackTool = async (item) => {
                   </span>
                   <span
                     v-else-if="
-                      value && Array.isArray(value) && props.page_name === 'inventory'
+                      value &&
+                      Array.isArray(value) &&
+                      value === item.tool &&
+                      props.page_name === 'inventory'
                     "
                   >
                     {{
@@ -211,6 +251,33 @@ const TurnBackTool = async (item) => {
                         : "Missing Tool - Something error please contact admin"
                     }}
                   </span>
+
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      value === item.avatar &&
+                      props.page_name === 'inventory'
+                    "
+                  >
+                    <img
+                      :src="item.avatar ? item.avatar : ''"
+                      class="inventory"
+                      alt="Avatar"
+                    />
+                  </span>
+
+                  <span
+                    v-else-if="
+                      value &&
+                      Array.isArray(value) &&
+                      value === item.category &&
+                      props.page_name === 'inventory'
+                    "
+                  >
+                  {{ value.map(category => category.type).join(" - ") }}
+                  </span>
+
                   <span
                     v-else-if="
                       value && Array.isArray(value) && props.page_name === 'invoice'
@@ -246,6 +313,34 @@ const TurnBackTool = async (item) => {
                     "
                   >
                     {{ value.username }}
+                  </span>
+
+                  <span
+                    v-else-if="
+                      value && props.page_name === 'history' && value === item.inventory
+                    "
+                  >
+                    {{ value.toolName }}
+                  </span>
+
+                  <span
+                    v-else-if="
+                      value && props.page_name === 'history' && value === item.account
+                    "
+                  >
+                    {{ value.username }}
+                  </span>
+
+                  <span
+                    v-else-if="
+                      value && props.page_name === 'tool' && value === item.avatar
+                    "
+                  >
+                    <img
+                      :src="item.avatar ? item.avatar : ''"
+                      class="tool"
+                      alt="Avatar"
+                    />
                   </span>
 
                   <span v-else>
@@ -339,6 +434,17 @@ const TurnBackTool = async (item) => {
                     Delete
                   </button>
                 </td>
+                <td
+                  class="px-4 py-3 flex items-center"
+                  v-show="props.page_name === 'request' && item.status === 'Accept'"
+                >
+                  <button
+                    @click="removeItem(item.id)"
+                    class="text-indigo-500 hover:underline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -353,5 +459,10 @@ const TurnBackTool = async (item) => {
   div.flex.flex-col {
     width: fit-content;
   }
+}
+
+img {
+  object-fit: contain;
+  width: 140px;
 }
 </style>
