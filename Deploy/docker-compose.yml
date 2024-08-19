@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+
+  frontend:
+    image: 518h0090/teachequipmanagement:frontend
+    build:
+      context: "teach-equip-management-ui"
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: 518h0090/teachequipmanagement:backend
+    build:
+      context: "./TeachEquipManagement"
+      dockerfile: TeachEquipManagement.WebAPI/Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    image: 518h0090/teachequipmanagement:database
+    hostname: sqlserver
+    build:
+      context: "teach-equip-management-database-deploy"
+      dockerfile: Dockerfile
+    ports:
+      - "1433:1433"
+    restart: always
+
+    environment:
+      MSSQL_SA_PASSWORD: "Hieuro5122@"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
