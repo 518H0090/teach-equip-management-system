@@ -354,7 +354,8 @@ const TurnBackTool = async (item) => {
                     props.page_name !== 'inventory' &&
                     props.page_name !== 'invoice' &&
                     props.page_name !== 'request' &&
-                    props.page_name !== 'borrow'
+                    props.page_name !== 'borrow' &&
+                     props.page_name !== 'history'
                   "
                 >
                   <RouterLink
