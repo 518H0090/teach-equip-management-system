@@ -9,28 +9,6 @@ Một số thông tin khác:
 - Cung cấp thống kê, báo cáo cho đội ngũ quản lý"
 ![image](https://github.com/518H0090/teach-equip-management-system/assets/73675587/335990d4-3b1e-4cb9-9bb3-6921e5b4461e)
 
-# Setup
-
-# Frontend - teach-equip-management-ui
-
-Step1: npm install
-Step2: npm run dev
-
-# Backend - TeachEquipManagement
-
-Step1: Open TeachEquipManagement.sln
-Step2: Go To Nuget Package Console 
-Step3: Type "update database"
-Step4: Click to file BackupDatabaseSprint4.sql and execute
-Step5: run api.
-
-Use admin account login to the system 
-
-Username: trunghieuit1204 
-Password: trunghieuit1204
-
-Or we can choose any account in BackupDatabaseSprint4.sql.
-
 # Screen
 
 Login
