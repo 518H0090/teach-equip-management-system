@@ -17,6 +17,8 @@ Login
 Dashboard
 
 ![image](https://github.com/user-attachments/assets/48c33e79-cbc9-431a-8a8f-54da14a00e4a)
+![{9E2E1CCA-956A-4321-A3BE-5B56CC2CDAFF}](https://github.com/user-attachments/assets/6c2076b2-0295-4cc1-a740-7988c0f3ab3f)
+
 
 Account
 
