@@ -70,8 +70,6 @@ const allHistories = async () => {
   );
   const { data } = response.data;
 
-  console.log(data);
-
   const mappedFilter = data.map(async (item) => ({
     id: item.id,
     account: await accountById(item.accountId),

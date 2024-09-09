@@ -320,7 +320,7 @@ const TurnBackTool = async (item) => {
                       value && props.page_name === 'history' && value === item.inventory
                     "
                   >
-                    {{ value.toolName }}
+                    {{ value.tool }}
                   </span>
 
                   <span
